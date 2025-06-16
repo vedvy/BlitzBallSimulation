@@ -166,3 +166,18 @@ a.secondary {
     filter: invert();
   }
 }
+
+/*End of Template CSS*/
+
+.game_screen{
+  display: flexbox;
+}
+
+.banner{
+  width: 100%;
+  height: 40px;
+  background-color: red;
+  text-align: center;
+  color: white;
+  
+}
