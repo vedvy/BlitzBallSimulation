@@ -237,14 +237,72 @@ a.secondary {
 .game_main_content{
   display: flex;
   width: 100%;
-  height: 500px;
+  height: 550px;
 }
 
 .game_field{
   flex-grow: 4;
-  background-color: rgb(140, 9, 9);
+  background-color: green;
+  position: relative;
     
 }
+
+.inner_field{
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background-color: rgb(140, 9, 9);
+  left: 350px;
+  
+  top: 150px;
+  transform: rotate(45deg);
+}
+
+.home_base{
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-color: rgb(140, 9, 9);
+  border-radius: 32px;
+  top: 260px;
+  left: 260px;
+}
+
+.first_base,
+.second_base,
+.third_base{
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-color: white;
+
+}
+
+.first_base{
+  left: 250px;
+  top: 10px;
+}
+
+.second_base{
+  top: 10px;
+  left: 10px;
+}
+
+.third_base{
+  top: 250px;
+  left: 10px;
+}
+
+.home_base_plate{
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  transform: rotate(deg);
+  margin: auto;
+  position: relative;
+  top: 10px;
+}
+
 
 
 .logger_section{

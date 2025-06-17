@@ -32,8 +32,18 @@ export default function GameScreen()
             </div>
             <div className={styles.game_main_content}>
                 <div className={styles.game_field}>
-                    <span>Strikes: </span>
-                    <span>Balls: </span>
+                    <div className={styles.inner_field}>
+                        <div className={styles.home_base}>
+                        <div className={styles.home_base_plate}></div>
+                        
+                    </div>
+                    <div className={styles.first_base}></div>
+                    <div className={styles.second_base}></div>
+                    <div className={styles.third_base}></div>
+                    </div>
+                    
+                    <div className="styles.first_base"></div>
+                    
                 </div>
                 <div className={styles.logger_section}>
                     <h2>Logger area</h2>
