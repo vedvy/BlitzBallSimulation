@@ -30,6 +30,14 @@ export default function GameScreen()
  
                 </div>
             </div>
+            <div className={styles.game_main_content}>
+                <div className={styles.game_field}>
+                    <h2>Main Field Area</h2>
+                </div>
+                <div className={styles.logger_section}>
+                    <h2>Logger area</h2>
+                </div>
+            </div>
         </div>
     )
 }
