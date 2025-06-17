@@ -293,6 +293,25 @@ a.secondary {
   left: 10px;
 }
 
+.pitchers_mound{
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: burlywood;
+  border-radius: 64px;
+  top: 100px;
+  left: 95px;
+}
+
+.pitchers_plate{
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  top: 20px;
+  left: 20px;
+}
+
 .home_base_plate{
   width: 40px;
   height: 40px;

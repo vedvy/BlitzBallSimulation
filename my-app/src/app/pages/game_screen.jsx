@@ -40,9 +40,10 @@ export default function GameScreen()
                     <div className={styles.first_base}></div>
                     <div className={styles.second_base}></div>
                     <div className={styles.third_base}></div>
+                    <div className={styles.pitchers_mound}>
+                        <div className={styles.pitchers_plate}></div>
                     </div>
-                    
-                    <div className="styles.first_base"></div>
+                    </div>
                     
                 </div>
                 <div className={styles.logger_section}>
