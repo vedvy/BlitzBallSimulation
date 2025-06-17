@@ -8,12 +8,26 @@ export default function GameScreen()
             <div className={styles.banner}>
                 <h1>Beta Testing for Game</h1>
             </div>
-            <div className="team_banners">
-                <div className="team_red">
+            <div className={styles.team_banners}>
+                <div className={styles.team_red_banner}>
+                    <h1 style={{textAlign: "center"}}>Team Red | Score: 0</h1>
+                    <hr/>
+                    <h2>Current Batter: _______</h2>
+                    <h2>Current Pitcher: _______</h2>
+                    <hr/>
+                    <h3 style={{textAlign: "center"}}>Current Actions: </h3>
+                    <span className={styles.player_buttons_red}>Button 1</span>
 
                 </div>
-                <div className="team_blue">
-
+                <div className={styles.team_blue_banner}>
+                    <h1 style={{textAlign: "center"}}>Team Blue | Score: 0</h1>
+                    <hr/>
+                    <h2>Current Batter: _______</h2>
+                    <h2>Current Pitcher: _______</h2>
+                    <hr/>
+                    <h3 style={{textAlign: "center"}}>Current Actions: </h3>
+                    <span className={styles.player_buttons_blue}>Button 1</span>
+ 
                 </div>
             </div>
         </div>

@@ -170,14 +170,61 @@ a.secondary {
 /*End of Template CSS*/
 
 .game_screen{
-  display: flexbox;
+  display: grid;
+  overflow: hidden;
 }
 
 .banner{
   width: 100%;
   height: 40px;
-  background-color: red;
+  background-color: teal;
   text-align: center;
   color: white;
   
+}
+
+.team_banners{
+  display: flex;
+  justify-content: space-evenly;
+  height: 150px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  
+
+}
+
+.team_red_banner{
+  width: 100%;
+  background-color: red;
+  color: white;
+  border: 2px solid black;
+}
+
+
+.team_blue_banner{
+  width: 100%;
+  background-color: blue;
+  color: white;
+  border: 2px solid black;
+}
+
+.player_buttons_red,
+.player_buttons_blue{
+  border: 2px solid black;
+  background-color: #ccc;
+  color: black;
+  cursor: pointer;
+  padding: 5px;
+
+
+
+}
+
+.player_buttons_red:hover{
+  background-color: lightcoral;
+  transition-duration: 0.2s;
+}
+
+.player_buttons_blue:hover{
+  background-color: aquamarine;
+  transition-duration: 0.2s;
 }
