@@ -31,7 +31,11 @@ export default function GameScreen()
                 </div>
             </div>
             <div className={styles.game_main_content}>
+                    
                 <div className={styles.game_field}>
+                    <h1 className={styles.field_information}>Inning: </h1>
+                    <h1 className={styles.field_information}>Outs: </h1>
+                    <h1 className={styles.field_information}>Strikes: </h1>
                     <div className={styles.inner_field}>
                         <div className={styles.home_base}>
                         <div className={styles.home_base_plate}></div>
@@ -44,12 +48,16 @@ export default function GameScreen()
                         <div className={styles.pitchers_plate}></div>
                     </div>
                     </div>
-                    
+
                 </div>
                 <div className={styles.logger_section}>
-                    <h2>Logger area</h2>
+                    <h2 style={{textAlign: "center"}}>Game Logs</h2>
+                    <div className={styles.logger_content}></div>
                 </div>
             </div>
+            <div className={styles.footer}>
+                Created by Vedant Vyas, circa 2025
+            </div>   
         </div>
     )
 }

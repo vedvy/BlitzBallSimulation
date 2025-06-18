@@ -327,4 +327,34 @@ a.secondary {
 .logger_section{
   flex: 1;
   background-color: gray;
+  position: relative;
+}
+
+.logger_content{
+  width: 230px;
+  height: 500px;
+  background-color: lightgray;
+  position: absolute;
+  left: 20px;
+  overflow: auto;
+
+
+}
+
+.field_information{
+    color: white;
+    background-color:chocolate;
+    width: 150px;
+    height: auto;
+}
+
+.footer{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background-color: #1a1a1a;
+  color: white;
+  width: 100%;
+  text-align: center;
+  padding: 5px;
 }
