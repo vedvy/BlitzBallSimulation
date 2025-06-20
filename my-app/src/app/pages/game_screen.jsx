@@ -13,7 +13,22 @@ export default function GameScreen()
     const [current_inning, set_current_inning] = useState(1);
     const [current_strikes, set_current_strikes] = useState(0);
     const [top_of_inning, set_top_inning] = useState(false);
-    
+    const [first_base, set_first_base] = useState({
+        base_value: 1,
+        active_string: `first_base_active_${red_team_choices==="hitter"?"red":"blue"}`
+    });
+    const [second_base, set_second_base] = useState({
+        base_value: 2,
+        active_string: `second_base_active_${red_team_choices==="hitter"?"red":"blue"}`
+    });
+    const [third_base, set_third_base] = useState({
+        base_value: 3,
+        active_string: `third_base_active_${red_team_choices==="hitter"?"red":"blue"}`
+    });
+    const [current_player, set_current_player_running] = useState({
+        hit_score: 0
+    });    
+
 
     const switchPositions = () => {
         red_team_choices === "hitter" ? set_red_team_choices("pitcher") : set_red_team_choices("hitter");
@@ -47,6 +62,8 @@ export default function GameScreen()
     const incrementStrikes = () => {
         current_strikes === 2 ? incrementOuts() : set_current_strikes(current_strikes+1);
     }
+
+    const 
 
     return (
         <div className={styles.game_screen}>
