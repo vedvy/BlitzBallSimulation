@@ -68,7 +68,10 @@ export default function GameScreen()
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     {red_team_choices === "hitter" && (
                     <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_red}>Base 1 Hit</span>
+                        <span className={styles.player_buttons_red}>Single</span>
+                        <span className={styles.player_buttons_red}>Double</span>
+                        <span className={styles.player_buttons_red}>Triple</span>
+                        <span className={styles.player_buttons_red}>Home Run</span>
                     </div>
                     )}
                     {red_team_choices === "pitcher" && (
@@ -101,7 +104,10 @@ export default function GameScreen()
                     )}
                     {blue_team_choices === "hitter" && (
                     <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_blue}>Base 1 Hit</span>
+                        <span className={styles.player_buttons_blue}>Single</span>
+                        <span className={styles.player_buttons_blue}>Double</span>
+                        <span className={styles.player_buttons_blue}>Triple</span>
+                        <span className={styles.player_buttons_blue}>Home Run</span>
                     </div>
                     )}
                     
