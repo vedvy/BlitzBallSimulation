@@ -213,7 +213,7 @@ a.secondary {
   background-color: #ccc;
   color: black;
   cursor: pointer;
-  padding: 5px;
+  padding: 10px;
 }
 
 .player_buttons_red:hover{
@@ -356,6 +356,6 @@ a.secondary {
 }
 
 .choice_buttons_main{
-  display: inline-block;
-  gap: 10px;
+  display: flex;
+  justify-content: space-evenly;
 }

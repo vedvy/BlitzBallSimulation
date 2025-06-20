@@ -57,8 +57,13 @@ export default function GameScreen()
                 <div className={styles.team_red_banner}>
                     <h1 style={{textAlign: "center"}}>Team Red | Score: 0</h1>
                     <hr/>
-                    <h2>Current Batter: _______</h2>
-                    <h2>Current Pitcher: _______</h2>
+                    {red_team_choices === "hitter" && (
+                        <h2>Current Batter: _______</h2>
+                    )}
+                    {red_team_choices === "pitcher" && (
+                        <h2>Current Pitcher: _______</h2>
+                    )}
+                    
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     {red_team_choices === "hitter" && (
@@ -79,8 +84,12 @@ export default function GameScreen()
                 <div className={styles.team_blue_banner}>
                     <h1 style={{textAlign: "center"}}>Team Blue | Score: 0</h1>
                     <hr/>
-                    <h2>Current Batter: _______</h2>
-                    <h2>Current Pitcher: _______</h2>
+                    {blue_team_choices === "hitter" && (
+                        <h2>Current Batter: _______</h2>
+                    )}
+                    {blue_team_choices === "pitcher" && (
+                        <h2>Current Pitcher: _______</h2>
+                    )}
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     
@@ -114,7 +123,7 @@ export default function GameScreen()
                     <div className={styles.second_base}></div>
                     <div className={styles.third_base}></div>
                     <div className={styles.pitchers_mound}>
-                        <div className={styles.pitchers_plate}></div>
+                        <div className={styles.pitchers_plate} style={{backgroundColor: red_team_choices === "pitcher" ? "red" : "blue"}}></div>
                     </div>
                     </div>
 
