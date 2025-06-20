@@ -1,5 +1,7 @@
 import react from "react";
 import styles from "../page.module.css"
+import PitcherChoices from "../components/pitcher_buttons";
+import HitterChoices from "../components/hitter_buttons";
 
 export default function GameScreen()
 {
@@ -16,7 +18,7 @@ export default function GameScreen()
                     <h2>Current Pitcher: _______</h2>
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
-                    <span className={styles.player_buttons_red}>Button 1</span>
+                    <HitterChoices/>
 
                 </div>
                 <div className={styles.team_blue_banner}>
@@ -26,7 +28,7 @@ export default function GameScreen()
                     <h2>Current Pitcher: _______</h2>
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
-                    <span className={styles.player_buttons_blue}>Button 1</span>
+                    <PitcherChoices/>
  
                 </div>
             </div>
