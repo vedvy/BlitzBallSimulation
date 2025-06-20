@@ -15,23 +15,23 @@ export default function GameScreen()
     const [top_of_inning, set_top_inning] = useState(false);
     const [first_base, set_first_base] = useState({
         base_value: 1,
-        active_string: `first_base_active_${red_team_choices==="hitter"?"red":"blue"}`,
+        active_string: `active_base_${red_team_choices==="hitter"?"red":"blue"}`,
         currently_active: false
     });
     const [second_base, set_second_base] = useState({
         base_value: 2,
-        active_string: `second_base_active_${red_team_choices==="hitter"?"red":"blue"}`,
+        active_string: `active_base_${red_team_choices==="hitter"?"red":"blue"}`,
         currently_active: false
     });
     const [third_base, set_third_base] = useState({
         base_value: 3,
-        active_string: `third_base_active_${red_team_choices==="hitter"?"red":"blue"}`,
+        active_string: `active_base_${red_team_choices==="hitter"?"red":"blue"}`,
         currently_active: false
 
     });
-    const [current_player, set_current_player_running] = useState({
-        hit_score: 0
-    });    
+    // const [current_player, set_current_player_running] = useState({
+    //     hit_score: 0
+    // });    
 
 
     const switchPositions = () => {
@@ -67,30 +67,62 @@ export default function GameScreen()
         current_strikes === 2 ? incrementOuts() : set_current_strikes(current_strikes+1);
     }
 
+    const updateFBActive = (isActive) =>
+    {
+        console.log(isActive);
+        set_first_base(...first_base, currently_active = isActive);
+        return;
+    }
+
+    const updateSBActive = (isActive) => {
+        return set_second_base(...second_base, currently_active = isActive);
+    }
+
+    const updateTBActive = (isActive) => {
+        return set_third_base(...third_base, currently_active = isActive);
+    }
+
+
     const updateBases = (runs) =>{
+        console.log("inside update bases");
         if(third_base.currently_active === true)
         {
-            third_base.currently_active = false;
+            updateTBActive(false);
         }
         if(second_base.currently_active === true)
         {
-            second_base.currently_active = false;
+            updateSBActive(false);
             if(second_base.base_value + runs === 3)
             {
-                third_base.currently_active = true;
+                updateTBActive(true);
             }
         }
         if(first_base.currently_active === true)
         {
-            first_base.currently_active = false;
+            updateFBActive(false);
             if(first_base.base_value + runs === 2)
             {
-                second_base.currently_active = true;
+                updateSBActive(true);
             }
             else if(first_base.base_value + runs === 3)
             {
-                third_base.currently_active = true;
+                updateTBActive(true);
             }
+        }
+        console.log(first_base.currently_active);
+        console.log(first_base.active_string);
+        switch(runs){
+            case 1: 
+                updateFBActive(true);
+                console.log(first_base.currently_active);
+                return;
+            case 2: 
+                updateSBActive(true);
+                return;
+            case 3:
+                updateTBActive(true);
+                return;
+
         }
     }
 
@@ -114,10 +146,10 @@ export default function GameScreen()
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     {red_team_choices === "hitter" && (
                     <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_red}>Single</span>
-                        <span className={styles.player_buttons_red}>Double</span>
-                        <span className={styles.player_buttons_red}>Triple</span>
-                        <span className={styles.player_buttons_red}>Home Run</span>
+                        <span className={styles.player_buttons_red} onClick={() => {updateBases(1);}}>Single</span>
+                        <span className={styles.player_buttons_red} onClick={() => {updateBases(2);}}>Double</span>
+                        <span className={styles.player_buttons_red} onClick={() => {updateBases(3);}}>Triple</span>
+                        <span className={styles.player_buttons_red} onClick={() => {updateBases(4);}}>Home Run</span>
                     </div>
                     )}
                     {red_team_choices === "pitcher" && (
@@ -150,10 +182,10 @@ export default function GameScreen()
                     )}
                     {blue_team_choices === "hitter" && (
                     <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_blue}>Single</span>
-                        <span className={styles.player_buttons_blue}>Double</span>
-                        <span className={styles.player_buttons_blue}>Triple</span>
-                        <span className={styles.player_buttons_blue}>Home Run</span>
+                        <span className={styles.player_buttons_blue} onClick={() => {updateBases(1);}}>Single</span>
+                        <span className={styles.player_buttons_blue} onClick={() => {updateBases(2);}}>Double</span>
+                        <span className={styles.player_buttons_blue} onClick={() => {updateBases(3);}}>Triple</span>
+                        <span className={styles.player_buttons_blue} onClick={() => {updateBases(4);}}>Home Run</span>
                     </div>
                     )}
                     
@@ -171,9 +203,9 @@ export default function GameScreen()
                         <div className={styles.home_base_plate}></div>
                         
                     </div>
-                    <div className={styles.first_base}></div>
-                    <div className={styles.second_base}></div>
-                    <div className={styles.third_base}></div>
+                    <div className={`${styles.first_base} ${first_base.active_string}`} ></div>
+                    <div className={`${styles.second_base} ${second_base.currently_active && styles.second_base.active_string}`}></div>
+                    <div className={`${styles.third_base} ${third_base.currently_active && styles.third_base.active_string}`}></div>
                     <div className={styles.pitchers_mound}>
                         <div className={styles.pitchers_plate} style={{backgroundColor: red_team_choices === "pitcher" ? "red" : "blue"}}></div>
                     </div>
