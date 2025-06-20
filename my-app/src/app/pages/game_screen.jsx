@@ -1,10 +1,21 @@
+'use client'
 import react from "react";
 import styles from "../page.module.css"
 import PitcherChoices from "../components/pitcher_buttons";
 import HitterChoices from "../components/hitter_buttons";
+import { useState, useEffect } from "react";
 
 export default function GameScreen()
 {
+    const [red_team_choices, set_red_team_choices] = useState("hitter");
+    const [blue_team_choices, set_blue_team_choices] = useState("pitcher");
+
+    const switchPositions = () => {
+        red_team_choices === "hitter" ? set_red_team_choices("pitcher") : set_red_team_choices("hitter");
+        blue_team_choices === "pitcher" ? set_blue_team_choices("hitter") : set_blue_team_choices("pitcher");
+
+    }
+
     return (
         <div className={styles.game_screen}>
             <div className={styles.banner}>
@@ -18,7 +29,18 @@ export default function GameScreen()
                     <h2>Current Pitcher: _______</h2>
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
-                    <HitterChoices/>
+                    {red_team_choices === "hitter" && (
+                    <div className={styles.hitter_buttons_main}>
+                        <span className={styles.player_buttons_red}>Base 1 Hit</span>
+                    </div>
+                    )}
+                    {red_team_choices === "pitcher" && (
+                    <div className={styles.hitter_buttons_main}>
+                        <span className={styles.player_buttons_red} onClick={() => {switchPositions();}}>Out</span>
+                    </div>
+                    )}
+
+                    
 
                 </div>
                 <div className={styles.team_blue_banner}>
@@ -28,7 +50,18 @@ export default function GameScreen()
                     <h2>Current Pitcher: _______</h2>
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
-                    <PitcherChoices/>
+                    
+                    {blue_team_choices === "pitcher" && (
+                    <div className="pitcher_buttons_main">
+                        <span className={styles.player_buttons_blue} onClick={() => {switchPositions();}}>Out</span>
+                    </div>
+                    )}
+                    {blue_team_choices === "hitter" && (
+                    <div className="pitcher_buttons_main">
+                        <span className={styles.player_buttons_blue}>Base 1 Hit</span>
+                    </div>
+                    )}
+                    
  
                 </div>
             </div>
