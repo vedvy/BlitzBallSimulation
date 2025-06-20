@@ -11,7 +11,9 @@ export default function GameScreen()
     const [blue_team_choices, set_blue_team_choices] = useState("pitcher");
     const [current_outs, set_current_outs] = useState(0);
     const [current_inning, set_current_inning] = useState(1);
+    const [current_strikes, set_current_strikes] = useState(0);
     const [top_of_inning, set_top_inning] = useState(false);
+    
 
     const switchPositions = () => {
         red_team_choices === "hitter" ? set_red_team_choices("pitcher") : set_red_team_choices("hitter");
@@ -28,6 +30,7 @@ export default function GameScreen()
             switchPositions();
             console.log(top_of_inning);
             set_current_outs(0);
+            set_current_strikes(0);
             if(top_of_inning)
             {
                 set_current_inning(current_inning+1);
@@ -36,9 +39,13 @@ export default function GameScreen()
         else
         {
             set_current_outs(current_outs+1);
+            set_current_strikes(0);
         }
         
+    }
 
+    const incrementStrikes = () => {
+        current_strikes === 2 ? incrementOuts() : set_current_strikes(current_strikes+1);
     }
 
     return (
@@ -55,13 +62,14 @@ export default function GameScreen()
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     {red_team_choices === "hitter" && (
-                    <div className={styles.hitter_buttons_main}>
+                    <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_red}>Base 1 Hit</span>
                     </div>
                     )}
                     {red_team_choices === "pitcher" && (
-                    <div className={styles.hitter_buttons_main}>
+                    <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_red} onClick={() => {incrementOuts();}}>Out</span>
+                        <span className={styles.player_buttons_red} onClick={() => {incrementStrikes();}}>Strike</span>
                     </div>
                     )}
 
@@ -77,12 +85,13 @@ export default function GameScreen()
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     
                     {blue_team_choices === "pitcher" && (
-                    <div className="pitcher_buttons_main">
+                    <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_blue} onClick={() => {incrementOuts();}}>Out</span>
+                        <span className={styles.player_buttons_blue} onClick={() => {incrementStrikes();}}>Strike</span>
                     </div>
                     )}
                     {blue_team_choices === "hitter" && (
-                    <div className="pitcher_buttons_main">
+                    <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_blue}>Base 1 Hit</span>
                     </div>
                     )}
@@ -95,7 +104,7 @@ export default function GameScreen()
                 <div className={styles.game_field}>
                     <h1 className={styles.field_information}>Inning: {current_inning}</h1>
                     <h1 className={styles.field_information}>Outs: {current_outs}</h1>
-                    <h1 className={styles.field_information}>Strikes: </h1>
+                    <h1 className={styles.field_information}>Strikes: {current_strikes}</h1>
                     <div className={styles.inner_field}>
                         <div className={styles.home_base}>
                         <div className={styles.home_base_plate}></div>

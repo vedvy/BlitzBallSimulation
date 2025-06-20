@@ -355,14 +355,7 @@ a.secondary {
   padding: 5px;
 }
 
-/*Pitcher Buttons CSS*/
-
-.pitcher_buttons_main{
+.choice_buttons_main{
   display: inline-block;
-}
-
-/*Hitter Buttons CSS*/
-
-.hitter_buttons_main{
-  
+  gap: 10px;
 }
