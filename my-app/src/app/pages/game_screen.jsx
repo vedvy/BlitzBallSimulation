@@ -15,15 +15,19 @@ export default function GameScreen()
     const [top_of_inning, set_top_inning] = useState(false);
     const [first_base, set_first_base] = useState({
         base_value: 1,
-        active_string: `first_base_active_${red_team_choices==="hitter"?"red":"blue"}`
+        active_string: `first_base_active_${red_team_choices==="hitter"?"red":"blue"}`,
+        currently_active: false
     });
     const [second_base, set_second_base] = useState({
         base_value: 2,
-        active_string: `second_base_active_${red_team_choices==="hitter"?"red":"blue"}`
+        active_string: `second_base_active_${red_team_choices==="hitter"?"red":"blue"}`,
+        currently_active: false
     });
     const [third_base, set_third_base] = useState({
         base_value: 3,
-        active_string: `third_base_active_${red_team_choices==="hitter"?"red":"blue"}`
+        active_string: `third_base_active_${red_team_choices==="hitter"?"red":"blue"}`,
+        currently_active: false
+
     });
     const [current_player, set_current_player_running] = useState({
         hit_score: 0
@@ -63,7 +67,32 @@ export default function GameScreen()
         current_strikes === 2 ? incrementOuts() : set_current_strikes(current_strikes+1);
     }
 
-    const 
+    const updateBases = (runs) =>{
+        if(third_base.currently_active === true)
+        {
+            third_base.currently_active = false;
+        }
+        if(second_base.currently_active === true)
+        {
+            second_base.currently_active = false;
+            if(second_base.base_value + runs === 3)
+            {
+                third_base.currently_active = true;
+            }
+        }
+        if(first_base.currently_active === true)
+        {
+            first_base.currently_active = false;
+            if(first_base.base_value + runs === 2)
+            {
+                second_base.currently_active = true;
+            }
+            else if(first_base.base_value + runs === 3)
+            {
+                third_base.currently_active = true;
+            }
+        }
+    }
 
     return (
         <div className={styles.game_screen}>
