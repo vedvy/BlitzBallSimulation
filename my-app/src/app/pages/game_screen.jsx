@@ -13,25 +13,13 @@ export default function GameScreen()
     const [current_inning, set_current_inning] = useState(1);
     const [current_strikes, set_current_strikes] = useState(0);
     const [top_of_inning, set_top_inning] = useState(false);
-    const [first_base, set_first_base] = useState({
-        base_value: 1,
-        active_string: `active_base_${red_team_choices==="hitter"?"red":"blue"}`,
-        currently_active: false
-    });
-    const [second_base, set_second_base] = useState({
-        base_value: 2,
-        active_string: `active_base_${red_team_choices==="hitter"?"red":"blue"}`,
-        currently_active: false
-    });
-    const [third_base, set_third_base] = useState({
-        base_value: 3,
-        active_string: `active_base_${red_team_choices==="hitter"?"red":"blue"}`,
-        currently_active: false
-
-    });
+    const [first_base_active, set_first_base_active] = useState(false);
+    const [second_base_active, set_second_base_active] = useState(false);
+    const [third_base_active, set_third_base_active] = useState(false);
     // const [current_player, set_current_player_running] = useState({
     //     hit_score: 0
     // });    
+
 
 
     const switchPositions = () => {
@@ -69,52 +57,54 @@ export default function GameScreen()
 
     const updateFBActive = (isActive) =>
     {
+        console.log("Inside first base active");
         console.log(isActive);
-        set_first_base(...first_base, currently_active = isActive);
+        set_first_base_active(isActive);
+
         return;
     }
 
     const updateSBActive = (isActive) => {
-        return set_second_base(...second_base, currently_active = isActive);
+        set_second_base_active(isActive);
+        return;
     }
 
     const updateTBActive = (isActive) => {
-        return set_third_base(...third_base, currently_active = isActive);
+        set_third_base_active(isActive);
+        return;
     }
 
 
     const updateBases = (runs) =>{
         console.log("inside update bases");
-        if(third_base.currently_active === true)
+        if(third_base_active === true)
         {
             updateTBActive(false);
         }
-        if(second_base.currently_active === true)
+        if(second_base_active === true)
         {
             updateSBActive(false);
-            if(second_base.base_value + runs === 3)
+            if(2 + runs === 3)
             {
                 updateTBActive(true);
             }
         }
-        if(first_base.currently_active === true)
+        if(first_base_active === true)
         {
             updateFBActive(false);
-            if(first_base.base_value + runs === 2)
+            if(1 + runs === 2)
             {
                 updateSBActive(true);
             }
-            else if(first_base.base_value + runs === 3)
+            else if(1 + runs === 3)
             {
                 updateTBActive(true);
             }
         }
-        console.log(first_base.currently_active);
-        console.log(first_base.active_string);
         switch(runs){
             case 1: 
                 updateFBActive(true);
-                console.log(first_base.currently_active);
+                
                 return;
             case 2: 
                 updateSBActive(true);
@@ -125,6 +115,8 @@ export default function GameScreen()
 
         }
     }
+
+
 
     return (
         <div className={styles.game_screen}>
@@ -203,9 +195,9 @@ export default function GameScreen()
                         <div className={styles.home_base_plate}></div>
                         
                     </div>
-                    <div className={`${styles.first_base} ${first_base.active_string}`} ></div>
-                    <div className={`${styles.second_base} ${second_base.currently_active && styles.second_base.active_string}`}></div>
-                    <div className={`${styles.third_base} ${third_base.currently_active && styles.third_base.active_string}`}></div>
+                    <div className={first_base_active ? `${styles.first_base} ${red_team_choices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.first_base} ></div>
+                    <div className={second_base_active ? `${styles.second_base} ${red_team_choices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.second_base}></div>
+                    <div className={third_base_active ? `${styles.third_base} ${red_team_choices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.third_base}></div>
                     <div className={styles.pitchers_mound}>
                         <div className={styles.pitchers_plate} style={{backgroundColor: red_team_choices === "pitcher" ? "red" : "blue"}}></div>
                     </div>
