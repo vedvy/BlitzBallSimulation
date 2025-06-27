@@ -7,6 +7,10 @@ import { useState, useEffect } from "react";
 
 export default function GameScreen()
 {
+    /**
+     * Determine if there is a way to refactor the states here. Via multiple values in one state or convert some inside
+     * a context? figure it out when implementing backend providers
+     */
     const [red_team_choices, set_red_team_choices] = useState("hitter");
     const [blue_team_choices, set_blue_team_choices] = useState("pitcher");
     const [red_score, set_red_score] = useState(0);
@@ -19,6 +23,7 @@ export default function GameScreen()
     const [first_base_active, set_first_base_active] = useState(false);
     const [second_base_active, set_second_base_active] = useState(false);
     const [third_base_active, set_third_base_active] = useState(false);
+    const [game_over, set_game_over] = useState(false);
     // const [current_player, set_current_player_running] = useState({
     //     hit_score: 0
     // });    
@@ -46,7 +51,29 @@ export default function GameScreen()
             set_current_strikes(0);
             if(top_of_inning)
             {
-                set_current_inning(current_inning+1);
+                if(current_inning === 3)
+                {
+                    var logger = document.getElementById("game_log");
+                    console.log(logger);
+                    var log = document.createElement("div");
+                    if(red_score === blue_score)
+                    {
+                        log.textContent = "It's a Tie!";
+                        logger.append(log);
+                    }
+                    else{
+                        log.textContent = (red_score > blue_score ? "red team wins" : "blue team wins");
+                        log.className = (red_score > blue_score ? styles.log_text_red : styles.log_text_blue);
+                        logger.append(log);
+                    }
+                    set_game_over(true);
+                }
+                else
+                {
+                    set_current_inning(current_inning+1);
+                }
+                
+                
             }
         }
         else
@@ -163,18 +190,18 @@ export default function GameScreen()
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     {red_team_choices === "hitter" && (
-                    <div className={styles.choice_buttons_main}>
+                    (!game_over && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_red} onClick={() => {updateBases(1);}}>Single</span>
                         <span className={styles.player_buttons_red} onClick={() => {updateBases(2);}}>Double</span>
                         <span className={styles.player_buttons_red} onClick={() => {updateBases(3);}}>Triple</span>
                         <span className={styles.player_buttons_red} onClick={() => {updateBases(4);}}>Home Run</span>
-                    </div>
+                    </div>)
                     )}
                     {red_team_choices === "pitcher" && (
-                    <div className={styles.choice_buttons_main}>
+                    (!game_over && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_red} onClick={() => {incrementOuts();}}>Out</span>
                         <span className={styles.player_buttons_red} onClick={() => {incrementStrikes();}}>Strike</span>
-                    </div>
+                    </div>)
                     )}
 
                     
@@ -193,18 +220,18 @@ export default function GameScreen()
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     
                     {blue_team_choices === "pitcher" && (
-                    <div className={styles.choice_buttons_main}>
+                    (!game_over && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_blue} onClick={() => {incrementOuts();}}>Out</span>
                         <span className={styles.player_buttons_blue} onClick={() => {incrementStrikes();}}>Strike</span>
-                    </div>
+                    </div>)
                     )}
                     {blue_team_choices === "hitter" && (
-                    <div className={styles.choice_buttons_main}>
+                    (!game_over && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_blue} onClick={() => {updateBases(1);}}>Single</span>
                         <span className={styles.player_buttons_blue} onClick={() => {updateBases(2);}}>Double</span>
                         <span className={styles.player_buttons_blue} onClick={() => {updateBases(3);}}>Triple</span>
                         <span className={styles.player_buttons_blue} onClick={() => {updateBases(4);}}>Home Run</span>
-                    </div>
+                    </div>)
                     )}
                     
  
@@ -232,7 +259,7 @@ export default function GameScreen()
                 </div>
                 <div className={styles.logger_section}>
                     <h2 style={{textAlign: "center"}}>Game Logs</h2>
-                    <div className={styles.logger_content}></div>
+                    <div className={styles.logger_content} id="game_log"></div>
                 </div>
             </div>
             <div className={styles.footer}>

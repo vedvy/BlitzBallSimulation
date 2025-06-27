@@ -342,8 +342,21 @@ a.secondary {
   position: absolute;
   left: 20px;
   overflow: auto;
+  text-align: center;
 
 
+}
+
+.log_text_red{
+  color: rgba(220, 17, 17, 0.918);
+  font-size: large;
+  font-weight: bold;
+}
+
+.log_text_blue{
+  color: blue;
+  font-size: large;
+  font-weight: bold;
 }
 
 .field_information{
