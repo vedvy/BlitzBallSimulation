@@ -9,6 +9,9 @@ export default function GameScreen()
 {
     const [red_team_choices, set_red_team_choices] = useState("hitter");
     const [blue_team_choices, set_blue_team_choices] = useState("pitcher");
+    const [red_score, set_red_score] = useState(0);
+    const [blue_score, set_blue_score] = useState(0);
+    
     const [current_outs, set_current_outs] = useState(0);
     const [current_inning, set_current_inning] = useState(1);
     const [current_strikes, set_current_strikes] = useState(0);
@@ -25,6 +28,9 @@ export default function GameScreen()
     const switchPositions = () => {
         red_team_choices === "hitter" ? set_red_team_choices("pitcher") : set_red_team_choices("hitter");
         blue_team_choices === "pitcher" ? set_blue_team_choices("hitter") : set_blue_team_choices("pitcher");
+        set_first_base_active(false);
+        set_second_base_active(false);
+        set_third_base_active(false);
         console.log(top_of_inning);
         set_top_inning(!top_of_inning);
         console.log(top_of_inning);
@@ -77,20 +83,29 @@ export default function GameScreen()
 
     const updateBases = (runs) =>{
         console.log("inside update bases");
+        var score_increment = 0;
         if(third_base_active === true)
         {
+            console.log("third base was active");
             updateTBActive(false);
+            score_increment++;
+
         }
         if(second_base_active === true)
         {
+            console.log("second base was active");
             updateSBActive(false);
             if(2 + runs === 3)
             {
                 updateTBActive(true);
             }
+            else{
+                score_increment++;
+            }
         }
         if(first_base_active === true)
         {
+            console.log("first base was active");
             updateFBActive(false);
             if(1 + runs === 2)
             {
@@ -100,20 +115,31 @@ export default function GameScreen()
             {
                 updateTBActive(true);
             }
+            else
+            {
+                score_increment++;
+            }
         }
         switch(runs){
             case 1: 
                 updateFBActive(true);
-                
+                red_team_choices === "hitter" ? set_red_score(red_score+score_increment) : set_blue_score(blue_score+score_increment); 
                 return;
             case 2: 
                 updateSBActive(true);
+                red_team_choices === "hitter" ? set_red_score(red_score+score_increment) : set_blue_score(blue_score+score_increment); 
                 return;
             case 3:
                 updateTBActive(true);
+                red_team_choices === "hitter" ? set_red_score(red_score+score_increment) : set_blue_score(blue_score+score_increment); 
+                return;
+            default:
+                score_increment++;
+                red_team_choices === "hitter" ? set_red_score(red_score+score_increment) : set_blue_score(blue_score+score_increment); 
                 return;
 
         }
+        
     }
 
 
@@ -125,7 +151,7 @@ export default function GameScreen()
             </div>
             <div className={styles.team_banners}>
                 <div className={styles.team_red_banner}>
-                    <h1 style={{textAlign: "center"}}>Team Red | Score: 0</h1>
+                    <h1 style={{textAlign: "center"}}>Team Red | Score: {red_score}</h1>
                     <hr/>
                     {red_team_choices === "hitter" && (
                         <h2>Current Batter: _______</h2>
@@ -155,7 +181,7 @@ export default function GameScreen()
 
                 </div>
                 <div className={styles.team_blue_banner}>
-                    <h1 style={{textAlign: "center"}}>Team Blue | Score: 0</h1>
+                    <h1 style={{textAlign: "center"}}>Team Blue | Score: {blue_score}</h1>
                     <hr/>
                     {blue_team_choices === "hitter" && (
                         <h2>Current Batter: _______</h2>
