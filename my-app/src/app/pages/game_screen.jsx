@@ -11,6 +11,11 @@ export default function GameScreen()
      * Determine if there is a way to refactor the states here. Via multiple values in one state or convert some inside
      * a context? figure it out when implementing backend providers
      */
+
+    /* 
+    * Running into some stuff regarding the refreshes. Don't worry about it for now, work on setting up 
+    * the backend and then we can go back to this.
+    */
     const [red_team_choices, set_red_team_choices] = useState("hitter");
     const [blue_team_choices, set_blue_team_choices] = useState("pitcher");
     const [red_score, set_red_score] = useState(0);
