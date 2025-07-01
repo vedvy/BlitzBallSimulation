@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 const teamSchema = new Schema({
-    teamColor: { type: String, enum: ["red", "blue"], required: true},
+    teamColor: { type: String, required: true},
     teamPlayers: [{type: Schema.Types.ObjectId, ref: "players", required: true}],
     teamScore: {type: Number, default: 0},
     teamChoices: {type: String, enum: ["hitter", "pitcher"], required: true}
