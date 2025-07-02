@@ -3,7 +3,9 @@ import react from "react";
 import styles from "../page.module.css"
 import PitcherChoices from "../components/pitcher_buttons";
 import HitterChoices from "../components/hitter_buttons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { DataContext } from "../components/context";
 
 export default function GameScreen()
 {
@@ -32,6 +34,8 @@ export default function GameScreen()
     // const [current_player, set_current_player_running] = useState({
     //     hit_score: 0
     // });    
+
+    const dataModel = useContext(DataContext);
 
 
 
