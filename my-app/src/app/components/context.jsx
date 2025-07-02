@@ -14,7 +14,18 @@ export const DataProvider = ({children}) => {
     const fetchData = async() =>
     {
         /*Insert mongodb calls here!!*/
-        
+        set_loading(true);
+
+        const playerResponse = await axios.get("/players");
+        set_players(playerResponse.data);
+
+        const teamResponse = await axios.get("/teams");
+        set_teams(teamResponse.data);
+
+        const mainGameResponse = await axios.get("/maingame");
+        set_main_game_info(mainGameResponse.data);
+
+        set_loading(false);
     }
 
     useEffect(() => {

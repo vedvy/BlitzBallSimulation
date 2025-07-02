@@ -19,3 +19,34 @@ const jsonParser = bodyParser.json();
 const app = express();
 app.use(cors());
 
+app.get("/players", async function(req, res) {
+    try{
+        const playersArray = await Player.find({});
+        res.send(playersArray);
+    }
+    catch(err){
+        res.status(500).json({message: "err", err});
+    }
+});
+
+app.get("/teams", async function(req, res) {
+    try{
+        const teamsArray = await Team.find({});
+        res.send(teamsArray);
+    }
+    catch(err){
+        res.status(500).json({message: "err", err});
+    }
+});
+
+app.get("/maingame", async function(req, res){
+    try{
+        const mainGame = await MainGame.find({});
+        res.send(mainGame);
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+});
+
