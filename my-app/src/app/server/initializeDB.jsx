@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
-const Player = require('./models/player');
-const Team = require('./models/team');
-const MainGameInfo = require('./models/main_game');
+const { MongoClient } = require('mongodb');
+const Player = require('./models/player.jsx');
+const Team = require('./models/team.jsx');
+const MainGameInfo = require('./models/main_game.jsx');
+
 
 let userArgs = process.argv.slice(2);
 
-if(!userArgs[0].startsWith('mongoDB')){
-    console.log("Start your mongo connections with a valid url as the first arg.");
-    return;
-}
+// if(!userArgs[0].startsWith('mongoDB')){
+//     console.log("Start your mongo connections with a valid url as the first arg. userArgs:", userArgs[0]);
+//     return;
+// }
 
-let mongoDB = userArgs[0];
-mongoose.connect(mongoDB);
-let db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error occurred: '));
+let uri = 'mongodb://127.0.0.1:27017/blitzball';
 
-function createPlayer(playerObject){
+ async function createPlayer(playerObject){
+    console.log("Created player!");
     let newPlayer = new Player({
         name: playerObject.name,
     });
@@ -23,7 +23,7 @@ function createPlayer(playerObject){
     return newPlayer.save();
 }
 
-function createTeam(teamObject){
+async function createTeam(teamObject){
     let newTeam = new Team({
         teamColor: teamObject.teamColor,
         teamPlayers: teamObject.teamPlayers,
@@ -33,7 +33,7 @@ function createTeam(teamObject){
     return newTeam.save();
 }
 
-function createGame(mainGameObject){
+async function createGame(mainGameObject){
     let newGame = new MainGameInfo({
         teamRed: mainGameObject.teamRed,
         teamBlue: mainGameObject.teamBlue,
@@ -51,6 +51,10 @@ function createGame(mainGameObject){
 
 async function initializeDB()
 {
+    await mongoose.connect(uri);
+    let db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'MongoDB connection error occurred: '));
+
     const player1 = {
         name: "John"
     };
@@ -82,7 +86,7 @@ async function initializeDB()
     const player8 = {
         name: "Leon"
     };
-
+    console.log("Right before player refs");
     let playerRef1 = await createPlayer(player1);
     let playerRef2 = await createPlayer(player2);
     let playerRef3 = await createPlayer(player3);
@@ -91,6 +95,7 @@ async function initializeDB()
     let playerRef6 = await createPlayer(player6);
     let playerRef7 = await createPlayer(player7);
     let playerRef8 = await createPlayer(player8);
+    console.log("AAfter player refs");
 
     const team1 = {
         teamColor: "red",
@@ -122,7 +127,7 @@ async function initializeDB()
         gameOver: false
     };
 
-    let gameRef1 = createGame(game1);
+    let gameRef1 = await createGame(game1);
 
     if(db)
     {
