@@ -1,25 +1,34 @@
-const express = require("express");
+import express from "express";
+import cors from "cors";
+import Player from './models/player.js';
+import Team from './models/team.js';
+import MainGame from './models/main_game.js';
+import mongoose from 'mongoose';
+import bodyParser from "body-parser";
 
-const cors = require('cors');
+// const express = require("express");
 
-const Player = require('./models/player.jsx');
-const Team = require('./models/team.jsx');
-const MainGame = require('./models/main_game.jsx');
+// const cors = require('cors');
 
-const mongoose = require('mongoose');
+// const Player = require('./models/player.jsx');
+// const Team = require('./models/team.jsx');
+// const MainGame = require('./models/main_game.js');
 
-let mongoDB = 'mongodb://127.0.0.1:27017/blitzball';
-await mongoose.connect(mongoDB);
+// const mongoose = require('mongoose');
+
+let mongoDB = 'mongodb://localhost:27017/blitzball';
+mongoose.connect(mongoDB);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error occurred'));
 
-const bodyParser = require('body-parser');
+
 const jsonParser = bodyParser.json();
 
 const app = express();
 app.use(cors());
 
 app.get("/players", async function(req, res) {
+    console.log("GETTING PLAYERS");
     try{
         const playersArray = await Player.find({});
         res.send(playersArray);

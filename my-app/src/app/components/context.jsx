@@ -15,14 +15,15 @@ export const DataProvider = ({children}) => {
     {
         /*Insert mongodb calls here!!*/
         set_loading(true);
-
-        const playerResponse = await axios.get("/players");
+        console.log("Obtaining Players");
+        const playerResponse = await axios.get("http://localhost:8000/players");
+        console.log(playerResponse);
         set_players(playerResponse.data);
 
-        const teamResponse = await axios.get("/teams");
+        const teamResponse = await axios.get("http://localhost:8000/teams");
         set_teams(teamResponse.data);
 
-        const mainGameResponse = await axios.get("/maingame");
+        const mainGameResponse = await axios.get("http://localhost:8000/maingame");
         set_main_game_info(mainGameResponse.data);
 
         set_loading(false);

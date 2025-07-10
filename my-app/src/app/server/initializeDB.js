@@ -1,8 +1,9 @@
-const mongoose = require('mongoose');
-const { MongoClient } = require('mongodb');
-const Player = require('./models/player.jsx');
-const Team = require('./models/team.jsx');
-const MainGameInfo = require('./models/main_game.jsx');
+import mongoose from 'mongoose';
+
+import Player from './models/player.js';
+import Team from './models/team.js';
+import MainGameInfo from './models/main_game.js';
+
 
 
 let userArgs = process.argv.slice(2);
@@ -34,6 +35,7 @@ async function createTeam(teamObject){
 }
 
 async function createGame(mainGameObject){
+
     let newGame = new MainGameInfo({
         teamRed: mainGameObject.teamRed,
         teamBlue: mainGameObject.teamBlue,
