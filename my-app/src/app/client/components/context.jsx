@@ -9,12 +9,13 @@ export const DataProvider = ({children}) => {
     const [players, set_players] = useState([]);
     const [teams, set_teams] = useState([]);
     const [main_game_info, set_main_game_info] = useState([]);
-    const [loading, set_loading] = useState(false);
+    const [loading, set_loading] = useState(true);
 
     const fetchData = async() =>
     {
         /*Insert mongodb calls here!!*/
         set_loading(true);
+        console.log("Loading: ",loading);
         console.log("Obtaining Players");
         const playerResponse = await axios.get("http://localhost:8000/players");
 
@@ -27,16 +28,17 @@ export const DataProvider = ({children}) => {
         set_main_game_info(mainGameResponse.data);
 
         set_loading(false);
+        console.log("Loading: ", loading);
     }
 
     useEffect(() => {
-        fetchData();
+     fetchData();
     }, []);
 
     if(!loading)
     {
         return(
-            <DataContext.Provider value={{players, teams, main_game_info, fetchData}}>
+            <DataContext.Provider value={{players, teams, main_game_info, loading, fetchData}}>
                 {children}
             </DataContext.Provider>
         )

@@ -1,4 +1,4 @@
-//IMPORTANT: npm run dev-server
+//IMPORTANT: npm run dev-server inside /server
 //DOUBLY IMPORTANT TO IMPLEMENT: I may need a separate package.json for th server,
 //which means file restructuring
 import express from "express";

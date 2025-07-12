@@ -36,8 +36,14 @@ export default function GameScreen()
     // });    
 
     const dataModel = useContext(DataContext);
+    if(!dataModel.loading)
+    {
+        console.log("Team Blue: ", dataModel.main_game_info[0]);
+        console.log("Team Red Teammates: ", dataModel.teams[0].teamPlayers);
+        
+        // console.log("Team Red: ", dataModel.main_game_info.teamRed);
+    }
     
-    console.log("Players: ", dataModel);
 
 
 
