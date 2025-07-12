@@ -1,3 +1,5 @@
+//nodemon .\initializeDB.js mongodb://localhost:27017/blitzball
+
 import mongoose from 'mongoose';
 
 import Player from './models/player.js';

@@ -1,6 +1,6 @@
 'use client'
 import react from "react";
-import styles from "../page.module.css"
+import styles from "../page.module.css";
 import PitcherChoices from "../components/pitcher_buttons";
 import HitterChoices from "../components/hitter_buttons";
 import { useState, useEffect, useContext } from "react";

@@ -1,3 +1,6 @@
+//IMPORTANT: npm run dev-server
+//DOUBLY IMPORTANT TO IMPLEMENT: I may need a separate package.json for th server,
+//which means file restructuring
 import express from "express";
 import cors from "cors";
 import Player from './models/player.js';
