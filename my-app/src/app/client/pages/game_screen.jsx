@@ -35,8 +35,9 @@ export default function GameScreen()
     //     hit_score: 0
     // });    
 
-    // const dataModel = useContext(DataContext);
+    const dataModel = useContext(DataContext);
     
+    console.log("Players: ", dataModel);
 
 
 

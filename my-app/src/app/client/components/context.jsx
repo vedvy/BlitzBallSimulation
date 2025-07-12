@@ -17,7 +17,7 @@ export const DataProvider = ({children}) => {
         set_loading(true);
         console.log("Obtaining Players");
         const playerResponse = await axios.get("http://localhost:8000/players");
-        console.log(playerResponse);
+
         set_players(playerResponse.data);
 
         const teamResponse = await axios.get("http://localhost:8000/teams");
