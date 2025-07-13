@@ -6,6 +6,7 @@ import HitterChoices from "../components/hitter_buttons";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { DataContext } from "../components/context";
+import main_game from "@/app/server/models/main_game";
 
 export default function GameScreen()
 {
@@ -18,6 +19,27 @@ export default function GameScreen()
     * Running into some stuff regarding the refreshes. Don't worry about it for now, work on setting up 
     * the backend and then we can go back to this.
     */
+    
+    // const [current_player, set_current_player_running] = useState({
+    //     hit_score: 0
+    // });    
+
+    const dataModel = useContext(DataContext);
+    if(!dataModel.loading)
+    {
+        console.log(dataModel.main_game_info[0].teamBlue);
+        console.log("Team Red Teammates: ", dataModel.teams[0].teamChoices);
+
+        var teamRed = dataModel.teams[0];
+        var teamBlue = dataModel.teams[1];
+        var mainGameInfo = dataModel.main_game_info[0];
+        console.log(dataModel.main_game_info[0].firstBaseActive);
+
+
+        
+        // console.log("Team Red: ", dataModel.main_game_info.teamRed);
+    }
+    
     const [red_team_choices, set_red_team_choices] = useState("hitter");
     const [blue_team_choices, set_blue_team_choices] = useState("pitcher");
     const [red_score, set_red_score] = useState(0);
@@ -31,23 +53,14 @@ export default function GameScreen()
     const [second_base_active, set_second_base_active] = useState(false);
     const [third_base_active, set_third_base_active] = useState(false);
     const [game_over, set_game_over] = useState(false);
-    // const [current_player, set_current_player_running] = useState({
-    //     hit_score: 0
-    // });    
 
-    const dataModel = useContext(DataContext);
-    if(!dataModel.loading)
-    {
-        console.log("Team Blue: ", dataModel.main_game_info[0]);
-        console.log("Team Red Teammates: ", dataModel.teams[0].teamPlayers);
+
+    const switchPositions = async () => {
+        await axios.post("http://localhost:8000/switchPositions", {redTeam: teamRed, 
+            blueTeam: teamBlue, 
+            main_game_info: mainGameInfo});
+
         
-        // console.log("Team Red: ", dataModel.main_game_info.teamRed);
-    }
-    
-
-
-
-    const switchPositions = () => {
         red_team_choices === "hitter" ? set_red_team_choices("pitcher") : set_red_team_choices("hitter");
         blue_team_choices === "pitcher" ? set_blue_team_choices("hitter") : set_blue_team_choices("pitcher");
         set_first_base_active(false);
@@ -56,6 +69,12 @@ export default function GameScreen()
         console.log(top_of_inning);
         set_top_inning(!top_of_inning);
         console.log(top_of_inning);
+
+        console.log(mainGameInfo.firstBaseActive);
+        console.log("Team Red: ", teamRed.teamChoices);
+        console.log("Team Blue", teamBlue.teamChoices);
+
+        await dataModel.fetchData();
     }
 
     const incrementOuts = () =>
@@ -187,7 +206,6 @@ export default function GameScreen()
     }
 
 
-
     return (
         <div className={styles.game_screen}>
             <div className={styles.banner}>
@@ -197,16 +215,16 @@ export default function GameScreen()
                 <div className={styles.team_red_banner}>
                     <h1 style={{textAlign: "center"}}>Team Red | Score: {red_score}</h1>
                     <hr/>
-                    {red_team_choices === "hitter" && (
+                    {teamRed.teamChoices === "hitter" && (
                         <h2>Current Batter: _______</h2>
                     )}
-                    {red_team_choices === "pitcher" && (
+                    {teamRed.teamChoices === "pitcher" && (
                         <h2>Current Pitcher: _______</h2>
                     )}
                     
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
-                    {red_team_choices === "hitter" && (
+                    {teamRed.teamChoices === "hitter" && (
                     (!game_over && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_red} onClick={() => {updateBases(1);}}>Single</span>
                         <span className={styles.player_buttons_red} onClick={() => {updateBases(2);}}>Double</span>
@@ -214,7 +232,7 @@ export default function GameScreen()
                         <span className={styles.player_buttons_red} onClick={() => {updateBases(4);}}>Home Run</span>
                     </div>)
                     )}
-                    {red_team_choices === "pitcher" && (
+                    {teamRed.teamChoices === "pitcher" && (
                     (!game_over && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_red} onClick={() => {incrementOuts();}}>Out</span>
                         <span className={styles.player_buttons_red} onClick={() => {incrementStrikes();}}>Strike</span>
@@ -227,22 +245,22 @@ export default function GameScreen()
                 <div className={styles.team_blue_banner}>
                     <h1 style={{textAlign: "center"}}>Team Blue | Score: {blue_score}</h1>
                     <hr/>
-                    {blue_team_choices === "hitter" && (
+                    {teamBlue.teamChoices === "hitter" && (
                         <h2>Current Batter: _______</h2>
                     )}
-                    {blue_team_choices === "pitcher" && (
+                    {teamBlue.teamChoices === "pitcher" && (
                         <h2>Current Pitcher: _______</h2>
                     )}
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     
-                    {blue_team_choices === "pitcher" && (
+                    {teamBlue.teamChoices === "pitcher" && (
                     (!game_over && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_blue} onClick={() => {incrementOuts();}}>Out</span>
                         <span className={styles.player_buttons_blue} onClick={() => {incrementStrikes();}}>Strike</span>
                     </div>)
                     )}
-                    {blue_team_choices === "hitter" && (
+                    {teamBlue.teamChoices === "hitter" && (
                     (!game_over && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_blue} onClick={() => {updateBases(1);}}>Single</span>
                         <span className={styles.player_buttons_blue} onClick={() => {updateBases(2);}}>Double</span>

@@ -62,6 +62,118 @@ app.get("/maingame", async function(req, res){
     }
 });
 
+/*POST Section for Game Screen*/
+
+app.post("/switchPositions", jsonParser, async function(req, res) {
+    try{
+        const redTeam = req.body['redTeam'];
+        const blueTeam = req.body['blueTeam'];
+        const MainGameInfo = req.body['main_game_info'];
+        const currentTopOfInning = MainGameInfo.topOfInning;
+
+        if(redTeam.teamChoices === "pitcher")
+        {
+            const updateRedTeam = await Team.findByIdAndUpdate(redTeam.id, {teamChoices: "hitter"}, {new: true});
+            const updateBlueTeam = await Team.findByIdAndUpdate(blueTeam.id, {teamChoices: "pitcher"}, {new: true});
+        }
+        else
+        {
+            const updateRedTeam = await Team.findByIdAndUpdate(redTeam.id, {teamChoices: "pitcher"}, {new: true});
+            const updateBlueTeam = await Team.findByIdAndUpdate(blueTeam.id, {teamChoices: "hitter"}, {new: true});
+        }
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, {
+                firstBaseActive: false,
+                secondBaseActive: false,
+                thirdBaseActive: false,
+                topOfInning: !currentTopOfInning
+            }, {new: true});
+        res.send(updateGameInfo);
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+})
+
+
+app.post("incrementOuts", jsonParser, async function(req, res){
+    try{
+        const MainGameInfo = req.body['main_game_info'];
+
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+});
+
+app.post("incrementStrikes", jsonParser, async function(req, res){
+    try{
+        const MainGameInfo = req.body['main_game_info'];
+        if(MainGameInfo.currentStrikes === 2)
+        {
+            //Call Outs function
+        }
+        else
+        {
+            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, {
+            $inc: {currentStrikes: 1}
+            }, {new: true});
+        }
+        res.send(updateGameInfo);
+
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+
+});
+
+app.post("updateFirstBase", jsonParser, async function(req, res)
+{
+    try{
+
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+});
+
+app.post("updateSecondBase", jsonParser, async function(req, res)
+{
+    try{
+
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+});
+
+app.post("updateThirdBase", jsonParser, async function(req, res)
+{
+    try{
+
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+});
+
+app.post("updateBasesAndScores", jsonParser, async function(req, res){
+    try{
+        
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+});
+
+
 app.listen(8000, () => {console.log("Server listening on port 8000...");});
 
 app.get("", (req,res) =>

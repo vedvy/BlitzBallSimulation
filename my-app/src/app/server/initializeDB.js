@@ -103,7 +103,7 @@ async function initializeDB()
 
     const team1 = {
         teamColor: "red",
-        teamPlayers: [playerRef1, playerRef2, playerRef3, playerRef4],
+        teamPlayers: [playerRef1.id, playerRef2, playerRef3, playerRef4],
         teamScore: 0,
         teamChoices: "hitter"
     };
