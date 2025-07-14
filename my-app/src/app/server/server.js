@@ -130,16 +130,11 @@ app.post("incrementOuts", jsonParser, async function(req, res){
 app.post("incrementStrikes", jsonParser, async function(req, res){
     try{
         const MainGameInfo = req.body['main_game_info'];
-        if(MainGameInfo.currentStrikes === 2)
-        {
-            //Call Outs function
-        }
-        else
-        {
-            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, {
+        
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, {
             $inc: {currentStrikes: 1}
             }, {new: true});
-        }
+        
         res.send(updateGameInfo);
 
     }
@@ -198,9 +193,27 @@ app.post("updateThirdBase", jsonParser, async function(req, res)
     }
 });
 
-app.post("updateBasesAndScores", jsonParser, async function(req, res){
+app.post("updateScores", jsonParser, async function(req, res){
     try{
-        
+        const updateRedScores = req.body['updateRedScores'];
+        const teamRed = req.body['teamRed'];
+        const teamBlue = req.body['teamBlue'];
+        const scoreAddition = req.body['score_increment'];
+        if(updateRedScores)
+        {
+            const updateTeamRed = await Team.findByIdAndUpdate(teamRed.id, {
+                $inc: {teamScore: scoreAddition}
+            }, {new: true});
+        }
+        else
+        {
+            const updateTeamBlue = await Team.findByIdAndUpdate(teamBlue.id, 
+                {
+                    $inc: {teamScore: scoreAddition}
+                }, {new: true}
+            );
+        }
+        res.send(200);
     }
     catch(err)
     {

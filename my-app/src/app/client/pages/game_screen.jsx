@@ -55,27 +55,27 @@ export default function GameScreen()
     const [game_over, set_game_over] = useState(false);
 
 
-    const switchPositions = async () => {
-        await axios.post("http://localhost:8000/switchPositions", {redTeam: teamRed, 
-            blueTeam: teamBlue, 
-            main_game_info: mainGameInfo});
+    // const switchPositions = async () => {
+    //     await axios.post("http://localhost:8000/switchPositions", {redTeam: teamRed, 
+    //         blueTeam: teamBlue, 
+    //         main_game_info: mainGameInfo});
 
         
-        red_team_choices === "hitter" ? set_red_team_choices("pitcher") : set_red_team_choices("hitter");
-        blue_team_choices === "pitcher" ? set_blue_team_choices("hitter") : set_blue_team_choices("pitcher");
-        set_first_base_active(false);
-        set_second_base_active(false);
-        set_third_base_active(false);
-        console.log(top_of_inning);
-        set_top_inning(!top_of_inning);
-        console.log(top_of_inning);
+    //     red_team_choices === "hitter" ? set_red_team_choices("pitcher") : set_red_team_choices("hitter");
+    //     blue_team_choices === "pitcher" ? set_blue_team_choices("hitter") : set_blue_team_choices("pitcher");
+    //     set_first_base_active(false);
+    //     set_second_base_active(false);
+    //     set_third_base_active(false);
+    //     console.log(top_of_inning);
+    //     set_top_inning(!top_of_inning);
+    //     console.log(top_of_inning);
 
-        console.log(mainGameInfo.firstBaseActive);
-        console.log("Team Red: ", teamRed.teamChoices);
-        console.log("Team Blue", teamBlue.teamChoices);
+    //     console.log(mainGameInfo.firstBaseActive);
+    //     console.log("Team Red: ", teamRed.teamChoices);
+    //     console.log("Team Blue", teamBlue.teamChoices);
 
-        await dataModel.fetchData();
-    }
+    //     await dataModel.fetchData();
+    // }
 
     const incrementOuts = async () =>
     {
@@ -130,11 +130,21 @@ export default function GameScreen()
                 resetOuts: false
             });
         }
+        await dataModel.fetchData();
         
     }
 
-    const incrementStrikes = () => {
-        current_strikes === 2 ? incrementOuts() : set_current_strikes(current_strikes+1);
+    const incrementStrikes = async () => {
+        // mainGameInfo.currentStrikes === 2 ? incrementOuts() : set_current_strikes(current_strikes+1);
+        if(mainGameInfo.currentStrikes === 2)
+        {
+            await incrementOuts();
+        }
+        else
+        {
+            await axios.post("http://localhost:8000/incrementStrikes", {main_game_info: mainGameInfo});
+        }
+       await dataModel.fetchData();
     }
 
     const updateFBActive = async (isActive) =>
@@ -144,7 +154,7 @@ export default function GameScreen()
         await axios.post("http://localhost:8000/updateFirstBase", {main_game_info: mainGameInfo,
             isActive: isActive
         });
-
+        await dataModel.fetchData();
         return;
     }
 
@@ -152,6 +162,7 @@ export default function GameScreen()
         await axios.post("http://localhost:8000/updateSecondBase", {main_game_info: mainGameInfo,
             isActive: isActive
         });
+        await dataModel.fetchData();
         return;
     }
 
@@ -159,43 +170,44 @@ export default function GameScreen()
         await axios.post("http://localhost:8000/updateThirdBase", {main_game_info: mainGameInfo,
             isActive: isActive
         });
+        await dataModel.fetchData();
         return;
     }
 
 
-    const updateBases = (runs) =>{
+    const updateBases = async (runs) =>{
         console.log("inside update bases");
         var score_increment = 0;
-        if(third_base_active === true)
+        if(mainGameInfo.thirdBaseActive === true)
         {
             console.log("third base was active");
-            updateTBActive(false);
+            await updateTBActive(false);
             score_increment++;
 
         }
-        if(second_base_active === true)
+        if(mainGameInfo.secondBaseActive === true)
         {
             console.log("second base was active");
-            updateSBActive(false);
+            await updateSBActive(false);
             if(2 + runs === 3)
             {
-                updateTBActive(true);
+                await updateTBActive(true);
             }
             else{
                 score_increment++;
             }
         }
-        if(first_base_active === true)
+        if(mainGameInfo.firstBaseActive === true)
         {
             console.log("first base was active");
-            updateFBActive(false);
+            await updateFBActive(false);
             if(1 + runs === 2)
             {
-                updateSBActive(true);
+               await updateSBActive(true);
             }
             else if(1 + runs === 3)
             {
-                updateTBActive(true);
+               await updateTBActive(true);
             }
             else
             {
@@ -204,20 +216,68 @@ export default function GameScreen()
         }
         switch(runs){
             case 1: 
-                updateFBActive(true);
-                red_team_choices === "hitter" ? set_red_score(red_score+score_increment) : set_blue_score(blue_score+score_increment); 
+                await updateFBActive(true);
+                if(teamRed.teamChoices === "hitter")
+                {
+                    await axios.post("http://localhost:8000/updateScores", 
+                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                    );
+                }
+                else
+                {
+                    await axios.post("http://localhost:8000/updateScores", 
+                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                    );
+                }
+                await dataModel.fetchData();
                 return;
             case 2: 
-                updateSBActive(true);
-                red_team_choices === "hitter" ? set_red_score(red_score+score_increment) : set_blue_score(blue_score+score_increment); 
+                await updateSBActive(true);
+                if(teamRed.teamChoices === "hitter")
+                {
+                    await axios.post("http://localhost:8000/updateScores", 
+                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                    );
+                }
+                else
+                {
+                    await axios.post("http://localhost:8000/updateScores", 
+                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                    );
+                }
+                await dataModel.fetchData(); 
                 return;
             case 3:
-                updateTBActive(true);
-                red_team_choices === "hitter" ? set_red_score(red_score+score_increment) : set_blue_score(blue_score+score_increment); 
+                await updateTBActive(true);
+                if(teamRed.teamChoices === "hitter")
+                {
+                    await axios.post("http://localhost:8000/updateScores", 
+                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                    );
+                }
+                else
+                {
+                    await axios.post("http://localhost:8000/updateScores", 
+                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                    );
+                }
+                await dataModel.fetchData();
                 return;
             default:
                 score_increment++;
-                red_team_choices === "hitter" ? set_red_score(red_score+score_increment) : set_blue_score(blue_score+score_increment); 
+                if(teamRed.teamChoices === "hitter")
+                {
+                    await axios.post("http://localhost:8000/updateScores", 
+                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                    );
+                }
+                else
+                {
+                    await axios.post("http://localhost:8000/updateScores", 
+                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                    );
+                }
+                await dataModel.fetchData();
                 return;
 
         }
@@ -232,7 +292,7 @@ export default function GameScreen()
             </div>
             <div className={styles.team_banners}>
                 <div className={styles.team_red_banner}>
-                    <h1 style={{textAlign: "center"}}>Team Red | Score: {red_score}</h1>
+                    <h1 style={{textAlign: "center"}}>Team Red | Score: {teamRed.teamScore}</h1>
                     <hr/>
                     {teamRed.teamChoices === "hitter" && (
                         <h2>Current Batter: _______</h2>
@@ -262,7 +322,7 @@ export default function GameScreen()
 
                 </div>
                 <div className={styles.team_blue_banner}>
-                    <h1 style={{textAlign: "center"}}>Team Blue | Score: {blue_score}</h1>
+                    <h1 style={{textAlign: "center"}}>Team Blue | Score: {teamBlue.teamScore}</h1>
                     <hr/>
                     {teamBlue.teamChoices === "hitter" && (
                         <h2>Current Batter: _______</h2>
@@ -274,9 +334,9 @@ export default function GameScreen()
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     
                     {teamBlue.teamChoices === "pitcher" && (
-                    (!game_over && <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_blue} onClick={() => {incrementOuts();}}>Out</span>
-                        <span className={styles.player_buttons_blue} onClick={() => {incrementStrikes();}}>Strike</span>
+                    (!mainGameInfo.gameOver && <div className={styles.choice_buttons_main}>
+                        <span className={styles.player_buttons_blue} onClick={async () => {await incrementOuts();}}>Out</span>
+                        <span className={styles.player_buttons_blue} onClick={async () => {await incrementStrikes();}}>Strike</span>
                     </div>)
                     )}
                     {teamBlue.teamChoices === "hitter" && (
@@ -294,9 +354,9 @@ export default function GameScreen()
             <div className={styles.game_main_content}>
                     
                 <div className={styles.game_field}>
-                    <h1 className={styles.field_information}>Inning: {current_inning}</h1>
-                    <h1 className={styles.field_information}>Outs: {current_outs}</h1>
-                    <h1 className={styles.field_information}>Strikes: {current_strikes}</h1>
+                    <h1 className={styles.field_information}>Inning: {mainGameInfo.currentInning}</h1>
+                    <h1 className={styles.field_information}>Outs: {mainGameInfo.currentOuts}</h1>
+                    <h1 className={styles.field_information}>Strikes: {mainGameInfo.currentStrikes}</h1>
                     <div className={styles.inner_field}>
                         <div className={styles.home_base}>
                         <div className={styles.home_base_plate}></div>
