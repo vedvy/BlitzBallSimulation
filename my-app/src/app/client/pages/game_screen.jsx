@@ -77,36 +77,48 @@ export default function GameScreen()
         await dataModel.fetchData();
     }
 
-    const incrementOuts = () =>
+    const incrementOuts = async () =>
     {
         if(current_outs === 2)
         {
-            switchPositions();
+            await axios.post("http://localhost:8000/switchPositions", {redTeam: teamRed, 
+            blueTeam: teamBlue, 
+            main_game_info: mainGameInfo});
+
             console.log(top_of_inning);
-            set_current_outs(0);
-            set_current_strikes(0);
-            if(top_of_inning)
+            await axios.post("http://localhost:8000/incrementOuts", {main_game_info: mainGameInfo, 
+                resetOuts: true
+            });
+
+            if(mainGameInfo.topOfInning)
             {
-                if(current_inning === 3)
+                if(mainGameInfo.currentInning === 3)
                 {
                     var logger = document.getElementById("game_log");
                     console.log(logger);
                     var log = document.createElement("div");
-                    if(red_score === blue_score)
+                    if(teamRed.teamScore === teamBlue.teamScore)
                     {
                         log.textContent = "It's a Tie!";
                         logger.append(log);
                     }
                     else{
-                        log.textContent = (red_score > blue_score ? "red team wins" : "blue team wins");
-                        log.className = (red_score > blue_score ? styles.log_text_red : styles.log_text_blue);
+                        log.textContent = (teamRed.teamScore > teamBlue.teamScore ? "red team wins" : "blue team wins");
+                        log.className = (teamRed.teamScore > teamBlue.teamScore ? styles.log_text_red : styles.log_text_blue);
                         logger.append(log);
                     }
-                    set_game_over(true);
+                    
+                    await axios.post("http://localhost:8000/updateGameOver", {
+                        main_game_info: mainGameInfo
+                    });
                 }
                 else
                 {
-                    set_current_inning(current_inning+1);
+                    
+                    await axios.post("http://localhost:8000/updateInnings", {
+                        main_game_info: mainGameInfo
+                    });
+
                 }
                 
                 
@@ -114,8 +126,9 @@ export default function GameScreen()
         }
         else
         {
-            set_current_outs(current_outs+1);
-            set_current_strikes(0);
+            await axios.post("http://locahost:8000/incrementOuts", {main_game_info: mainGameInfo, 
+                resetOuts: false
+            });
         }
         
     }
@@ -124,22 +137,28 @@ export default function GameScreen()
         current_strikes === 2 ? incrementOuts() : set_current_strikes(current_strikes+1);
     }
 
-    const updateFBActive = (isActive) =>
+    const updateFBActive = async (isActive) =>
     {
         console.log("Inside first base active");
         console.log(isActive);
-        set_first_base_active(isActive);
+        await axios.post("http://localhost:8000/updateFirstBase", {main_game_info: mainGameInfo,
+            isActive: isActive
+        });
 
         return;
     }
 
-    const updateSBActive = (isActive) => {
-        set_second_base_active(isActive);
+    const updateSBActive = async (isActive) => {
+        await axios.post("http://localhost:8000/updateSecondBase", {main_game_info: mainGameInfo,
+            isActive: isActive
+        });
         return;
     }
 
-    const updateTBActive = (isActive) => {
-        set_third_base_active(isActive);
+    const updateTBActive = async (isActive) => {
+        await axios.post("http://localhost:8000/updateThirdBase", {main_game_info: mainGameInfo,
+            isActive: isActive
+        });
         return;
     }
 
@@ -283,11 +302,11 @@ export default function GameScreen()
                         <div className={styles.home_base_plate}></div>
                         
                     </div>
-                    <div className={first_base_active ? `${styles.first_base} ${red_team_choices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.first_base} ></div>
-                    <div className={second_base_active ? `${styles.second_base} ${red_team_choices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.second_base}></div>
-                    <div className={third_base_active ? `${styles.third_base} ${red_team_choices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.third_base}></div>
+                    <div className={first_base_active ? `${styles.first_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.first_base} ></div>
+                    <div className={second_base_active ? `${styles.second_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.second_base}></div>
+                    <div className={third_base_active ? `${styles.third_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.third_base}></div>
                     <div className={styles.pitchers_mound}>
-                        <div className={styles.pitchers_plate} style={{backgroundColor: red_team_choices === "pitcher" ? "red" : "blue"}}></div>
+                        <div className={styles.pitchers_plate} style={{backgroundColor: teamRed.teamChoices === "pitcher" ? "red" : "blue"}}></div>
                     </div>
                     </div>
 
