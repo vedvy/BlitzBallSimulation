@@ -73,15 +73,15 @@ app.post("/switchPositions", jsonParser, async function(req, res) {
 
         if(redTeam.teamChoices === "pitcher")
         {
-            const updateRedTeam = await Team.findByIdAndUpdate(redTeam.id, {teamChoices: "hitter"}, {new: true});
-            const updateBlueTeam = await Team.findByIdAndUpdate(blueTeam.id, {teamChoices: "pitcher"}, {new: true});
+            const updateRedTeam = await Team.findByIdAndUpdate(redTeam._id, {teamChoices: "hitter"}, {new: true});
+            const updateBlueTeam = await Team.findByIdAndUpdate(blueTeam._id, {teamChoices: "pitcher"}, {new: true});
         }
         else
         {
-            const updateRedTeam = await Team.findByIdAndUpdate(redTeam.id, {teamChoices: "pitcher"}, {new: true});
-            const updateBlueTeam = await Team.findByIdAndUpdate(blueTeam.id, {teamChoices: "hitter"}, {new: true});
+            const updateRedTeam = await Team.findByIdAndUpdate(redTeam._id, {teamChoices: "pitcher"}, {new: true});
+            const updateBlueTeam = await Team.findByIdAndUpdate(blueTeam._id, {teamChoices: "hitter"}, {new: true});
         }
-        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, {
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
                 firstBaseActive: false,
                 secondBaseActive: false,
                 thirdBaseActive: false,
@@ -96,14 +96,15 @@ app.post("/switchPositions", jsonParser, async function(req, res) {
 })
 
 
-app.post("incrementOuts", jsonParser, async function(req, res){
+app.post("/incrementOuts", jsonParser, async function(req, res){
     try{
         const MainGameInfo = req.body['main_game_info'];
         const resetOuts = req.body['resetOuts'];
- 
+        console.log("Inside Increment Outs");
         if(resetOuts)
         {
-            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, 
+            console.log("Resetting Outs");
+            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, 
             {
                 currentOuts: 0,
                 currentStrikes: 0
@@ -111,14 +112,15 @@ app.post("incrementOuts", jsonParser, async function(req, res){
         }
         else
         {
-            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, 
+            console.log("Incrementing Outs");
+            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, 
             {
                $inc: {currentOuts: 1},
                 currentStrikes: 0
             }, {new: true});
         }
 
-        res.send(updateGameInfo);
+        res.send(200);
         
     }
     catch(err)
@@ -127,11 +129,11 @@ app.post("incrementOuts", jsonParser, async function(req, res){
     }
 });
 
-app.post("incrementStrikes", jsonParser, async function(req, res){
+app.post("/incrementStrikes", jsonParser, async function(req, res){
     try{
         const MainGameInfo = req.body['main_game_info'];
         
-        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, {
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             $inc: {currentStrikes: 1}
             }, {new: true});
         
@@ -145,14 +147,20 @@ app.post("incrementStrikes", jsonParser, async function(req, res){
 
 });
 
-app.post("updateFirstBase", jsonParser, async function(req, res)
+app.post("/updateFirstBase", jsonParser, async function(req, res)
 {
+    console.log("Outside uFB");
     try{
+        console.log("inside first base");
         const MainGameInfo = req.body['main_game_info'];
+        console.log(MainGameInfo);
         const isActive = req.body['isActive'];
-        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, {
+        
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             firstBaseActive: isActive 
         }, {new: true});
+        console.log(MainGameInfo.firstBaseActive);
+
         res.send(updateGameInfo);
     }
     catch(err)
@@ -161,12 +169,12 @@ app.post("updateFirstBase", jsonParser, async function(req, res)
     }
 });
 
-app.post("updateSecondBase", jsonParser, async function(req, res)
+app.post("/updateSecondBase", jsonParser, async function(req, res)
 {
     try{
         const MainGameInfo = req.body['main_game_info'];
         const isActive = req.body['isActive'];
-        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, {
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             secondBaseActive: isActive 
         }, {new: true});
         res.send(updateGameInfo);
@@ -177,12 +185,12 @@ app.post("updateSecondBase", jsonParser, async function(req, res)
     }
 });
 
-app.post("updateThirdBase", jsonParser, async function(req, res)
+app.post("/updateThirdBase", jsonParser, async function(req, res)
 {
     try{
         const MainGameInfo = req.body['main_game_info'];
         const isActive = req.body['isActive'];
-        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, {
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             thirdBaseActive: isActive 
         }, {new: true});
         res.send(updateGameInfo);
@@ -193,7 +201,7 @@ app.post("updateThirdBase", jsonParser, async function(req, res)
     }
 });
 
-app.post("updateScores", jsonParser, async function(req, res){
+app.post("/updateScores", jsonParser, async function(req, res){
     try{
         const updateRedScores = req.body['updateRedScores'];
         const teamRed = req.body['teamRed'];
@@ -201,13 +209,13 @@ app.post("updateScores", jsonParser, async function(req, res){
         const scoreAddition = req.body['score_increment'];
         if(updateRedScores)
         {
-            const updateTeamRed = await Team.findByIdAndUpdate(teamRed.id, {
+            const updateTeamRed = await Team.findByIdAndUpdate(teamRed._id, {
                 $inc: {teamScore: scoreAddition}
             }, {new: true});
         }
         else
         {
-            const updateTeamBlue = await Team.findByIdAndUpdate(teamBlue.id, 
+            const updateTeamBlue = await Team.findByIdAndUpdate(teamBlue._id, 
                 {
                     $inc: {teamScore: scoreAddition}
                 }, {new: true}
@@ -221,11 +229,11 @@ app.post("updateScores", jsonParser, async function(req, res){
     }
 });
 
-app.post("updateGameOver", jsonParser, async function(req, res)
+app.post("/updateGameOver", jsonParser, async function(req, res)
 {
     try{
         const MainGameInfo = req.body['main_game_info'];
-        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, {
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             gameOver: true
         });
         res.send(updateGameInfo);
@@ -236,11 +244,11 @@ app.post("updateGameOver", jsonParser, async function(req, res)
     }
 });
 
-app.post("updateInnings", jsonParser, async function(req, res)
+app.post("/updateInnings", jsonParser, async function(req, res)
 {
     try{
         const MainGameInfo = req.body['main_game_info'];
-        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo.id, {
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             $inc: {currentInning: 1}
         });
         res.send(updateGameInfo);

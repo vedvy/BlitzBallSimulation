@@ -79,8 +79,9 @@ export default function GameScreen()
 
     const incrementOuts = async () =>
     {
-        if(current_outs === 2)
+        if(mainGameInfo.currentOuts === 2)
         {
+            console.log("Switching Team Positions");
             await axios.post("http://localhost:8000/switchPositions", {redTeam: teamRed, 
             blueTeam: teamBlue, 
             main_game_info: mainGameInfo});
@@ -126,7 +127,7 @@ export default function GameScreen()
         }
         else
         {
-            await axios.post("http://locahost:8000/incrementOuts", {main_game_info: mainGameInfo, 
+            await axios.post("http://localhost:8000/incrementOuts", {main_game_info: mainGameInfo, 
                 resetOuts: false
             });
         }
@@ -216,6 +217,7 @@ export default function GameScreen()
         }
         switch(runs){
             case 1: 
+                console.log("Case 1 active");
                 await updateFBActive(true);
                 if(teamRed.teamChoices === "hitter")
                 {
@@ -230,6 +232,7 @@ export default function GameScreen()
                     );
                 }
                 await dataModel.fetchData();
+                console.log(dataModel.main_game_info[0].firstBaseActive);
                 return;
             case 2: 
                 await updateSBActive(true);
@@ -304,17 +307,17 @@ export default function GameScreen()
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     {teamRed.teamChoices === "hitter" && (
-                    (!game_over && <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_red} onClick={() => {updateBases(1);}}>Single</span>
-                        <span className={styles.player_buttons_red} onClick={() => {updateBases(2);}}>Double</span>
-                        <span className={styles.player_buttons_red} onClick={() => {updateBases(3);}}>Triple</span>
-                        <span className={styles.player_buttons_red} onClick={() => {updateBases(4);}}>Home Run</span>
+                    (!mainGameInfo.gameOver && <div className={styles.choice_buttons_main}>
+                        <span className={styles.player_buttons_red} onClick={async () => {await updateBases(1);}}>Single</span>
+                        <span className={styles.player_buttons_red} onClick={async () => {await updateBases(2);}}>Double</span>
+                        <span className={styles.player_buttons_red} onClick={async () => {await updateBases(3);}}>Triple</span>
+                        <span className={styles.player_buttons_red} onClick={async () => {await updateBases(4);}}>Home Run</span>
                     </div>)
                     )}
                     {teamRed.teamChoices === "pitcher" && (
                     (!game_over && <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_red} onClick={() => {incrementOuts();}}>Out</span>
-                        <span className={styles.player_buttons_red} onClick={() => {incrementStrikes();}}>Strike</span>
+                        <span className={styles.player_buttons_red} onClick={async () => {await incrementOuts();}}>Out</span>
+                        <span className={styles.player_buttons_red} onClick={async () => {await incrementStrikes();}}>Strike</span>
                     </div>)
                     )}
 
@@ -340,11 +343,11 @@ export default function GameScreen()
                     </div>)
                     )}
                     {teamBlue.teamChoices === "hitter" && (
-                    (!game_over && <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_blue} onClick={() => {updateBases(1);}}>Single</span>
-                        <span className={styles.player_buttons_blue} onClick={() => {updateBases(2);}}>Double</span>
-                        <span className={styles.player_buttons_blue} onClick={() => {updateBases(3);}}>Triple</span>
-                        <span className={styles.player_buttons_blue} onClick={() => {updateBases(4);}}>Home Run</span>
+                    (!mainGameInfo.gameOver && <div className={styles.choice_buttons_main}>
+                        <span className={styles.player_buttons_blue} onClick={async () => {await updateBases(1);}}>Single</span>
+                        <span className={styles.player_buttons_blue} onClick={async () => {await updateBases(2);}}>Double</span>
+                        <span className={styles.player_buttons_blue} onClick={async () => {await updateBases(3);}}>Triple</span>
+                        <span className={styles.player_buttons_blue} onClick={async () => {await updateBases(4);}}>Home Run</span>
                     </div>)
                     )}
                     
@@ -362,9 +365,9 @@ export default function GameScreen()
                         <div className={styles.home_base_plate}></div>
                         
                     </div>
-                    <div className={first_base_active ? `${styles.first_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.first_base} ></div>
-                    <div className={second_base_active ? `${styles.second_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.second_base}></div>
-                    <div className={third_base_active ? `${styles.third_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.third_base}></div>
+                    <div className={mainGameInfo.firstBaseActive ? `${styles.first_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.first_base} ></div>
+                    <div className={mainGameInfo.secondBaseActive ? `${styles.second_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.second_base}></div>
+                    <div className={mainGameInfo.thirdBaseActive ? `${styles.third_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.third_base}></div>
                     <div className={styles.pitchers_mound}>
                         <div className={styles.pitchers_plate} style={{backgroundColor: teamRed.teamChoices === "pitcher" ? "red" : "blue"}}></div>
                     </div>
