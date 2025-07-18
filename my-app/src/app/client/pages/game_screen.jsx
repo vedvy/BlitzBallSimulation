@@ -10,15 +10,7 @@ import main_game from "@/app/server/models/main_game";
 
 export default function GameScreen()
 {
-    /**
-     * Determine if there is a way to refactor the states here. Via multiple values in one state or convert some inside
-     * a context? figure it out when implementing backend providers
-     */
 
-    /* 
-    * Running into some stuff regarding the refreshes. Don't worry about it for now, work on setting up 
-    * the backend and then we can go back to this.
-    */
     
     // const [current_player, set_current_player_running] = useState({
     //     hit_score: 0
@@ -34,25 +26,27 @@ export default function GameScreen()
         var teamBlue = dataModel.teams[1];
         var mainGameInfo = dataModel.main_game_info[0];
         console.log(dataModel.main_game_info[0].firstBaseActive);
+        console.log(teamRed.teamPlayers);
+        console.log(teamBlue.teamPlayers);
 
 
         
         // console.log("Team Red: ", dataModel.main_game_info.teamRed);
     }
     
-    const [red_team_choices, set_red_team_choices] = useState("hitter");
-    const [blue_team_choices, set_blue_team_choices] = useState("pitcher");
-    const [red_score, set_red_score] = useState(0);
-    const [blue_score, set_blue_score] = useState(0);
+    // const [red_team_choices, set_red_team_choices] = useState("hitter");
+    // const [blue_team_choices, set_blue_team_choices] = useState("pitcher");
+    // const [red_score, set_red_score] = useState(0);
+    // const [blue_score, set_blue_score] = useState(0);
     
-    const [current_outs, set_current_outs] = useState(0);
-    const [current_inning, set_current_inning] = useState(1);
-    const [current_strikes, set_current_strikes] = useState(0);
-    const [top_of_inning, set_top_inning] = useState(false);
-    const [first_base_active, set_first_base_active] = useState(false);
-    const [second_base_active, set_second_base_active] = useState(false);
-    const [third_base_active, set_third_base_active] = useState(false);
-    const [game_over, set_game_over] = useState(false);
+    // const [current_outs, set_current_outs] = useState(0);
+    // const [current_inning, set_current_inning] = useState(1);
+    // const [current_strikes, set_current_strikes] = useState(0);
+    // const [top_of_inning, set_top_inning] = useState(false);
+    // const [first_base_active, set_first_base_active] = useState(false);
+    // const [second_base_active, set_second_base_active] = useState(false);
+    // const [third_base_active, set_third_base_active] = useState(false);
+    // const [game_over, set_game_over] = useState(false);
 
 
     // const switchPositions = async () => {
@@ -86,7 +80,7 @@ export default function GameScreen()
             blueTeam: teamBlue, 
             main_game_info: mainGameInfo});
 
-            console.log(top_of_inning);
+
             await axios.post("http://localhost:8000/incrementOuts", {main_game_info: mainGameInfo, 
                 resetOuts: true
             });
@@ -155,7 +149,7 @@ export default function GameScreen()
         await axios.post("http://localhost:8000/updateFirstBase", {main_game_info: mainGameInfo,
             isActive: isActive
         });
-        await dataModel.fetchData();
+
         return;
     }
 
@@ -163,7 +157,7 @@ export default function GameScreen()
         await axios.post("http://localhost:8000/updateSecondBase", {main_game_info: mainGameInfo,
             isActive: isActive
         });
-        await dataModel.fetchData();
+
         return;
     }
 
@@ -171,7 +165,7 @@ export default function GameScreen()
         await axios.post("http://localhost:8000/updateThirdBase", {main_game_info: mainGameInfo,
             isActive: isActive
         });
-        await dataModel.fetchData();
+
         return;
     }
 
@@ -315,7 +309,7 @@ export default function GameScreen()
                     </div>)
                     )}
                     {teamRed.teamChoices === "pitcher" && (
-                    (!game_over && <div className={styles.choice_buttons_main}>
+                    (!mainGameInfo.gameOver && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_red} onClick={async () => {await incrementOuts();}}>Out</span>
                         <span className={styles.player_buttons_red} onClick={async () => {await incrementStrikes();}}>Strike</span>
                     </div>)

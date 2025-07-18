@@ -15,10 +15,7 @@ const mainGameSchema = new Schema({
     gameOver: {type: Boolean, default: false}
 });
 
-/* 
-Add virtual functions for the following fields: 
-pretty much all except for teams Red and Blue. And add the context. and the init.
-*/
+
 
 mainGameSchema.virtual("id").get(function()
 {

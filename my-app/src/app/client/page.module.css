@@ -381,3 +381,22 @@ a.secondary {
   display: flex;
   justify-content: space-evenly;
 }
+
+/*selectPlayer CSS*/
+
+.selectPlayerContainer{
+  display: grid;
+  
+}
+
+.selectPlayerRed{
+  background-color: lightcoral;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+
+}
+
+.selectPlayerBlue{
+  background-color: lightblue;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
