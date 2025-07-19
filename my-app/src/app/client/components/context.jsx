@@ -11,9 +11,10 @@ export const DataProvider = ({children}) => {
     const [main_game_info, set_main_game_info] = useState([]);
     const [loading, set_loading] = useState(true);
 
+
     const fetchData = async() =>
     {
-        /*Insert mongodb calls here!!*/
+
         set_loading(true);
         console.log("Loading: ",loading);
         console.log("Obtaining Players");

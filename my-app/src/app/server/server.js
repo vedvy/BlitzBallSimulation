@@ -41,6 +41,39 @@ app.get("/players", async function(req, res) {
     }
 });
 
+app.get("/teamplayernames", jsonParser, async function(req, res) {
+    try{
+        const playersArray = req.body['playersArray'];
+        const teamRed = req.body['teamRed'];
+        const teamBlue = req.body['teamBlue'];
+        var redTeamPlayers = [];
+        var blueTeamPlayers = [];
+        for(let i = 0; i < playersArray.length(); i++)
+        {
+            if(teamRed.teamPlayers.contains(playersArray[i]._id))
+            {
+                let redPlayerFound = await Player.findById(playersArray[i]._id);
+                redTeamPlayers.push(redPlayerFound.name);
+            }
+            else if(teamBlue.teamPlayers.contains(playersArray[i]._id))
+            {
+                let bluePlayerFound = await Player.findById(playersArray[i]._id);
+                blueTeamPlayers.push(bluePlayerFound.name);
+            }
+            
+            
+        }
+        res.json({
+            redTeamPlayers: redTeamPlayers,
+            blueTeamPlayers: blueTeamPlayers
+        }
+        );
+    }
+    catch(err){
+        res.status(500).json({message: "err", err});
+    }
+});
+
 app.get("/teams", async function(req, res) {
     try{
         const teamsArray = await Team.find({});
