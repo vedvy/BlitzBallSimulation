@@ -7,10 +7,12 @@ export const DataContext = createContext();
 
 export const DataProvider = ({children}) => {
     const [players, set_players] = useState([]);
+    const [redTeamPlayers, set_red_team_players] = useState([]);
+    const [blueTeamPlayers, set_blue_team_players] = useState([]);
     const [teams, set_teams] = useState([]);
     const [main_game_info, set_main_game_info] = useState([]);
     const [loading, set_loading] = useState(true);
-
+    /*Add a view toggle state here!*/
 
     const fetchData = async() =>
     {
@@ -27,6 +29,15 @@ export const DataProvider = ({children}) => {
 
         const mainGameResponse = await axios.get("http://localhost:8000/maingame");
         set_main_game_info(mainGameResponse.data);
+
+        let teamRed = teams[0];
+        let teamBlue = teams[1];
+        await axios.post("http://localhost:8000/teamplayernames", {playersArray: players, teamRed: teamRed,
+            teamBlue: teamBlue})
+            .then((response) => {
+            set_red_team_players(response.data.redTeamPlayers);
+            set_blue_team_players(response.data.blueTeamPlayers);
+        });
 
         set_loading(false);
         console.log("Loading: ", loading);

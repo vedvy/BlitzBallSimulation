@@ -389,13 +389,15 @@ a.secondary {
   
 }
 
-.selectPlayerRed{
+.selectPlayerRed,
+.playerRedChosen{
   background-color: lightcoral;
   font-family: Georgia, 'Times New Roman', Times, serif;
 
 }
 
-.selectPlayerBlue{
+.selectPlayerBlue,
+.playerBlueChosen{
   background-color: lightblue;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }

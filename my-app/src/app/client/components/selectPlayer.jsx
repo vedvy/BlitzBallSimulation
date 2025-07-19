@@ -5,17 +5,46 @@ import { DataContext } from "../components/context";
 
 export default function selectPlayer()
 {
+    const[redPlayerChosen, set_red_player] = useState();
+    const[bluePlayerChosen, set_blue_player] = useState();
+
     const dataModel = useContext(DataContext);
     if(!dataModel.loading)
     {
+        var teamRedPlayers = dataModel.redTeamPlayers;
+        var teamBluePlayers = dataModel.blueTeamPlayers;
         var teamRed = dataModel.teams[0];
         var teamBlue = dataModel.teams[1];
         
     }
 
+    const chosenRedPlayer = async (player) => {
+        if(bluePlayerChosen)
+        {
+
+        }
+        else
+        {
+            set_red_player(player);
+        }
+    }
+
+    const chosenBluePlayer = async (player) => {
+        if(redPlayerChosen)
+        {
+
+        }
+        else
+        {
+            set_blue_player(player);
+        }
+    }
+
+
     /*Think about how to implement this server-side. User should: 
     1. Be prompted the choices with  the names, not the ids.
-    2. Click and confirm them EACH. Lock in for one and other before making the decision.
+    2. Click and confirm them EACH. Lock in for one and other before making the decision. The choices
+    must be either separate or together. 
     3. Do the server-side changes with the corresponding ids. 
     4. Do a re-render before going back to the game. 
     NOTE: maintain the state of this page in case of dropped connections/add it to the dataModel as a
@@ -28,22 +57,29 @@ export default function selectPlayer()
 
     return (
         <div className="selectPlayerContainer">
-            <div className="selectPlayerRed">
+            {!redPlayerChosen && <div className="selectPlayerRed">
                 {teamRed.teamChoices === "hitter" ? <h1>Choose Red Team's Hitter</h1> : <h1>Choose Red Team's Pitcher</h1>}
-                {teamRed.teamPlayers.map((player) => {
+                {redTeamPlayers.map((player) => {
                     <button className="player_buttons_red">
                         {player}
                     </button>
                 })}    
-            </div>
-            <div className="selectPlayerBlue">
+            </div>}
+            {redPlayerChosen && <div className="playerRedChosen">
+                    <h1>Red Player Up Next: {redPlayerChosen}</h1>
+                </div>}
+            {!bluePlayerChosen && <div className="selectPlayerBlue">
                 {teamBlue.teamChoices === "hitter" ? <h1>Choose Blue Team's Hitter</h1> : <h1>Choose Blue Team's Pitcher</h1>}
-                {teamBlue.teamPlayers.map((player) => {
+                {blueTeamPlayers.map((player) => {
                     <button className="player_buttons_blue">
                         {player}
                     </button>
                 })}
-            </div>
+            </div>}
+            {bluePlayerChosen && 
+            <div className="playerBlueChosen">
+                <h1>Blue Player Up Next: {bluePlayerChosen}</h1>
+            </div>}
         </div>
     )
 }

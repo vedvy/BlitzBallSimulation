@@ -41,7 +41,7 @@ app.get("/players", async function(req, res) {
     }
 });
 
-app.get("/teamplayernames", jsonParser, async function(req, res) {
+app.post("/teamplayernames", jsonParser, async function(req, res) {
     try{
         const playersArray = req.body['playersArray'];
         const teamRed = req.body['teamRed'];
