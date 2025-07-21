@@ -11,7 +11,10 @@ export const DataProvider = ({children}) => {
     const [blueTeamPlayers, set_blue_team_players] = useState([]);
     const [teams, set_teams] = useState([]);
     const [main_game_info, set_main_game_info] = useState([]);
+    const [view, toggle_view] = useState("gameField");
+    //Views: selectPlayer, gameField for now.
     const [loading, set_loading] = useState(true);
+    
     /*Add a view toggle state here!*/
 
     const fetchData = async() =>
@@ -29,15 +32,7 @@ export const DataProvider = ({children}) => {
 
         const mainGameResponse = await axios.get("http://localhost:8000/maingame");
         set_main_game_info(mainGameResponse.data);
-
-        let teamRed = teams[0];
-        let teamBlue = teams[1];
-        await axios.post("http://localhost:8000/teamplayernames", {playersArray: players, teamRed: teamRed,
-            teamBlue: teamBlue})
-            .then((response) => {
-            set_red_team_players(response.data.redTeamPlayers);
-            set_blue_team_players(response.data.blueTeamPlayers);
-        });
+       
 
         set_loading(false);
         console.log("Loading: ", loading);
@@ -45,13 +40,27 @@ export const DataProvider = ({children}) => {
 
     useEffect(() => {
      fetchData();
+     console.log(players);
     }, []);
+
+    // const fetchTeamPlayers = async (players, teams) => {
+    //     let teamRed = teams[0];
+    //     let teamBlue = teams[1];
+    //     await axios.post("http://localhost:8000/teamplayernames", {playersArray: players, teamRed: teamRed,
+    //         teamBlue: teamBlue})
+    //         .then((response) => {
+    //         set_red_team_players(response.data.redTeamPlayers);
+    //         set_blue_team_players(response.data.blueTeamPlayers);
+    //     });
+
+    // }
 
     if(!loading)
     {
         return(
-            <DataContext.Provider value={{players, teams, main_game_info, loading, fetchData}}>
+            <DataContext.Provider value={{players, teams, main_game_info, redTeamPlayers, blueTeamPlayers, view, loading, fetchData}}>
                 {children}
+                
             </DataContext.Provider>
         )
     }

@@ -34,6 +34,7 @@ app.get("/players", async function(req, res) {
     console.log("GETTING PLAYERS");
     try{
         const playersArray = await Player.find({});
+        console.log(playersArray.length);
         res.send(playersArray);
     }
     catch(err){
@@ -43,25 +44,33 @@ app.get("/players", async function(req, res) {
 
 app.post("/teamplayernames", jsonParser, async function(req, res) {
     try{
+        console.log("Getting player names");
         const playersArray = req.body['playersArray'];
+        console.log(playersArray.length);
+        console.log("after players Array");
         const teamRed = req.body['teamRed'];
         const teamBlue = req.body['teamBlue'];
+        console.log("After getting teams defined");
         var redTeamPlayers = [];
         var blueTeamPlayers = [];
+        console.log("Empty arrays defined");
+
         for(let i = 0; i < playersArray.length(); i++)
         {
+            console.log("Inside for loop");
+            console.log("Index: ", i);
             if(teamRed.teamPlayers.contains(playersArray[i]._id))
             {
+                console.log("Found red player");
                 let redPlayerFound = await Player.findById(playersArray[i]._id);
                 redTeamPlayers.push(redPlayerFound.name);
             }
             else if(teamBlue.teamPlayers.contains(playersArray[i]._id))
             {
+                console.log("Found Blue Players");
                 let bluePlayerFound = await Player.findById(playersArray[i]._id);
                 blueTeamPlayers.push(bluePlayerFound.name);
             }
-            
-            
         }
         res.json({
             redTeamPlayers: redTeamPlayers,

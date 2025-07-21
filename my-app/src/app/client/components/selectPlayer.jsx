@@ -3,7 +3,7 @@ import axios from "axios";
 import { DataContext } from "../components/context";
 
 
-export default function selectPlayer()
+export default function SelectPlayer()
 {
     const[redPlayerChosen, set_red_player] = useState();
     const[bluePlayerChosen, set_blue_player] = useState();
@@ -21,7 +21,7 @@ export default function selectPlayer()
     const chosenRedPlayer = async (player) => {
         if(bluePlayerChosen)
         {
-
+            //server call and then switch view back to game field.
         }
         else
         {
@@ -56,7 +56,7 @@ export default function selectPlayer()
 
 
     return (
-        <div className="selectPlayerContainer">
+        <div className="game_main_content">
             {!redPlayerChosen && <div className="selectPlayerRed">
                 {teamRed.teamChoices === "hitter" ? <h1>Choose Red Team's Hitter</h1> : <h1>Choose Red Team's Pitcher</h1>}
                 {redTeamPlayers.map((player) => {

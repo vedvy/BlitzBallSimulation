@@ -7,14 +7,11 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { DataContext } from "../components/context";
 import main_game from "@/app/server/models/main_game";
+import SelectPlayer from "../components/selectPlayer";
+import GameField from "../components/gameField";
 
 export default function GameScreen()
-{
-
-    
-    // const [current_player, set_current_player_running] = useState({
-    //     hit_score: 0
-    // });    
+{ 
 
     const dataModel = useContext(DataContext);
     if(!dataModel.loading)
@@ -281,7 +278,6 @@ export default function GameScreen()
         
     }
 
-
     return (
         <div className={styles.game_screen}>
             <div className={styles.banner}>
@@ -348,31 +344,15 @@ export default function GameScreen()
  
                 </div>
             </div>
-            <div className={styles.game_main_content}>
-                    
-                <div className={styles.game_field}>
-                    <h1 className={styles.field_information}>Inning: {mainGameInfo.currentInning}</h1>
-                    <h1 className={styles.field_information}>Outs: {mainGameInfo.currentOuts}</h1>
-                    <h1 className={styles.field_information}>Strikes: {mainGameInfo.currentStrikes}</h1>
-                    <div className={styles.inner_field}>
-                        <div className={styles.home_base}>
-                        <div className={styles.home_base_plate}></div>
-                        
-                    </div>
-                    <div className={mainGameInfo.firstBaseActive ? `${styles.first_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.first_base} ></div>
-                    <div className={mainGameInfo.secondBaseActive ? `${styles.second_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.second_base}></div>
-                    <div className={mainGameInfo.thirdBaseActive ? `${styles.third_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.third_base}></div>
-                    <div className={styles.pitchers_mound}>
-                        <div className={styles.pitchers_plate} style={{backgroundColor: teamRed.teamChoices === "pitcher" ? "red" : "blue"}}></div>
-                    </div>
-                    </div>
-
-                </div>
-                <div className={styles.logger_section}>
-                    <h2 style={{textAlign: "center"}}>Game Logs</h2>
-                    <div className={styles.logger_content} id="game_log"></div>
-                </div>
-            </div>
+            {dataModel.view === "gameField" && 
+                <GameField
+                dataModel={dataModel}
+                mainGameInfo={mainGameInfo}
+                teamRed={teamRed}
+                teamBlue={teamBlue}
+            />}
+            {dataModel.view === "selectPlayer" && 
+            <SelectPlayer/>}
             <div className={styles.footer}>
                 Created by Vedant Vyas, circa 2025
             </div>   
