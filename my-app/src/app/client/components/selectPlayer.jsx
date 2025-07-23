@@ -70,10 +70,11 @@ export default function SelectPlayer()
         <div className="game_main_content">
             {!redPlayerChosen && <div className="selectPlayerRed">
                 {teamRed.teamChoices === "hitter" ? <h1>Choose Red Team's Hitter</h1> : <h1>Choose Red Team's Pitcher</h1>}
+                
                 {redTeamPlayers.map((player) => {
-                    <button className="player_buttons_red">
-                        {player}
-                    </button>
+                        {console.log(player)}
+                        <h3>{player}</h3>
+                    
                 })}    
             </div>}
             {redPlayerChosen && <div className="playerRedChosen">
@@ -81,10 +82,10 @@ export default function SelectPlayer()
                 </div>}
             {!bluePlayerChosen && <div className="selectPlayerBlue">
                 {teamBlue.teamChoices === "hitter" ? <h1>Choose Blue Team's Hitter</h1> : <h1>Choose Blue Team's Pitcher</h1>}
-                {blueTeamPlayers.map((player) => {
+                {blueTeamPlayers.map((player) => {(
                     <button className="player_buttons_blue">
                         {player}
-                    </button>
+                    </button>)
                 })}
             </div>}
             {bluePlayerChosen && 
