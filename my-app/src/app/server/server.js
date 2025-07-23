@@ -8,6 +8,7 @@ import Team from './models/team.js';
 import MainGame from './models/main_game.js';
 import mongoose from 'mongoose';
 import bodyParser from "body-parser";
+import { withCoalescedInvoke } from "next/dist/lib/coalesced-function.js";
 
 // const express = require("express");
 
@@ -42,30 +43,38 @@ app.get("/players", async function(req, res) {
     }
 });
 
-app.post("/teamplayernames", jsonParser, async function(req, res) {
+app.get("/teamplayernames", jsonParser, async function(req, res) {
     try{
         console.log("Getting player names");
-        const playersArray = req.body['playersArray'];
+        // const playersArray = req.body['playersArray'];
+        const playersArray = await Player.find({});
+        const MainGameInfo = (await MainGame.find({}).exec())[0];
         console.log(playersArray.length);
+        console.log(MainGameInfo);
         console.log("after players Array");
-        const teamRed = req.body['teamRed'];
-        const teamBlue = req.body['teamBlue'];
+        // const teamRed = req.body['teamRed'];
+        // const teamBlue = req.body['teamBlue'];
+        const teamRed = await Team.findById(MainGameInfo.teamRed);
+        const teamBlue = await Team.findById(MainGameInfo.teamBlue);
         console.log("After getting teams defined");
         var redTeamPlayers = [];
         var blueTeamPlayers = [];
         console.log("Empty arrays defined");
+        console.log(teamRed);
 
-        for(let i = 0; i < playersArray.length(); i++)
+        for(let i = 0; i < playersArray.length; i++)
         {
             console.log("Inside for loop");
             console.log("Index: ", i);
-            if(teamRed.teamPlayers.contains(playersArray[i]._id))
+            console.log(playersArray[i].id);
+            console.log("Contains player: " , teamRed.teamPlayers.includes(playersArray[i].id));
+            if(teamRed.teamPlayers.includes(playersArray[i]._id))
             {
                 console.log("Found red player");
                 let redPlayerFound = await Player.findById(playersArray[i]._id);
                 redTeamPlayers.push(redPlayerFound.name);
             }
-            else if(teamBlue.teamPlayers.contains(playersArray[i]._id))
+            else if(teamBlue.teamPlayers.includes(playersArray[i]._id))
             {
                 console.log("Found Blue Players");
                 let bluePlayerFound = await Player.findById(playersArray[i]._id);

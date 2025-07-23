@@ -11,7 +11,7 @@ export const DataProvider = ({children}) => {
     const [blueTeamPlayers, set_blue_team_players] = useState([]);
     const [teams, set_teams] = useState([]);
     const [main_game_info, set_main_game_info] = useState([]);
-    const [view, toggle_view] = useState("gameField");
+    const [view, toggle_view] = useState("selectPlayer");
     //Views: selectPlayer, gameField for now.
     const [loading, set_loading] = useState(true);
     
@@ -33,6 +33,9 @@ export const DataProvider = ({children}) => {
         const mainGameResponse = await axios.get("http://localhost:8000/maingame");
         set_main_game_info(mainGameResponse.data);
        
+        const playerNamesResponse = await axios.get("http://localhost:8000/teamplayernames");
+        set_red_team_players(playerNamesResponse.data.redTeamPlayers);
+        set_blue_team_players(playerNamesResponse.data.blueTeamPlayers);
 
         set_loading(false);
         console.log("Loading: ", loading);

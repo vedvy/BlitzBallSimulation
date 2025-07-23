@@ -5,18 +5,27 @@ import { DataContext } from "../components/context";
 
 export default function SelectPlayer()
 {
-    const[redPlayerChosen, set_red_player] = useState();
-    const[bluePlayerChosen, set_blue_player] = useState();
+    const [redPlayerChosen, set_red_player] = useState();
+    const [bluePlayerChosen, set_blue_player] = useState();
+    // const [redTeamPlayers, set_RTP] = useState();
+    // const [blueTeamPlayers, set_BTP] = useState();
 
     const dataModel = useContext(DataContext);
     if(!dataModel.loading)
     {
-        var teamRedPlayers = dataModel.redTeamPlayers;
-        var teamBluePlayers = dataModel.blueTeamPlayers;
         var teamRed = dataModel.teams[0];
         var teamBlue = dataModel.teams[1];
-        
+        var redTeamPlayers = dataModel.redTeamPlayers;
+        redTeamPlayers.map((player) => {
+        console.log(player);  
+        });
+        var blueTeamPlayers = dataModel.blueTeamPlayers;
+        console.log("Team Red: ", teamRed);
+
     }
+  
+
+      
 
     const chosenRedPlayer = async (player) => {
         if(bluePlayerChosen)
@@ -39,6 +48,8 @@ export default function SelectPlayer()
             set_blue_player(player);
         }
     }
+
+    
 
 
     /*Think about how to implement this server-side. User should: 
