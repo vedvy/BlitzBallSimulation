@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { DataContext } from "../components/context";
+import styles from "../page.module.css"
 
 
 export default function SelectPlayer()
@@ -68,28 +69,26 @@ export default function SelectPlayer()
 
     return (
         <div className="game_main_content">
-            {!redPlayerChosen && <div className="selectPlayerRed">
+            {!redPlayerChosen && <div className={styles.selectPlayerRed}>
                 {teamRed.teamChoices === "hitter" ? <h1>Choose Red Team's Hitter</h1> : <h1>Choose Red Team's Pitcher</h1>}
                 
-                {redTeamPlayers.map((player) => {
-                        {console.log(player)}
-                        <h3>{player}</h3>
-                    
-                })}    
+                {redTeamPlayers.map((player) => 
+                        <button className={styles.player_buttons_red}>{player}</button>
+                )}    
             </div>}
-            {redPlayerChosen && <div className="playerRedChosen">
+            {redPlayerChosen && <div className={styles.playerRedChosen}>
                     <h1>Red Player Up Next: {redPlayerChosen}</h1>
                 </div>}
-            {!bluePlayerChosen && <div className="selectPlayerBlue">
+            {!bluePlayerChosen && <div className={styles.selectPlayerBlue}>
                 {teamBlue.teamChoices === "hitter" ? <h1>Choose Blue Team's Hitter</h1> : <h1>Choose Blue Team's Pitcher</h1>}
-                {blueTeamPlayers.map((player) => {(
-                    <button className="player_buttons_blue">
+                {blueTeamPlayers.map((player) => (
+                    <button className={styles.player_buttons_blue}>
                         {player}
                     </button>)
-                })}
+                )}
             </div>}
             {bluePlayerChosen && 
-            <div className="playerBlueChosen">
+            <div className={styles.playerBlueChosen}>
                 <h1>Blue Player Up Next: {bluePlayerChosen}</h1>
             </div>}
         </div>
