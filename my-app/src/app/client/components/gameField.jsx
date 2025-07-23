@@ -4,6 +4,7 @@ export default function GameField(
     {
         dataModel,
         mainGameInfo,
+        strikes,
         teamRed,
         teamBlue,
 
@@ -224,7 +225,7 @@ export default function GameField(
                     <div className={styles.game_field}>
                         <h1 className={styles.field_information}>Inning: {mainGameInfo.currentInning}</h1>
                         <h1 className={styles.field_information}>Outs: {mainGameInfo.currentOuts}</h1>
-                        <h1 className={styles.field_information}>Strikes: {mainGameInfo.currentStrikes}</h1>
+                        <h1 className={styles.field_information}>Strikes: {strikes}</h1>
                         <div className={styles.inner_field}>
                             <div className={styles.home_base}>
                             <div className={styles.home_base_plate}></div>

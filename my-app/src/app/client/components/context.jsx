@@ -37,6 +37,15 @@ export const DataProvider = ({children}) => {
         set_red_team_players(playerNamesResponse.data.redTeamPlayers);
         set_blue_team_players(playerNamesResponse.data.blueTeamPlayers);
 
+        if(view === "selectPlayer")
+        {
+            toggle_view("gameField");
+        }
+        else
+        {
+            toggle_view("selectPlayer");
+        }
+
         set_loading(false);
         console.log("Loading: ", loading);
     }

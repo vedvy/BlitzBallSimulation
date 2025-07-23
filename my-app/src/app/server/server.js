@@ -64,19 +64,19 @@ app.get("/teamplayernames", jsonParser, async function(req, res) {
 
         for(let i = 0; i < playersArray.length; i++)
         {
-            console.log("Inside for loop");
-            console.log("Index: ", i);
-            console.log(playersArray[i].id);
-            console.log("Contains player: " , teamRed.teamPlayers.includes(playersArray[i].id));
+            // console.log("Inside for loop");
+            // console.log("Index: ", i);
+            // console.log(playersArray[i].id);
+            // console.log("Contains player: " , teamRed.teamPlayers.includes(playersArray[i].id));
             if(teamRed.teamPlayers.includes(playersArray[i]._id))
             {
-                console.log("Found red player");
+        
                 let redPlayerFound = await Player.findById(playersArray[i]._id);
                 redTeamPlayers.push(redPlayerFound.name);
             }
             else if(teamBlue.teamPlayers.includes(playersArray[i]._id))
             {
-                console.log("Found Blue Players");
+            
                 let bluePlayerFound = await Player.findById(playersArray[i]._id);
                 blueTeamPlayers.push(bluePlayerFound.name);
             }
@@ -148,6 +148,7 @@ app.post("/switchPositions", jsonParser, async function(req, res) {
 
 app.post("/setNextPlayers", jsonParser, async function(req, res)
 {
+    /*Still needs fixing!!!!*/
     try{
         const nextRedPlayer = req.body['redPlayerChosen'];
         const nRPObject = (await Player.find({name: nextRedPlayer}).exec())[0];
@@ -156,8 +157,8 @@ app.post("/setNextPlayers", jsonParser, async function(req, res)
         const teamRed = req.body['teamRed'];
         const teamBlue = req.body['teamBlue'];
         console.log("Definitions in setNextPLayers done");
-        console.log(teamRed);
-        console.log(nRPObject._id);
+        console.log("team Red: ", teamRed);
+        console.log(nRPObject);
 
         const updateRedTeam = await Team.findByIdAndUpdate(teamRed._id, {currentPlayer: nRPObject, currentPlayerDisplay: nextRedPlayer});
         const updateBlueTeam = await Team.findByIdAndUpdate(teamBlue._id, {currentPlayer: nBPObject, currentPlayerDisplay: nextBluePlayer});

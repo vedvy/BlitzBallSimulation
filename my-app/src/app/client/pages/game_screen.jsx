@@ -13,6 +13,8 @@ import GameField from "../components/gameField";
 export default function GameScreen()
 { 
 
+    
+
     const dataModel = useContext(DataContext);
     if(!dataModel.loading)
     {
@@ -30,6 +32,7 @@ export default function GameScreen()
         
         // console.log("Team Red: ", dataModel.main_game_info.teamRed);
     }
+    const [localStrikes, set_local_strikes] = useState(mainGameInfo.currentStrikes);
     
     // const [red_team_choices, set_red_team_choices] = useState("hitter");
     // const [blue_team_choices, set_blue_team_choices] = useState("pitcher");
@@ -128,15 +131,17 @@ export default function GameScreen()
 
     const incrementStrikes = async () => {
         // mainGameInfo.currentStrikes === 2 ? incrementOuts() : set_current_strikes(current_strikes+1);
-        if(mainGameInfo.currentStrikes === 2)
+        if(mainGameInfo.currentStrikes === 2 || localStrikes === 2)
         {
             await incrementOuts();
         }
         else
         {
             await axios.post("http://localhost:8000/incrementStrikes", {main_game_info: mainGameInfo});
+            mainGameInfo.currentStrikes++;
+            set_local_strikes(mainGameInfo.currentStrikes);
         }
-       await dataModel.fetchData();
+    //    await dataModel.fetchData();
     }
 
     const updateFBActive = async (isActive) =>
@@ -348,6 +353,7 @@ export default function GameScreen()
                 <GameField
                 dataModel={dataModel}
                 mainGameInfo={mainGameInfo}
+                strikes={localStrikes}
                 teamRed={teamRed}
                 teamBlue={teamBlue}
             />}

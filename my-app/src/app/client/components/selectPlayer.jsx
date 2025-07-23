@@ -17,46 +17,46 @@ export default function SelectPlayer()
         var teamRed = dataModel.teams[0];
         var teamBlue = dataModel.teams[1];
         var redTeamPlayers = dataModel.redTeamPlayers;
-        redTeamPlayers.map((player) => {
-        console.log(player);  
-        });
+
         var blueTeamPlayers = dataModel.blueTeamPlayers;
-        console.log("Team Red: ", teamRed);
+
 
     }
-  
-
       
 
     const chosenRedPlayer = async (player) => {
+        console.log("Inside chosenRedPlayer");
+        
+
         if(bluePlayerChosen)
         {
-            set_red_player(player);
-            //server call and then switch view back to game field.
-            await axios.post("http://localhost:8000/setNextPlayers", {redPlayerChosen: redPlayerChosen,
+            
+            await axios.post("http://localhost:8000/setNextPlayers", {redPlayerChosen: player,
                 bluePlayerChosen: bluePlayerChosen, teamRed: teamRed, teamBlue: teamBlue
             });
 
             dataModel.view = "gameField";
+            console.log(dataModel.view);
             await dataModel.fetchData();
+            //server call and then switch view back to game field.
+            
         }
         else
         {
             set_red_player(player);
-            console.log(player);
-            console.log(redPlayerChosen);
         }
+        
     }
 
     const chosenBluePlayer = async (player) => {
         if(redPlayerChosen)
         {
-            set_blue_player(player);
             await axios.post("http://localhost:8000/setNextPlayers", {redPlayerChosen: redPlayerChosen,
-                bluePlayerChosen: bluePlayerChosen, teamRed: teamRed, teamBlue: teamBlue
+                bluePlayerChosen: player, teamRed: teamRed, teamBlue: teamBlue
             });
 
             dataModel.view = "gameField";
+            console.log(dataModel.view);
             await dataModel.fetchData();
         }
         else
@@ -97,11 +97,11 @@ export default function SelectPlayer()
                 </div>}
             {!bluePlayerChosen && <div className={styles.selectPlayerBlue}>
                 {teamBlue.teamChoices === "hitter" ? <h1>Choose Blue Team's Hitter</h1> : <h1>Choose Blue Team's Pitcher</h1>}
-                {blueTeamPlayers.map((player, index) => (
+                {blueTeamPlayers.map((player, index) => 
                     <button key={index} className={styles.player_buttons_blue}
                     onClick={async () => {await chosenBluePlayer(player);}}>
                         {player}
-                    </button>)
+                    </button>
                 )}
             </div>}
             {bluePlayerChosen && 
