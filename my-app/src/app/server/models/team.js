@@ -7,7 +7,8 @@ const teamSchema = new Schema({
     teamPlayers: [{type: Schema.Types.ObjectId, ref: "player", required: true}],
     teamScore: {type: Number, default: 0},
     teamChoices: {type: String, enum: ["hitter", "pitcher"], required: true},
-    currentPlayer: {type: Schema.Types.ObjectId, ref: "player"}
+    currentPlayer: {type: Schema.Types.ObjectId, ref: "player"},
+    currentPlayerDisplay: {type: String}
 
 },
 {toJSON: {virtuals: true}, toObject: {virtuals: true}}

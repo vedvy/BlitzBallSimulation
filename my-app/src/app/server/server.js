@@ -146,6 +146,29 @@ app.post("/switchPositions", jsonParser, async function(req, res) {
     }
 })
 
+app.post("/setNextPlayers", jsonParser, async function(req, res)
+{
+    try{
+        const nextRedPlayer = req.body['redPlayerChosen'];
+        const nRPObject = (await Player.find({name: nextRedPlayer}).exec())[0];
+        const nextBluePlayer = req.body['bluePlayerChosen'];
+        const nBPObject = (await Player.find({name: nextBluePlayer}).exec())[0];
+        const teamRed = req.body['teamRed'];
+        const teamBlue = req.body['teamBlue'];
+        console.log("Definitions in setNextPLayers done");
+        console.log(teamRed);
+        console.log(nRPObject._id);
+
+        const updateRedTeam = await Team.findByIdAndUpdate(teamRed._id, {currentPlayer: nRPObject, currentPlayerDisplay: nextRedPlayer});
+        const updateBlueTeam = await Team.findByIdAndUpdate(teamBlue._id, {currentPlayer: nBPObject, currentPlayerDisplay: nextBluePlayer});
+
+        res.send(200);
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+});
 
 app.post("/incrementOuts", jsonParser, async function(req, res){
     try{
