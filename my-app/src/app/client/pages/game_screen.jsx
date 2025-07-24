@@ -13,7 +13,8 @@ import GameField from "../components/gameField";
 export default function GameScreen()
 { 
 
-    
+    /*IMPORTANT: Include BALLS!! If the first base is open, make it active, else call updateBase(1).
+    Handle it the same way Strikes are.*/    
 
     const dataModel = useContext(DataContext);
     if(!dataModel.loading)
@@ -27,13 +28,14 @@ export default function GameScreen()
         console.log(dataModel.main_game_info[0].firstBaseActive);
         console.log(teamRed.teamPlayers);
         console.log(teamBlue.teamPlayers);
+        console.log(dataModel.view);
 
 
         
         // console.log("Team Red: ", dataModel.main_game_info.teamRed);
     }
     const [localStrikes, set_local_strikes] = useState(mainGameInfo.currentStrikes);
-    
+    const [localBalls, set_local_balls] = useState(mainGameInfo.currentBalls);
     
 
     const incrementOuts = async () =>
@@ -90,7 +92,7 @@ export default function GameScreen()
                 resetOuts: false
             });
         }
-        await dataModel.fetchData();
+        await dataModel.fetchData("selectPlayer");
         
     }
 
@@ -106,7 +108,29 @@ export default function GameScreen()
             mainGameInfo.currentStrikes++;
             set_local_strikes(mainGameInfo.currentStrikes);
         }
-    //    await dataModel.fetchData();
+ 
+    }
+
+    const incrementBalls = async () => {
+        if(mainGameInfo.currentBalls === 4 || localBalls === 4)
+        {
+            if(!mainGameInfo.firstBaseActive)
+            {
+                await updateFBActive(true);
+                await dataModel.fetchData("selectPlayer");
+                return;
+            }
+            else
+            {
+                await updateBases(1);
+            }
+        }
+        else
+        {
+            await axios.post("http://localhost:8000/incrementBalls", {main_game_info: mainGameInfo});
+            mainGameInfo.currentBalls++;
+            set_local_balls(mainGameInfo.currentBalls);
+        }
     }
 
     const updateFBActive = async (isActive) =>
@@ -192,7 +216,7 @@ export default function GameScreen()
                         {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
                     );
                 }
-                await dataModel.fetchData();
+                await dataModel.fetchData("selectPlayer");
                 console.log(dataModel.main_game_info[0].firstBaseActive);
                 return;
             case 2: 
@@ -209,7 +233,7 @@ export default function GameScreen()
                         {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
                     );
                 }
-                await dataModel.fetchData(); 
+                await dataModel.fetchData("selectPlayer"); 
                 return;
             case 3:
                 await updateTBActive(true);
@@ -225,7 +249,7 @@ export default function GameScreen()
                         {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
                     );
                 }
-                await dataModel.fetchData();
+                await dataModel.fetchData("selectPlayer");
                 return;
             default:
                 score_increment++;
@@ -241,7 +265,7 @@ export default function GameScreen()
                         {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
                     );
                 }
-                await dataModel.fetchData();
+                await dataModel.fetchData("selectPlayer");
                 return;
 
         }
@@ -267,7 +291,7 @@ export default function GameScreen()
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     {teamRed.teamChoices === "hitter" && (
-                    (!mainGameInfo.gameOver && <div className={styles.choice_buttons_main}>
+                    (!mainGameInfo.gameOver && dataModel.view === "gameField" && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_red} onClick={async () => {await updateBases(1);}}>Single</span>
                         <span className={styles.player_buttons_red} onClick={async () => {await updateBases(2);}}>Double</span>
                         <span className={styles.player_buttons_red} onClick={async () => {await updateBases(3);}}>Triple</span>
@@ -275,9 +299,10 @@ export default function GameScreen()
                     </div>)
                     )}
                     {teamRed.teamChoices === "pitcher" && (
-                    (!mainGameInfo.gameOver && <div className={styles.choice_buttons_main}>
+                    (!mainGameInfo.gameOver && dataModel.view === "gameField" && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_red} onClick={async () => {await incrementOuts();}}>Out</span>
                         <span className={styles.player_buttons_red} onClick={async () => {await incrementStrikes();}}>Strike</span>
+                        <span className={styles.player_buttons_red} onClick={async () => {await incrementBalls();}}>Ball</span>
                     </div>)
                     )}
 
@@ -297,13 +322,14 @@ export default function GameScreen()
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>
                     
                     {teamBlue.teamChoices === "pitcher" && (
-                    (!mainGameInfo.gameOver && <div className={styles.choice_buttons_main}>
+                    (!mainGameInfo.gameOver && dataModel.view === "gameField" && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_blue} onClick={async () => {await incrementOuts();}}>Out</span>
                         <span className={styles.player_buttons_blue} onClick={async () => {await incrementStrikes();}}>Strike</span>
+                        <span className={styles.player_buttons_blue} onClick={async () => {await incrementBalls();}}>Ball</span>
                     </div>)
                     )}
                     {teamBlue.teamChoices === "hitter" && (
-                    (!mainGameInfo.gameOver && <div className={styles.choice_buttons_main}>
+                    (!mainGameInfo.gameOver && dataModel.view === "gameField" && <div className={styles.choice_buttons_main}>
                         <span className={styles.player_buttons_blue} onClick={async () => {await updateBases(1);}}>Single</span>
                         <span className={styles.player_buttons_blue} onClick={async () => {await updateBases(2);}}>Double</span>
                         <span className={styles.player_buttons_blue} onClick={async () => {await updateBases(3);}}>Triple</span>
@@ -319,6 +345,7 @@ export default function GameScreen()
                 dataModel={dataModel}
                 mainGameInfo={mainGameInfo}
                 strikes={localStrikes}
+                balls={localBalls}
                 teamRed={teamRed}
                 teamBlue={teamBlue}
             />}

@@ -17,12 +17,13 @@ export const DataProvider = ({children}) => {
     
     /*Add a view toggle state here!*/
 
-    const fetchData = async() =>
+    const fetchData = async(viewChoice) =>
     {
 
         set_loading(true);
         console.log("Loading: ",loading);
         console.log("Obtaining Players");
+        console.log(viewChoice);
         const playerResponse = await axios.get("http://localhost:8000/players");
 
         set_players(playerResponse.data);
@@ -37,17 +38,31 @@ export const DataProvider = ({children}) => {
         set_red_team_players(playerNamesResponse.data.redTeamPlayers);
         set_blue_team_players(playerNamesResponse.data.blueTeamPlayers);
 
-        if(view === "selectPlayer")
+        // if(view === "selectPlayer")
+        // {
+        //     toggle_view("gameField");
+        // }
+        // else
+        // {
+        //     toggle_view("selectPlayer");
+        // }
+        if(viewChoice)
         {
-            toggle_view("gameField");
+            switchViews(viewChoice);
         }
         else
         {
             toggle_view("selectPlayer");
         }
+        
+        
 
         set_loading(false);
         console.log("Loading: ", loading);
+    }
+
+    const switchViews = (viewChoice) => {
+        toggle_view(viewChoice);
     }
 
     useEffect(() => {

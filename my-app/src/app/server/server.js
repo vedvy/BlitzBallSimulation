@@ -9,6 +9,7 @@ import MainGame from './models/main_game.js';
 import mongoose from 'mongoose';
 import bodyParser from "body-parser";
 import { withCoalescedInvoke } from "next/dist/lib/coalesced-function.js";
+import { createStaticHandler } from "react-router-dom";
 
 // const express = require("express");
 
@@ -148,7 +149,7 @@ app.post("/switchPositions", jsonParser, async function(req, res) {
 
 app.post("/setNextPlayers", jsonParser, async function(req, res)
 {
-    /*Still needs fixing!!!!*/
+
     try{
         const nextRedPlayer = req.body['redPlayerChosen'];
         const nRPObject = (await Player.find({name: nextRedPlayer}).exec())[0];
@@ -222,6 +223,20 @@ app.post("/incrementStrikes", jsonParser, async function(req, res){
 
 });
 
+app.post("/incrementBalls", jsonParser, async function(req, res) {
+    try{
+        const MainGameInfo = req.body['main_game_info'];
+
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
+            $inc: {currentBalls: 1}
+        }, {new: true});
+        res.send(updateGameInfo);
+    }
+    catch(err){
+        res.status(500).json({message: "err", err});
+    }
+});
+
 app.post("/updateFirstBase", jsonParser, async function(req, res)
 {
     console.log("Outside uFB");
@@ -232,7 +247,8 @@ app.post("/updateFirstBase", jsonParser, async function(req, res)
         const isActive = req.body['isActive'];
         
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
-            firstBaseActive: isActive 
+            firstBaseActive: isActive,
+            currentBalls: 0 
         }, {new: true});
         console.log(MainGameInfo.firstBaseActive);
 
@@ -250,7 +266,8 @@ app.post("/updateSecondBase", jsonParser, async function(req, res)
         const MainGameInfo = req.body['main_game_info'];
         const isActive = req.body['isActive'];
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
-            secondBaseActive: isActive 
+            secondBaseActive: isActive,
+            currentBalls: 0 
         }, {new: true});
         res.send(updateGameInfo);
     }
@@ -266,7 +283,8 @@ app.post("/updateThirdBase", jsonParser, async function(req, res)
         const MainGameInfo = req.body['main_game_info'];
         const isActive = req.body['isActive'];
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
-            thirdBaseActive: isActive 
+            thirdBaseActive: isActive,
+            currentBalls: 0
         }, {new: true});
         res.send(updateGameInfo);
     }

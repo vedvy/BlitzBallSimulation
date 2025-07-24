@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 const mainGameSchema = new Schema({
     teamRed: {type: Schema.Types.ObjectId, ref: "team", required: true},
     teamBlue: {type: Schema.Types.ObjectId, ref: "team", required: true},
+    currentBalls:{type: Number, default: 0},
     currentOuts: {type: Number, default: 0},
     currentStrikes: {type: Number, default: 0},
     currentInning: {type: Number, default: 1},

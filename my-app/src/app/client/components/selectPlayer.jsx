@@ -38,7 +38,7 @@ export default function SelectPlayer()
 
             dataModel.view = "gameField";
             console.log(dataModel.view);
-            await dataModel.fetchData();
+            await dataModel.fetchData("gameField");
             //server call and then switch view back to game field.
             
         }
@@ -58,7 +58,7 @@ export default function SelectPlayer()
 
             dataModel.view = "gameField";
             console.log(dataModel.view);
-            await dataModel.fetchData();
+            await dataModel.fetchData("gameField");
         }
         else
         {
@@ -85,7 +85,9 @@ export default function SelectPlayer()
 
     return (
         <div className="game_main_content">
-            <h2 className={styles.currentGameInfo}>Current Game Info: Inning {mainGameInfo.currentInning} | Outs: {mainGameInfo.currentOuts} | Strikes: {mainGameInfo.currentStrikes}</h2>
+            <h2 className={styles.currentGameInfo}>Current Game Info: Inning {mainGameInfo.currentInning} | Outs: {mainGameInfo.currentOuts} | Strikes: {mainGameInfo.currentStrikes}
+                | Balls: {mainGameInfo.currentBalls}
+            </h2>
             {!redPlayerChosen && <div className={styles.selectPlayerRed}>
                 
                 {teamRed.teamChoices === "hitter" ? <h1>Choose Red Team's Hitter</h1> : <h1>Choose Red Team's Pitcher</h1>}
