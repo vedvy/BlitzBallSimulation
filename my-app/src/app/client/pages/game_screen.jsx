@@ -34,42 +34,7 @@ export default function GameScreen()
     }
     const [localStrikes, set_local_strikes] = useState(mainGameInfo.currentStrikes);
     
-    // const [red_team_choices, set_red_team_choices] = useState("hitter");
-    // const [blue_team_choices, set_blue_team_choices] = useState("pitcher");
-    // const [red_score, set_red_score] = useState(0);
-    // const [blue_score, set_blue_score] = useState(0);
     
-    // const [current_outs, set_current_outs] = useState(0);
-    // const [current_inning, set_current_inning] = useState(1);
-    // const [current_strikes, set_current_strikes] = useState(0);
-    // const [top_of_inning, set_top_inning] = useState(false);
-    // const [first_base_active, set_first_base_active] = useState(false);
-    // const [second_base_active, set_second_base_active] = useState(false);
-    // const [third_base_active, set_third_base_active] = useState(false);
-    // const [game_over, set_game_over] = useState(false);
-
-
-    // const switchPositions = async () => {
-    //     await axios.post("http://localhost:8000/switchPositions", {redTeam: teamRed, 
-    //         blueTeam: teamBlue, 
-    //         main_game_info: mainGameInfo});
-
-        
-    //     red_team_choices === "hitter" ? set_red_team_choices("pitcher") : set_red_team_choices("hitter");
-    //     blue_team_choices === "pitcher" ? set_blue_team_choices("hitter") : set_blue_team_choices("pitcher");
-    //     set_first_base_active(false);
-    //     set_second_base_active(false);
-    //     set_third_base_active(false);
-    //     console.log(top_of_inning);
-    //     set_top_inning(!top_of_inning);
-    //     console.log(top_of_inning);
-
-    //     console.log(mainGameInfo.firstBaseActive);
-    //     console.log("Team Red: ", teamRed.teamChoices);
-    //     console.log("Team Blue", teamBlue.teamChoices);
-
-    //     await dataModel.fetchData();
-    // }
 
     const incrementOuts = async () =>
     {

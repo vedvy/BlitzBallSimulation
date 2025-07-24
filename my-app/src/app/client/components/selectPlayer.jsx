@@ -19,6 +19,7 @@ export default function SelectPlayer()
         var redTeamPlayers = dataModel.redTeamPlayers;
 
         var blueTeamPlayers = dataModel.blueTeamPlayers;
+        var mainGameInfo = dataModel.main_game_info[0];
 
 
     }
@@ -84,13 +85,16 @@ export default function SelectPlayer()
 
     return (
         <div className="game_main_content">
+            <h2 className={styles.currentGameInfo}>Current Game Info: Inning {mainGameInfo.currentInning} | Outs: {mainGameInfo.currentOuts} | Strikes: {mainGameInfo.currentStrikes}</h2>
             {!redPlayerChosen && <div className={styles.selectPlayerRed}>
+                
                 {teamRed.teamChoices === "hitter" ? <h1>Choose Red Team's Hitter</h1> : <h1>Choose Red Team's Pitcher</h1>}
                 
                 {redTeamPlayers.map((player, index) => 
                         <button key={index} className={styles.select_player_red}
                         onClick={async () => {await chosenRedPlayer(player);}}>{player}</button>
-                )}    
+                )}
+                
             </div>}
             {redPlayerChosen && <div className={styles.playerRedChosen}>
                     <h1>Red Player Up Next: {redPlayerChosen}</h1>

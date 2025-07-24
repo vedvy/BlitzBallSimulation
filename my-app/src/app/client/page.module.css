@@ -417,7 +417,13 @@ a.secondary {
   text-align: center;
   position: relative;
   background-color: lightblue;
-  height: 350px;
+  height: 320px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.currentGameInfo{
+  text-align: center;
+  background-color: seagreen;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
