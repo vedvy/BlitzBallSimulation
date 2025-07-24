@@ -9,6 +9,7 @@ import { DataContext } from "../components/context";
 import main_game from "@/app/server/models/main_game";
 import SelectPlayer from "../components/selectPlayer";
 import GameField from "../components/gameField";
+import EndGameScreen from "../components/endGameScreen";
 
 export default function GameScreen()
 { 
@@ -56,23 +57,26 @@ export default function GameScreen()
             {
                 if(mainGameInfo.currentInning === 3)
                 {
-                    var logger = document.getElementById("game_log");
-                    console.log(logger);
-                    var log = document.createElement("div");
-                    if(teamRed.teamScore === teamBlue.teamScore)
-                    {
-                        log.textContent = "It's a Tie!";
-                        logger.append(log);
-                    }
-                    else{
-                        log.textContent = (teamRed.teamScore > teamBlue.teamScore ? "red team wins" : "blue team wins");
-                        log.className = (teamRed.teamScore > teamBlue.teamScore ? styles.log_text_red : styles.log_text_blue);
-                        logger.append(log);
-                    }
+                    // var logger = document.getElementById("game_log");
+                    // console.log(logger);
+                    // var log = document.createElement("div");
+                    // if(teamRed.teamScore === teamBlue.teamScore)
+                    // {
+                    //     log.textContent = "It's a Tie!";
+                    //     logger.append(log);
+                    // }
+                    // else{
+                    //     log.textContent = (teamRed.teamScore > teamBlue.teamScore ? "red team wins" : "blue team wins");
+                    //     log.className = (teamRed.teamScore > teamBlue.teamScore ? styles.log_text_red : styles.log_text_blue);
+                    //     logger.append(log);
+                    // }
                     
                     await axios.post("http://localhost:8000/updateGameOver", {
                         main_game_info: mainGameInfo
                     });
+                    await dataModel.fetchData("gameOver");
+                    return;
+
                 }
                 else
                 {
@@ -351,6 +355,13 @@ export default function GameScreen()
             />}
             {dataModel.view === "selectPlayer" && 
             <SelectPlayer/>}
+            {dataModel.view === "gameOver" && 
+            <EndGameScreen
+            teamRed={teamRed}
+            teamBlue={teamBlue}
+            />
+            }
+
             <div className={styles.footer}>
                 Created by Vedant Vyas, circa 2025
             </div>   
