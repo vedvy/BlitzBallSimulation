@@ -293,10 +293,10 @@ export default function GameScreen()
                     <h1 style={{textAlign: "center"}}>Team Red | Score: {teamRed.teamScore}</h1>
                     <hr/>
                     {teamRed.teamChoices === "hitter" && (
-                        <h2>Current Batter: {teamRed.currentPlayerDisplay}</h2>
+                        <h2 style={{textAlign: "center"}}>Current Batter: {teamRed.currentPlayerDisplay}</h2>
                     )}
                     {teamRed.teamChoices === "pitcher" && (
-                        <h2>Current Pitcher: {teamRed.currentPlayerDisplay}</h2>
+                        <h2 style={{textAlign: "center"}}>Current Pitcher: {teamRed.currentPlayerDisplay}</h2>
                     )}
                     
                     <hr/>
@@ -323,10 +323,10 @@ export default function GameScreen()
                     <h1 style={{textAlign: "center"}}>Team Blue | Score: {teamBlue.teamScore}</h1>
                     <hr/>
                     {teamBlue.teamChoices === "hitter" && (
-                        <h2>Current Batter: {teamBlue.currentPlayerDisplay}</h2>
+                        <h2 style={{textAlign: "center"}}>Current Batter: {teamBlue.currentPlayerDisplay}</h2>
                     )}
                     {teamBlue.teamChoices === "pitcher" && (
-                        <h2>Current Pitcher: {teamBlue.currentPlayerDisplay}</h2>
+                        <h2 style={{textAlign: "center"}}>Current Pitcher: {teamBlue.currentPlayerDisplay}</h2>
                     )}
                     <hr/>
                     <h3 style={{textAlign: "center"}}>Current Actions: </h3>

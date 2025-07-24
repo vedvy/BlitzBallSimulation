@@ -11,7 +11,7 @@ export const DataProvider = ({children}) => {
     const [blueTeamPlayers, set_blue_team_players] = useState([]);
     const [teams, set_teams] = useState([]);
     const [main_game_info, set_main_game_info] = useState([]);
-    const [view, toggle_view] = useState("selectPlayer");
+    const [view, toggle_view] = useState("gameField");
     //Views: selectPlayer, gameField for now.
     const [loading, set_loading] = useState(true);
     

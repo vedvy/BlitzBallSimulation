@@ -208,7 +208,9 @@ a.secondary {
 }
 
 .player_buttons_red,
-.player_buttons_blue{
+.player_buttons_blue,
+.select_player_red,
+.select_player_blue{
   border: 2px solid black;
   background-color: #ccc;
   color: black;
@@ -216,13 +218,24 @@ a.secondary {
   padding: 10px;
 }
 
-.player_buttons_red:hover{
+.select_player_red,
+.select_player_blue{
+  padding: 50px;
+  font-size: 30px;
+}
+
+
+.player_buttons_red:hover,
+.select_player_red:hover{
   background-color: lightcoral;
+  color: white;
   transition-duration: 0.2s;
 }
 
-.player_buttons_blue:hover{
+.player_buttons_blue:hover,
+.select_player_blue:hover{
   background-color: aquamarine;
+  color: white;
   transition-duration: 0.2s;
 }
 
@@ -385,12 +398,15 @@ a.secondary {
 /*selectPlayer CSS*/
 
 .selectPlayerContainer{
-  display: grid;
+  display: flex;
   
 }
 
 .selectPlayerRed,
 .playerRedChosen{
+  text-align: center;
+  height: 200px;
+  position: relative;
   background-color: lightcoral;
   font-family: Georgia, 'Times New Roman', Times, serif;
 
@@ -398,7 +414,10 @@ a.secondary {
 
 .selectPlayerBlue,
 .playerBlueChosen{
+  text-align: center;
+  position: relative;
   background-color: lightblue;
+  height: 350px;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
