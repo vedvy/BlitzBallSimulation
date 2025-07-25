@@ -1,4 +1,6 @@
 import styles from "../page.module.css";
+import SelectPlayer from "./selectPlayer";
+import EndGameScreen from "./endGameScreen";
 
 export default function GameField(
     {
@@ -14,6 +16,7 @@ export default function GameField(
     mainGameInfo.logMessages.map((log, index) => {
         console.log(log);
     });
+    console.log(dataModel);
 
     const incrementOuts = async () =>
         {
@@ -225,8 +228,8 @@ export default function GameField(
             
         }
 
-    return (<div className={styles.game_main_content}> {/*dataModel view toggling problems here!*/}
-                    <div className={styles.game_field}>
+    return (<div className={styles.game_main_content}>
+                    {dataModel.view === "gameField" && <div className={styles.game_field}>
                         <h1 className={styles.field_information}>Inning: {mainGameInfo.currentInning}</h1>
                         <h1 className={styles.field_information}>Outs: {mainGameInfo.currentOuts}</h1>
                         <h1 className={styles.field_information}>Strikes: {strikes}</h1>
@@ -243,7 +246,13 @@ export default function GameField(
                         </div>
                         </div>
     
+                    </div>}
+                    {dataModel.view === "selectPlayer" && <div className={styles.game_field}>
+                        <SelectPlayer/>
                     </div>
+                    
+                    }
+                    
                     <div className={styles.logger_section}>
                         <h2 style={{textAlign: "center"}}>Game Logs</h2>
                         <div className={styles.logger_content} id="game_log">

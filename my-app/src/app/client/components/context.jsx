@@ -32,7 +32,7 @@ export const DataProvider = ({children}) => {
         set_teams(teamResponse.data);
 
         const mainGameResponse = await axios.get("http://localhost:8000/maingame");
-        set_main_game_info(mainGameResponse.data);
+        set_main_game_info(mainGameResponse.data.mainGame);
        
         const playerNamesResponse = await axios.get("http://localhost:8000/teamplayernames");
         set_red_team_players(playerNamesResponse.data.redTeamPlayers);
@@ -46,17 +46,18 @@ export const DataProvider = ({children}) => {
         // {
         //     toggle_view("selectPlayer");
         // }
-        if(viewChoice)
+        if(mainGameResponse.data.gameOver === true){
+            switchViews("gameOver");
+        }
+        else if(viewChoice)
         {
             switchViews(viewChoice);
         }
         else
         {
-            toggle_view("selectPlayer");
+            switchViews("selectPlayer");
         }
         
-        
-
         set_loading(false);
         console.log("Loading: ", loading);
     }

@@ -38,7 +38,7 @@ export default function GameScreen()
     const [localBalls, set_local_balls] = useState(mainGameInfo.currentBalls);
     
 
-    const incrementOuts = async () =>
+    const incrementOuts = async (isStrikeOut) =>
     {
         if(mainGameInfo.currentOuts === 2)
         {
@@ -49,7 +49,7 @@ export default function GameScreen()
 
 
             await axios.post("http://localhost:8000/incrementOuts", {main_game_info: mainGameInfo, 
-                resetOuts: true, teamRed: teamRed, teamBlue: teamBlue
+                resetOuts: true, teamRed: teamRed, teamBlue: teamBlue, isStrikeOut: isStrikeOut
             });
 
             if(mainGameInfo.topOfInning)
@@ -79,7 +79,7 @@ export default function GameScreen()
         else
         {
             await axios.post("http://localhost:8000/incrementOuts", {main_game_info: mainGameInfo, 
-                resetOuts: false, teamRed: teamRed, teamBlue: teamBlue
+                resetOuts: false, teamRed: teamRed, teamBlue: teamBlue, isStrikeOut: isStrikeOut
             });
         }
         await dataModel.fetchData("selectPlayer");
@@ -87,11 +87,11 @@ export default function GameScreen()
     }
 
     const incrementStrikes = async () => {
-        // mainGameInfo.currentStrikes === 2 ? incrementOuts() : set_current_strikes(current_strikes+1);
+        
         if(mainGameInfo.currentStrikes === 2 || localStrikes === 2)
         {
             set_local_strikes(0);
-            await incrementOuts();
+            await incrementOuts(true);
             
         }
         else
@@ -316,7 +316,7 @@ export default function GameScreen()
                     )}
                     {teamRed.teamChoices === "pitcher" && (
                     (!mainGameInfo.gameOver && dataModel.view === "gameField" && <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_red} onClick={async () => {await incrementOuts();}}>Out</span>
+                        <span className={styles.player_buttons_red} onClick={async () => {await incrementOuts(false);}}>Out</span>
                         <span className={styles.player_buttons_red} onClick={async () => {await incrementStrikes();}}>Strike</span>
                         <span className={styles.player_buttons_red} onClick={async () => {await incrementBalls();}}>Ball</span>
                     </div>)
@@ -339,7 +339,7 @@ export default function GameScreen()
                     
                     {teamBlue.teamChoices === "pitcher" && (
                     (!mainGameInfo.gameOver && dataModel.view === "gameField" && <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_blue} onClick={async () => {await incrementOuts();}}>Out</span>
+                        <span className={styles.player_buttons_blue} onClick={async () => {await incrementOuts(false);}}>Out</span>
                         <span className={styles.player_buttons_blue} onClick={async () => {await incrementStrikes();}}>Strike</span>
                         <span className={styles.player_buttons_blue} onClick={async () => {await incrementBalls();}}>Ball</span>
                     </div>)
@@ -356,7 +356,7 @@ export default function GameScreen()
  
                 </div>
             </div>
-            {dataModel.view === "gameField" && 
+            {dataModel.view !== "gameOver" && 
                 <GameField
                 dataModel={dataModel}
                 mainGameInfo={mainGameInfo}
@@ -365,12 +365,11 @@ export default function GameScreen()
                 teamRed={teamRed}
                 teamBlue={teamBlue}
             />}
-            {dataModel.view === "selectPlayer" && 
-            <SelectPlayer/>}
             {dataModel.view === "gameOver" && 
             <EndGameScreen
             teamRed={teamRed}
             teamBlue={teamBlue}
+            mainGameInfo={mainGameInfo}
             />
             }
 

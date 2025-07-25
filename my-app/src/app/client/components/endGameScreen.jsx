@@ -1,10 +1,12 @@
 import styles from "../page.module.css"
 
 export default function EndGameScreen(
-    {teamRed, teamBlue}
+    {teamRed, teamBlue, mainGameInfo}
 )
 
 {
+    console.log(teamRed.teamScore);
+
     return (
         <div className={styles.game_main_content}>
             <div className={styles.winnerScreen}>
@@ -22,6 +24,14 @@ export default function EndGameScreen(
             <h1>Team Blue Score: {teamBlue.teamScore}</h1>
             </div>
             
+            <div className={styles.logger_section}>
+                <h2 style={{textAlign: "center"}}>Game Logs</h2>
+                <div className={styles.logger_content} id="game_log">
+                    {mainGameInfo.logMessages.map((log, index) => 
+                        <p key={index} className={styles.logMessages}>{log}</p>
+                    )}
+                </div>
+            </div>
         </div>
     )
 }

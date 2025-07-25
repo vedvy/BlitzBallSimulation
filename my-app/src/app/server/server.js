@@ -101,7 +101,11 @@ app.get("/teams", async function(req, res) {
 app.get("/maingame", async function(req, res){
     try{
         const mainGame = await MainGame.find({});
-        res.send(mainGame);
+        console.log(mainGame[0].gameOver);
+        res.json({
+            mainGame: mainGame,
+            gameOver: mainGame[0].gameOver
+        });
     }
     catch(err)
     {
@@ -169,7 +173,10 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
     try{
         const MainGameInfo = req.body['main_game_info'];
         const resetOuts = req.body['resetOuts'];
-        
+        const teamRed = req.body['teamRed'];
+        const teamBlue = req.body['teamBlue'];
+        const StrikeOut = req.body['isStrikeOut'];
+
         if(resetOuts)
         {
             console.log("Resetting Outs");
@@ -187,6 +194,24 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
                $inc: {currentOuts: 1},
                 currentStrikes: 0
             }, {new: true});
+        }
+        
+        
+        if(teamRed.teamChoices === "pitcher")
+        {
+            let gameLog = `${teamRed.currentPlayerDisplay} got ${teamBlue.currentPlayerDisplay} OUT! 
+            Strikeout: ${StrikeOut}`;
+            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {$push: {logMessages: gameLog}},
+            {new: true}
+        );
+        }
+        else
+        {
+            let gameLog =  `${teamBlue.currentPlayerDisplay} got ${teamRed.currentPlayerDisplay} OUT!
+            StrikeOut: ${StrikeOut}`;
+            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {$push: {logMessages: gameLog}},
+            {new: true}
+        );
         }
 
         res.send(200);

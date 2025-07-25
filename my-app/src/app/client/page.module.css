@@ -383,6 +383,7 @@ a.secondary {
 
 .selectPlayerContainer{
   display: flex;
+  overflow: auto;
   
 }
 
@@ -433,6 +434,7 @@ a.secondary {
   font-weight: bold;
   font-family: Georgia, 'Times New Roman', Times, serif;
   text-decoration: underline;
+  margin-bottom: 10px;
 }
 
 .logger_section{
@@ -445,10 +447,11 @@ a.secondary {
   width: 230px;
   height: 500px;
   background-color: lightgray;
-  position: absolute;
+  position:static;
   left: 20px;
   overflow: auto;
   text-align: center;
 
+/*Keep position as static for now, determine is better positioning should be made*/
 
 }
