@@ -321,9 +321,6 @@ export default function GameScreen()
                         <span className={styles.player_buttons_red} onClick={async () => {await incrementBalls();}}>Ball</span>
                     </div>)
                     )}
-
-                    
-
                 </div>
                 <div className={styles.team_blue_banner}>
                     <h1 style={{textAlign: "center"}}>Team Blue | Score: {teamBlue.teamScore}</h1>

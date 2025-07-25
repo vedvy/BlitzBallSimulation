@@ -1,6 +1,8 @@
 import styles from "../page.module.css";
 import SelectPlayer from "./selectPlayer";
 import EndGameScreen from "./endGameScreen";
+import { useState, useEffect, useContext } from "react";
+import { DataContext } from "../components/context";
 
 export default function GameField(
     {
@@ -13,10 +15,37 @@ export default function GameField(
 
     })
 {
+
+
     mainGameInfo.logMessages.map((log, index) => {
         console.log(log);
     });
-    console.log(dataModel);
+    
+    const [quitFlag, set_quit_flag] = useState(false);
+    const [formData, set_form_data] = useState({
+        confirmationText: ""
+    })
+
+    const handleChanges = (event) => {
+        const {name, value} = event.target;
+        console.log(event.target);
+
+        set_form_data({
+            ...formData,
+            [name]: value
+        });
+    }
+
+    const confirmQuit = async (event) => {
+        event.preventDefault();
+        setError("");
+        const confirmText = formData.confirmationText.trim();
+        console.log(confirmText);
+        if(confirmText === "ForceQuit")
+        {
+            await dataModel.fetchData("gameOver");
+        }
+    }
 
     const incrementOuts = async () =>
         {
@@ -234,6 +263,23 @@ export default function GameField(
                         <h1 className={styles.field_information}>Outs: {mainGameInfo.currentOuts}</h1>
                         <h1 className={styles.field_information}>Strikes: {strikes}</h1>
                         <h1 className={styles.field_information}>Balls: {balls}</h1>
+                        <br/>
+                        {!quitFlag && <button className={styles.quitEarlyButton} onClick={() => {set_quit_flag(true);}}>Quit Early</button>}
+                        {quitFlag && <div>
+                            <form onSubmit={confirmQuit}>
+                            <textarea 
+                            name="confirmationText"
+                            placeholder="Enter ForceQuit to confirm"
+                            value={formData.confirmationText} 
+                            onChange={handleChanges}
+                            maxLength={20}>
+                            </textarea>
+                            </form>
+                            <button type="submit">Enter</button>
+                            <button onClick={() => {set_quit_flag(false);}}>Cancel</button>
+                            </div>
+
+                            }
                         <div className={styles.inner_field}>
                             <div className={styles.home_base}>
                             <div className={styles.home_base_plate}></div>
@@ -245,7 +291,7 @@ export default function GameField(
                             <div className={styles.pitchers_plate} style={{backgroundColor: teamRed.teamChoices === "pitcher" ? "red" : "blue"}}></div>
                         </div>
                         </div>
-    
+                    
                     </div>}
                     {dataModel.view === "selectPlayer" && <div className={styles.game_field}>
                         <SelectPlayer/>

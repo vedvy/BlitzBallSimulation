@@ -379,6 +379,20 @@ a.secondary {
   justify-content: space-evenly;
 }
 
+.quitEarlyButton{
+  color: black;
+  background-color: lightcyan;
+  cursor: pointer;
+  padding: 50px;
+  text-align: center;
+}
+
+.quitEarlyButton:hover{
+  color: white;
+  background-color: darkred;
+  transition-duration: 0.2s;
+}
+
 /*selectPlayer CSS*/
 
 .selectPlayerContainer{
