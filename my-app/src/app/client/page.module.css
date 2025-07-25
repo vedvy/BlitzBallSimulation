@@ -343,23 +343,6 @@ a.secondary {
 
 
 
-.logger_section{
-  flex: 1;
-  background-color: gray;
-  position: relative;
-}
-
-.logger_content{
-  width: 230px;
-  height: 500px;
-  background-color: lightgray;
-  position: absolute;
-  left: 20px;
-  overflow: auto;
-  text-align: center;
-
-
-}
 
 .log_text_red{
   color: rgba(220, 17, 17, 0.918);
@@ -442,4 +425,30 @@ a.secondary {
 .winnerTitle{
   font-size: 50px;
   font-weight: bold;
+}
+
+/*Logging CSS*/
+
+.logMessages{
+  font-weight: bold;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  text-decoration: underline;
+}
+
+.logger_section{
+  flex: 1;
+  background-color: gray;
+  position: relative;
+}
+
+.logger_content{
+  width: 230px;
+  height: 500px;
+  background-color: lightgray;
+  position: absolute;
+  left: 20px;
+  overflow: auto;
+  text-align: center;
+
+
 }

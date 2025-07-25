@@ -13,7 +13,9 @@ const mainGameSchema = new Schema({
     firstBaseActive: {type: Boolean, default: false},
     secondBaseActive: {type: Boolean, default: false},
     thirdBaseActive: {type: Boolean, default: false},
-    gameOver: {type: Boolean, default: false}
+    gameOver: {type: Boolean, default: false},
+    logMessages: [{type: String}]
+
 });
 
 

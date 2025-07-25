@@ -13,9 +13,7 @@ import EndGameScreen from "../components/endGameScreen";
 
 export default function GameScreen()
 { 
-
-    /*IMPORTANT: Include BALLS!! If the first base is open, make it active, else call updateBase(1).
-    Handle it the same way Strikes are.*/    
+   
 
     const dataModel = useContext(DataContext);
     if(!dataModel.loading)
@@ -30,6 +28,7 @@ export default function GameScreen()
         console.log(teamRed.teamPlayers);
         console.log(teamBlue.teamPlayers);
         console.log(dataModel.view);
+        console.log(mainGameInfo.logMessages);
 
 
         
@@ -50,26 +49,13 @@ export default function GameScreen()
 
 
             await axios.post("http://localhost:8000/incrementOuts", {main_game_info: mainGameInfo, 
-                resetOuts: true
+                resetOuts: true, teamRed: teamRed, teamBlue: teamBlue
             });
 
             if(mainGameInfo.topOfInning)
             {
-                if(mainGameInfo.currentInning === 3)
+                if(mainGameInfo.currentInning === 3) //Prompt for possible 4th inning/overtime
                 {
-                    // var logger = document.getElementById("game_log");
-                    // console.log(logger);
-                    // var log = document.createElement("div");
-                    // if(teamRed.teamScore === teamBlue.teamScore)
-                    // {
-                    //     log.textContent = "It's a Tie!";
-                    //     logger.append(log);
-                    // }
-                    // else{
-                    //     log.textContent = (teamRed.teamScore > teamBlue.teamScore ? "red team wins" : "blue team wins");
-                    //     log.className = (teamRed.teamScore > teamBlue.teamScore ? styles.log_text_red : styles.log_text_blue);
-                    //     logger.append(log);
-                    // }
                     
                     await axios.post("http://localhost:8000/updateGameOver", {
                         main_game_info: mainGameInfo
@@ -93,7 +79,7 @@ export default function GameScreen()
         else
         {
             await axios.post("http://localhost:8000/incrementOuts", {main_game_info: mainGameInfo, 
-                resetOuts: false
+                resetOuts: false, teamRed: teamRed, teamBlue: teamBlue
             });
         }
         await dataModel.fetchData("selectPlayer");
@@ -104,7 +90,9 @@ export default function GameScreen()
         // mainGameInfo.currentStrikes === 2 ? incrementOuts() : set_current_strikes(current_strikes+1);
         if(mainGameInfo.currentStrikes === 2 || localStrikes === 2)
         {
+            set_local_strikes(0);
             await incrementOuts();
+            
         }
         else
         {
@@ -210,14 +198,20 @@ export default function GameScreen()
                 await updateFBActive(true);
                 if(teamRed.teamChoices === "hitter")
                 {
+                    let gameLog = `${teamRed.currentPlayerDisplay} has hit a single!`;
                     await axios.post("http://localhost:8000/updateScores", 
-                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
+                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                        }
                     );
                 }
                 else
                 {
+                    let gameLog = `${teamBlue.currentPlayerDisplay} has hit a single!`;
                     await axios.post("http://localhost:8000/updateScores", 
-                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
+                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                        }
                     );
                 }
                 await dataModel.fetchData("selectPlayer");
@@ -227,14 +221,20 @@ export default function GameScreen()
                 await updateSBActive(true);
                 if(teamRed.teamChoices === "hitter")
                 {
+                    let gameLog = `${teamRed.currentPlayerDisplay} has hit a double!`;
                     await axios.post("http://localhost:8000/updateScores", 
-                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
+                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                        }
                     );
                 }
                 else
                 {
+                    let gameLog = `${teamBlue.currentPlayerDisplay} has hit a double!`;
                     await axios.post("http://localhost:8000/updateScores", 
-                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
+                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                        }
                     );
                 }
                 await dataModel.fetchData("selectPlayer"); 
@@ -243,14 +243,20 @@ export default function GameScreen()
                 await updateTBActive(true);
                 if(teamRed.teamChoices === "hitter")
                 {
+                    let gameLog = `${teamRed.currentPlayerDisplay} has hit a triple!`;
                     await axios.post("http://localhost:8000/updateScores", 
-                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
+                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                        }
                     );
                 }
                 else
                 {
+                    let gameLog = `${teamBlue.currentPlayerDisplay} has hit a triple!`;
                     await axios.post("http://localhost:8000/updateScores", 
-                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
+                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                        }
                     );
                 }
                 await dataModel.fetchData("selectPlayer");
@@ -259,14 +265,20 @@ export default function GameScreen()
                 score_increment++;
                 if(teamRed.teamChoices === "hitter")
                 {
+                    let gameLog = `${teamRed.currentPlayerDisplay} has gone far and smashed a home run!!!`;
                     await axios.post("http://localhost:8000/updateScores", 
-                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                        {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
+                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                        }
                     );
                 }
                 else
                 {
+                    let gameLog = `${teamBlue.currentPlayerDisplay} cracked the bat and scored a home run!!!`;
                     await axios.post("http://localhost:8000/updateScores", 
-                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment}
+                        {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
+                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                        }
                     );
                 }
                 await dataModel.fetchData("selectPlayer");

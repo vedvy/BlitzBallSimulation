@@ -11,6 +11,9 @@ export default function GameField(
 
     })
 {
+    mainGameInfo.logMessages.map((log, index) => {
+        console.log(log);
+    });
 
     const incrementOuts = async () =>
         {
@@ -243,7 +246,11 @@ export default function GameField(
                     </div>
                     <div className={styles.logger_section}>
                         <h2 style={{textAlign: "center"}}>Game Logs</h2>
-                        <div className={styles.logger_content} id="game_log"></div>
+                        <div className={styles.logger_content} id="game_log">
+                            {mainGameInfo.logMessages.map((log, index) => 
+                                <p key={index} className={styles.logMessages}>{log}</p>
+                            )}
+                        </div>
                     </div>
                 </div>)
 }

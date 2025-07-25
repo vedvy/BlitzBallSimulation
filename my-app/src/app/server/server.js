@@ -36,7 +36,7 @@ app.get("/players", async function(req, res) {
     console.log("GETTING PLAYERS");
     try{
         const playersArray = await Player.find({});
-        console.log(playersArray.length);
+       
         res.send(playersArray);
     }
     catch(err){
@@ -50,8 +50,7 @@ app.get("/teamplayernames", jsonParser, async function(req, res) {
         // const playersArray = req.body['playersArray'];
         const playersArray = await Player.find({});
         const MainGameInfo = (await MainGame.find({}).exec())[0];
-        console.log(playersArray.length);
-        console.log(MainGameInfo);
+        
         console.log("after players Array");
         // const teamRed = req.body['teamRed'];
         // const teamBlue = req.body['teamBlue'];
@@ -60,15 +59,11 @@ app.get("/teamplayernames", jsonParser, async function(req, res) {
         console.log("After getting teams defined");
         var redTeamPlayers = [];
         var blueTeamPlayers = [];
-        console.log("Empty arrays defined");
-        console.log(teamRed);
+    
 
         for(let i = 0; i < playersArray.length; i++)
         {
-            // console.log("Inside for loop");
-            // console.log("Index: ", i);
-            // console.log(playersArray[i].id);
-            // console.log("Contains player: " , teamRed.teamPlayers.includes(playersArray[i].id));
+            
             if(teamRed.teamPlayers.includes(playersArray[i]._id))
             {
         
@@ -157,9 +152,7 @@ app.post("/setNextPlayers", jsonParser, async function(req, res)
         const nBPObject = (await Player.find({name: nextBluePlayer}).exec())[0];
         const teamRed = req.body['teamRed'];
         const teamBlue = req.body['teamBlue'];
-        console.log("Definitions in setNextPLayers done");
-        console.log("team Red: ", teamRed);
-        console.log(nRPObject);
+        
 
         const updateRedTeam = await Team.findByIdAndUpdate(teamRed._id, {currentPlayer: nRPObject, currentPlayerDisplay: nextRedPlayer});
         const updateBlueTeam = await Team.findByIdAndUpdate(teamBlue._id, {currentPlayer: nBPObject, currentPlayerDisplay: nextBluePlayer});
@@ -176,7 +169,7 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
     try{
         const MainGameInfo = req.body['main_game_info'];
         const resetOuts = req.body['resetOuts'];
-        console.log("Inside Increment Outs");
+        
         if(resetOuts)
         {
             console.log("Resetting Outs");
@@ -239,18 +232,19 @@ app.post("/incrementBalls", jsonParser, async function(req, res) {
 
 app.post("/updateFirstBase", jsonParser, async function(req, res)
 {
-    console.log("Outside uFB");
+    
     try{
         console.log("inside first base");
         const MainGameInfo = req.body['main_game_info'];
-        console.log(MainGameInfo);
+        
         const isActive = req.body['isActive'];
         
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             firstBaseActive: isActive,
-            currentBalls: 0 
+            currentBalls: 0,
+            currentStrikes: 0
         }, {new: true});
-        console.log(MainGameInfo.firstBaseActive);
+        
 
         res.send(updateGameInfo);
     }
@@ -267,7 +261,8 @@ app.post("/updateSecondBase", jsonParser, async function(req, res)
         const isActive = req.body['isActive'];
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             secondBaseActive: isActive,
-            currentBalls: 0 
+            currentBalls: 0,
+            currentStrikes: 0 
         }, {new: true});
         res.send(updateGameInfo);
     }
@@ -284,7 +279,8 @@ app.post("/updateThirdBase", jsonParser, async function(req, res)
         const isActive = req.body['isActive'];
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             thirdBaseActive: isActive,
-            currentBalls: 0
+            currentBalls: 0,
+            currentStrikes: 0
         }, {new: true});
         res.send(updateGameInfo);
     }
@@ -300,6 +296,12 @@ app.post("/updateScores", jsonParser, async function(req, res){
         const teamRed = req.body['teamRed'];
         const teamBlue = req.body['teamBlue'];
         const scoreAddition = req.body['score_increment'];
+        const MainGameInfo = req.body['mainGameInfo'];
+        const gameLog = req.body['gameLog'];
+        console.log("updateScores: ");
+        console.log(MainGameInfo._id);
+        console.log(gameLog);
+
         if(updateRedScores)
         {
             const updateTeamRed = await Team.findByIdAndUpdate(teamRed._id, {
@@ -314,6 +316,12 @@ app.post("/updateScores", jsonParser, async function(req, res){
                 }, {new: true}
             );
         }
+        
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {$push: {logMessages: gameLog}},
+            {new: true}
+        );
+
+
         res.send(200);
     }
     catch(err)
