@@ -1,4 +1,5 @@
 import styles from "../page.module.css"
+import axios from "axios";
 
 export default function EndGameScreen(
     {teamRed, teamBlue, mainGameInfo}
@@ -6,6 +7,8 @@ export default function EndGameScreen(
 
 {
     console.log(teamRed.teamScore);
+
+
 
     return (
         <div className={styles.game_main_content}>

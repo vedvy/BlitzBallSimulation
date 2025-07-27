@@ -379,7 +379,9 @@ a.secondary {
   justify-content: space-evenly;
 }
 
-.quitEarlyButton{
+.quitEarlyButton,
+.quitSubmitButton,
+.quitCancelButton{
   color: black;
   background-color: lightcyan;
   cursor: pointer;
@@ -387,11 +389,25 @@ a.secondary {
   text-align: center;
 }
 
-.quitEarlyButton:hover{
+.quitEarlyButton:hover,
+.quitCancelButton:hover{
   color: white;
   background-color: darkred;
   transition-duration: 0.2s;
 }
+
+.quitSubmitButton,
+.quitCancelButton{
+  padding: 20px;
+}
+
+.quitSubmitButton:hover{
+  color: white;
+  background-color: green;
+  transition-duration: 0.2s;
+}
+
+
 
 /*selectPlayer CSS*/
 

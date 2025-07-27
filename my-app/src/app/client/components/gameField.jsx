@@ -38,7 +38,7 @@ export default function GameField(
 
     const confirmQuit = async (event) => {
         event.preventDefault();
-        setError("");
+        
         const confirmText = formData.confirmationText.trim();
         console.log(confirmText);
         if(confirmText === "ForceQuit")
@@ -274,9 +274,10 @@ export default function GameField(
                             onChange={handleChanges}
                             maxLength={20}>
                             </textarea>
+                            <button type="submit" className={styles.quitSubmitButton}>Enter</button>
+                            <button onClick={() => {set_quit_flag(false);}} className={styles.quitCancelButton}>Cancel</button>
                             </form>
-                            <button type="submit">Enter</button>
-                            <button onClick={() => {set_quit_flag(false);}}>Cancel</button>
+                               
                             </div>
 
                             }
