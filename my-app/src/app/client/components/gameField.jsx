@@ -3,6 +3,7 @@ import SelectPlayer from "./selectPlayer";
 import EndGameScreen from "./endGameScreen";
 import { useState, useEffect, useContext } from "react";
 import { DataContext } from "../components/context";
+import axios from "axios";
 
 export default function GameField(
     {
@@ -10,13 +11,13 @@ export default function GameField(
         mainGameInfo,
         strikes,
         balls,
+        hitByPitches,
         teamRed,
         teamBlue,
-
     })
 {
 
-
+    /*Add Mercy Rule to Force Quit Prompt*/
     mainGameInfo.logMessages.map((log, index) => {
         console.log(log);
     });
@@ -43,6 +44,7 @@ export default function GameField(
         console.log(confirmText);
         if(confirmText === "ForceQuit")
         {
+            await axios.post("http://localhost:8000/updateGameOver", {main_game_info: mainGameInfo, forceQuit: true})
             await dataModel.fetchData("gameOver");
         }
     }
@@ -55,8 +57,7 @@ export default function GameField(
                 await axios.post("http://localhost:8000/switchPositions", {redTeam: teamRed, 
                 blueTeam: teamBlue, 
                 main_game_info: mainGameInfo});
-    
-    
+
                 await axios.post("http://localhost:8000/incrementOuts", {main_game_info: mainGameInfo, 
                     resetOuts: true
                 });
@@ -80,7 +81,8 @@ export default function GameField(
                         }
                         
                         await axios.post("http://localhost:8000/updateGameOver", {
-                            main_game_info: mainGameInfo
+                            main_game_info: mainGameInfo,
+                            forceQuit: false
                         });
                     }
                     else
@@ -263,6 +265,7 @@ export default function GameField(
                         <h1 className={styles.field_information}>Outs: {mainGameInfo.currentOuts}</h1>
                         <h1 className={styles.field_information}>Strikes: {strikes}</h1>
                         <h1 className={styles.field_information}>Balls: {balls}</h1>
+                        <h1 className={styles.field_information}>HBP: {hitByPitches}</h1>
                         <br/>
                         {!quitFlag && <button className={styles.quitEarlyButton} onClick={() => {set_quit_flag(true);}}>Quit Early</button>}
                         {quitFlag && <div>

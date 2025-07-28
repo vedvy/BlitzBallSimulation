@@ -6,6 +6,7 @@ const mainGameSchema = new Schema({
     teamRed: {type: Schema.Types.ObjectId, ref: "team", required: true},
     teamBlue: {type: Schema.Types.ObjectId, ref: "team", required: true},
     currentBalls:{type: Number, default: 0},
+    currentHBP: {type: Number, default: 0},
     currentOuts: {type: Number, default: 0},
     currentStrikes: {type: Number, default: 0},
     currentInning: {type: Number, default: 1},
@@ -14,6 +15,7 @@ const mainGameSchema = new Schema({
     secondBaseActive: {type: Boolean, default: false},
     thirdBaseActive: {type: Boolean, default: false},
     gameOver: {type: Boolean, default: false},
+    earlyQuitOut: {type: Boolean, default: false},
     logMessages: [{type: String}]
 
 });

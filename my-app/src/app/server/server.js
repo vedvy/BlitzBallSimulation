@@ -255,6 +255,23 @@ app.post("/incrementBalls", jsonParser, async function(req, res) {
     }
 });
 
+app.post("/incrementHBP", jsonParser, async function(req, res)
+{
+    try{
+        const MainGameInfo = req.body['main_game_info'];
+        
+        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
+            $inc: {currentHBP: 1}
+        }, {new: true});
+
+        res.send(updateGameInfo);
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+});
+
 app.post("/updateFirstBase", jsonParser, async function(req, res)
 {
     
@@ -267,6 +284,7 @@ app.post("/updateFirstBase", jsonParser, async function(req, res)
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             firstBaseActive: isActive,
             currentBalls: 0,
+            currentHBP: 0,
             currentStrikes: 0
         }, {new: true});
         
@@ -287,6 +305,7 @@ app.post("/updateSecondBase", jsonParser, async function(req, res)
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             secondBaseActive: isActive,
             currentBalls: 0,
+            currentHBP: 0,
             currentStrikes: 0 
         }, {new: true});
         res.send(updateGameInfo);
@@ -305,6 +324,7 @@ app.post("/updateThirdBase", jsonParser, async function(req, res)
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
             thirdBaseActive: isActive,
             currentBalls: 0,
+            currentHBP: 0,
             currentStrikes: 0
         }, {new: true});
         res.send(updateGameInfo);
@@ -359,8 +379,9 @@ app.post("/updateGameOver", jsonParser, async function(req, res)
 {
     try{
         const MainGameInfo = req.body['main_game_info'];
+        const ForceQuit = req.body['forceQuit'];
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
-            gameOver: true
+            gameOver: true, earlyQuitOut: ForceQuit
         });
         res.send(updateGameInfo);
     }

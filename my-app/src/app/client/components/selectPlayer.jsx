@@ -24,6 +24,8 @@ export default function SelectPlayer()
 
     }
       
+    /*Add a Continue with current Playes button.*/
+
 
     const chosenRedPlayer = async (player) => {
         console.log("Inside chosenRedPlayer");

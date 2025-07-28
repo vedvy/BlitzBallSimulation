@@ -36,6 +36,7 @@ export default function GameScreen()
     }
     const [localStrikes, set_local_strikes] = useState(mainGameInfo.currentStrikes);
     const [localBalls, set_local_balls] = useState(mainGameInfo.currentBalls);
+    const [localHBP, set_local_HBP] = useState(mainGameInfo.currentHBP);
     
 
     const incrementOuts = async (isStrikeOut) =>
@@ -58,7 +59,7 @@ export default function GameScreen()
                 {
                     
                     await axios.post("http://localhost:8000/updateGameOver", {
-                        main_game_info: mainGameInfo
+                        main_game_info: mainGameInfo, forceQuit: false
                     });
                     await dataModel.fetchData("gameOver");
                     return;
@@ -122,6 +123,28 @@ export default function GameScreen()
             await axios.post("http://localhost:8000/incrementBalls", {main_game_info: mainGameInfo});
             mainGameInfo.currentBalls++;
             set_local_balls(mainGameInfo.currentBalls);
+        }
+    }
+
+    const incrementHBP = async () => {
+        if(mainGameInfo.currentHBP === 1 || localHBP === 1)
+        {
+            if(!mainGameInfo.firstBaseActive)
+            {
+                await updateFBActive(true);
+                await dataModel.fetchData("selectPlayer");
+                return;
+            }
+            else
+            {
+                await updateBases(1);
+            }
+        }
+        else
+        {
+            await axios.post("http://localhost:8000/incrementHBP", {main_game_info: mainGameInfo});
+            mainGameInfo.currentHBP++;
+            set_local_HBP(mainGameInfo.currentHBP);
         }
     }
 
@@ -319,6 +342,7 @@ export default function GameScreen()
                         <span className={styles.player_buttons_red} onClick={async () => {await incrementOuts(false);}}>Out</span>
                         <span className={styles.player_buttons_red} onClick={async () => {await incrementStrikes();}}>Strike</span>
                         <span className={styles.player_buttons_red} onClick={async () => {await incrementBalls();}}>Ball</span>
+                        <span className={styles.player_buttons_red} onClick={async () => {await incrementHBP();}}>Hit By Pitch</span>
                     </div>)
                     )}
                 </div>
@@ -339,6 +363,7 @@ export default function GameScreen()
                         <span className={styles.player_buttons_blue} onClick={async () => {await incrementOuts(false);}}>Out</span>
                         <span className={styles.player_buttons_blue} onClick={async () => {await incrementStrikes();}}>Strike</span>
                         <span className={styles.player_buttons_blue} onClick={async () => {await incrementBalls();}}>Ball</span>
+                        <span className={styles.player_buttons_blue} onClick={async () => {await incrementHBP();}}> Hit By Pitch</span>
                     </div>)
                     )}
                     {teamBlue.teamChoices === "hitter" && (
@@ -359,6 +384,7 @@ export default function GameScreen()
                 mainGameInfo={mainGameInfo}
                 strikes={localStrikes}
                 balls={localBalls}
+                hitByPitches={localHBP}
                 teamRed={teamRed}
                 teamBlue={teamBlue}
             />}
