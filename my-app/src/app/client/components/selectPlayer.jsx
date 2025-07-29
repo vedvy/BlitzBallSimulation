@@ -88,7 +88,7 @@ export default function SelectPlayer()
     return (
         <div className="game_main_content">
             <h2 className={styles.currentGameInfo}>Current Game Info: Inning {mainGameInfo.currentInning} | Outs: {mainGameInfo.currentOuts} | Strikes: {mainGameInfo.currentStrikes}
-                | Balls: {mainGameInfo.currentBalls}
+                | Balls: {mainGameInfo.currentBalls} | Hit By Pitches: {mainGameInfo.currentHBP}
             </h2>
             {!redPlayerChosen && <div className={styles.selectPlayerRed}>
                 

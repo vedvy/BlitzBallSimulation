@@ -151,14 +151,14 @@ export default function GameField(
         const updateBases = async (runs) =>{
             console.log("inside update bases");
             var score_increment = 0;
-            if(mainGameInfo.thirdBaseActive === true)
+            if(mainGameInfo.thirdBaseActive.isActive === true)
             {
                 console.log("third base was active");
                 await updateTBActive(false);
                 score_increment++;
     
             }
-            if(mainGameInfo.secondBaseActive === true)
+            if(mainGameInfo.secondBaseActive.isActive === true)
             {
                 console.log("second base was active");
                 await updateSBActive(false);
@@ -170,7 +170,7 @@ export default function GameField(
                     score_increment++;
                 }
             }
-            if(mainGameInfo.firstBaseActive === true)
+            if(mainGameInfo.firstBaseActive.isActive === true)
             {
                 console.log("first base was active");
                 await updateFBActive(false);
@@ -288,9 +288,15 @@ export default function GameField(
                             <div className={styles.home_base}>
                             <div className={styles.home_base_plate}></div>
                         </div>
-                        <div className={mainGameInfo.firstBaseActive ? `${styles.first_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.first_base} ></div>
-                        <div className={mainGameInfo.secondBaseActive ? `${styles.second_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.second_base}></div>
-                        <div className={mainGameInfo.thirdBaseActive ? `${styles.third_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.third_base}></div>
+                        <div className={mainGameInfo.firstBaseActive.isActive ? `${styles.first_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.first_base} >
+                            <span>{mainGameInfo.firstBaseActive.playerOnPlateDisplay}</span>
+                        </div>
+                        <div className={mainGameInfo.secondBaseActive.isActive ? `${styles.second_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.second_base}>
+                            <span>{mainGameInfo.secondBaseActive.playerOnPlateDisplay}</span>
+                        </div>
+                        <div className={mainGameInfo.thirdBaseActive.isActive ? `${styles.third_base} ${teamRed.teamChoices === "hitter" ? styles.active_base_red : styles.active_base_blue}` : styles.third_base}>
+                            <span>{mainGameInfo.thirdBaseActive.playerOnPlateDisplay}</span>
+                        </div>
                         <div className={styles.pitchers_mound}>
                             <div className={styles.pitchers_plate} style={{backgroundColor: teamRed.teamChoices === "pitcher" ? "red" : "blue"}}></div>
                         </div>

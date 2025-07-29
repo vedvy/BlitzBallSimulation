@@ -133,9 +133,9 @@ app.post("/switchPositions", jsonParser, async function(req, res) {
             const updateBlueTeam = await Team.findByIdAndUpdate(blueTeam._id, {teamChoices: "hitter"}, {new: true});
         }
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
-                firstBaseActive: false,
-                secondBaseActive: false,
-                thirdBaseActive: false,
+                firstBaseActive: {isActive: false, playerOnPlate: null, playerOnPlateDisplay: ""},
+                secondBaseActive: {isActive: false, playerOnPlate: null, playerOnPlateDisplay: ""},
+                thirdBaseActive: {isActive: false, playerOnPlate: null, playerOnPlateDisplay: ""},
                 topOfInning: !currentTopOfInning
             }, {new: true});
         res.send(updateGameInfo);
@@ -183,7 +183,9 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
             const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, 
             {
                 currentOuts: 0,
-                currentStrikes: 0
+                currentStrikes: 0,
+                currentHBP: 0,
+                currentBalls: 0,
             }, {new: true});    
         }
         else
@@ -192,7 +194,9 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
             const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, 
             {
                $inc: {currentOuts: 1},
-                currentStrikes: 0
+                currentStrikes: 0,
+                currentHBP: 0,
+                currentBalls: 0,
             }, {new: true});
         }
         
@@ -278,18 +282,35 @@ app.post("/updateFirstBase", jsonParser, async function(req, res)
     try{
         console.log("inside first base");
         const MainGameInfo = req.body['main_game_info'];
-        
         const isActive = req.body['isActive'];
-        
-        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
-            firstBaseActive: isActive,
+        const currentPlayer = req.body['currentPlayer'];
+        console.log(currentPlayer);
+
+        const currentPlayerID = await Player.find({name: currentPlayer});
+
+        console.log(currentPlayerID);
+        if(isActive)
+        {
+            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
+            firstBaseActive: {isActive: isActive, playerOnPlate: currentPlayerID._id, playerOnPlateDisplay: currentPlayer},
             currentBalls: 0,
             currentHBP: 0,
             currentStrikes: 0
         }, {new: true});
+        }
+        else
+        {
+           const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
+            firstBaseActive: {isActive: isActive, playerOnPlate: null, playerOnPlateDisplay: ""},
+            currentBalls: 0,
+            currentHBP: 0,
+            currentStrikes: 0
+        }, {new: true}); 
+        }
+        
         
 
-        res.send(updateGameInfo);
+        res.send(200);
     }
     catch(err)
     {
@@ -300,15 +321,35 @@ app.post("/updateFirstBase", jsonParser, async function(req, res)
 app.post("/updateSecondBase", jsonParser, async function(req, res)
 {
     try{
+        console.log("Inside Second Base");
+
         const MainGameInfo = req.body['main_game_info'];
         const isActive = req.body['isActive'];
-        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
-            secondBaseActive: isActive,
+        const currentPlayer = req.body['currentPlayer'];
+        console.log(currentPlayer);
+
+        const currentPlayerID = await Player.find({name: currentPlayer});
+
+        if(isActive)
+        {
+            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
+            secondBaseActive: {isActive: isActive, playerOnPlate: currentPlayerID._id, playerOnPlateDisplay: currentPlayer},
             currentBalls: 0,
             currentHBP: 0,
             currentStrikes: 0 
         }, {new: true});
-        res.send(updateGameInfo);
+        }
+        else
+        {
+            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
+            secondBaseActive: {isActive: isActive, playerOnPlate: null, playerOnPlateDisplay: ""},
+            currentBalls: 0,
+            currentHBP: 0,
+            currentStrikes: 0 
+        }, {new: true});
+        }
+        
+        res.send(200);
     }
     catch(err)
     {
@@ -319,15 +360,34 @@ app.post("/updateSecondBase", jsonParser, async function(req, res)
 app.post("/updateThirdBase", jsonParser, async function(req, res)
 {
     try{
+        console.log("Inside Third Base");
+
         const MainGameInfo = req.body['main_game_info'];
         const isActive = req.body['isActive'];
-        const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
-            thirdBaseActive: isActive,
+        const currentPlayer = req.body['currentPlayer'];
+        console.log(currentPlayer);
+
+        const currentPlayerID = await Player.find({name: currentPlayer});
+        if(isActive)
+        {
+            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
+            thirdBaseActive: {isActive: isActive, playerOnPlate: currentPlayerID._id, playerOnPlateDisplay: currentPlayer},
             currentBalls: 0,
             currentHBP: 0,
             currentStrikes: 0
         }, {new: true});
-        res.send(updateGameInfo);
+        }
+        else
+        {
+            const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
+            thirdBaseActive: {isActive: isActive, playerOnPlate: null, playerOnPlateDisplay: ""},
+            currentBalls: 0,
+            currentHBP: 0,
+            currentStrikes: 0
+        }, {new: true});
+        }
+        
+        res.send(200);
     }
     catch(err)
     {

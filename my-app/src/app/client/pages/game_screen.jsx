@@ -28,7 +28,7 @@ export default function GameScreen()
         console.log(teamRed.teamPlayers);
         console.log(teamBlue.teamPlayers);
         console.log(dataModel.view);
-        console.log(mainGameInfo.logMessages);
+
 
 
         
@@ -107,7 +107,7 @@ export default function GameScreen()
     const incrementBalls = async () => {
         if(mainGameInfo.currentBalls === 4 || localBalls === 4)
         {
-            if(!mainGameInfo.firstBaseActive)
+            if(!mainGameInfo.firstBaseActive.isActive)
             {
                 await updateFBActive(true);
                 await dataModel.fetchData("selectPlayer");
@@ -129,7 +129,7 @@ export default function GameScreen()
     const incrementHBP = async () => {
         if(mainGameInfo.currentHBP === 1 || localHBP === 1)
         {
-            if(!mainGameInfo.firstBaseActive)
+            if(!mainGameInfo.firstBaseActive.isActive)
             {
                 await updateFBActive(true);
                 await dataModel.fetchData("selectPlayer");
@@ -148,29 +148,62 @@ export default function GameScreen()
         }
     }
 
-    const updateFBActive = async (isActive) =>
+    const updateFBActive = async (isActive, currentPlayerOnPlate) =>
     {
         console.log("Inside first base active");
+        if(currentPlayerOnPlate)
+        {
+            await axios.post("http://localhost:8000/updateFirstBase", {main_game_info: mainGameInfo,
+            isActive: isActive, currentPlayer: currentPlayerOnPlate
+            });
+        }
+        else
+        {
+            let currentPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+            await axios.post("http://localhost:8000/updateFirstBase", {main_game_info: mainGameInfo,
+            isActive: isActive, currentPlayer: currentPlayer
+        });
+        }
+        
+    
         console.log(isActive);
-        await axios.post("http://localhost:8000/updateFirstBase", {main_game_info: mainGameInfo,
-            isActive: isActive
-        });
+        
 
         return;
     }
 
-    const updateSBActive = async (isActive) => {
-        await axios.post("http://localhost:8000/updateSecondBase", {main_game_info: mainGameInfo,
-            isActive: isActive
+    const updateSBActive = async (isActive, currentPlayerOnPlate) => {
+        if(currentPlayerOnPlate)
+        {
+            await axios.post("http://localhost:8000/updateSecondBase", {main_game_info: mainGameInfo,
+            isActive: isActive, currentPlayer: currentPlayerOnPlate
+            });
+        }
+        else
+        {
+            let currentPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+            await axios.post("http://localhost:8000/updateSecondBase", {main_game_info: mainGameInfo,
+            isActive: isActive, currentPlayer: currentPlayer
         });
+        }
 
         return;
     }
 
-    const updateTBActive = async (isActive) => {
-        await axios.post("http://localhost:8000/updateThirdBase", {main_game_info: mainGameInfo,
-            isActive: isActive
+    const updateTBActive = async (isActive, currentPlayerOnPlate) => {
+        if(currentPlayerOnPlate)
+        {
+            await axios.post("http://localhost:8000/updateThirdBase", {main_game_info: mainGameInfo,
+            isActive: isActive, currentPlayer: currentPlayerOnPlate
+            });
+        }
+        else
+        {
+            let currentPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+            await axios.post("http://localhost:8000/updateThirdBase", {main_game_info: mainGameInfo,
+            isActive: isActive, currentPlayer: currentPlayer
         });
+        }
 
         return;
     }
@@ -179,36 +212,39 @@ export default function GameScreen()
     const updateBases = async (runs) =>{
         console.log("inside update bases");
         var score_increment = 0;
-        if(mainGameInfo.thirdBaseActive === true)
+        if(mainGameInfo.thirdBaseActive.isActive === true)
         {
             console.log("third base was active");
             await updateTBActive(false);
             score_increment++;
 
         }
-        if(mainGameInfo.secondBaseActive === true)
+        if(mainGameInfo.secondBaseActive.isActive === true)
         {
             console.log("second base was active");
             await updateSBActive(false);
             if(2 + runs === 3)
             {
-                await updateTBActive(true);
+                let currentPlayer = mainGameInfo.secondBaseActive.playerOnPlateDisplay;
+                await updateTBActive(true, currentPlayer);
             }
             else{
                 score_increment++;
             }
         }
-        if(mainGameInfo.firstBaseActive === true)
+        if(mainGameInfo.firstBaseActive.isActive === true)
         {
             console.log("first base was active");
             await updateFBActive(false);
             if(1 + runs === 2)
             {
-               await updateSBActive(true);
+               let currentPlayer = mainGameInfo.firstBaseActive.playerOnPlateDisplay; 
+               await updateSBActive(true, currentPlayer);
             }
             else if(1 + runs === 3)
             {
-               await updateTBActive(true);
+               let currentPlayer = mainGameInfo.secondBaseActive.playerOnPlateDisplay; 
+               await updateTBActive(true, currentPlayer);
             }
             else
             {

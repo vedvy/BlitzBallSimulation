@@ -259,12 +259,12 @@ a.secondary {
 
 .inner_field{
   position: absolute;
-  width: 300px;
-  height: 300px;
+  width: 330px;
+  height: 330px;
   background-color: rgb(140, 9, 9);
   left: 350px;
   
-  top: 150px;
+  top: 100px;
   transform: rotate(45deg);
 }
 
@@ -274,23 +274,26 @@ a.secondary {
   height: 60px;
   background-color: rgb(140, 9, 9);
   border-radius: 32px;
-  top: 260px;
-  left: 260px;
+  top: 300px;
+  left: 300px;
 }
 
 .first_base,
 .second_base,
 .third_base{
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   background-color: white;
+  text-align: center;
+  color: white;
 
 }
 
 .first_base{
   left: 250px;
   top: 10px;
+  
 }
 
 .second_base{

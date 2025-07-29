@@ -125,9 +125,9 @@ async function initializeDB()
         currentStrikes: 0,
         currentInning: 1,
         topOfInning: false,
-        firstBaseActive: false,
-        secondBaseActive: false,
-        thirdBaseActive: false,
+        firstBaseActive: {isActive: false},
+        secondBaseActive: {isActive: false},
+        thirdBaseActive: {isActive: false},
         gameOver: false
     };
 
