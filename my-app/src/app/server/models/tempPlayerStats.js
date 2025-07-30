@@ -4,6 +4,54 @@ var Schema = mongoose.Schema;
 
 const tempPlayerStatsSchema = new Schema({
     name: {type: String, required: true},
+    HitterStats: {
+        Games: Number,
+        PlateAppearences: Number,
+        AtBats: Number,
+        Hits: Number,
+        OneB: Number,
+        TwoB: Number,
+        ThreeB: Number,
+        HomeRuns: Number,
+        BB: Number,
+        HitByPitches: Number,
+        RunsBattedIn: Number,
+        Runs: Number,
+        TotalBases: Number,
+        StrikeOuts: Number,
+        AVG: mongoose.Types.Decimal128,
+        SLGPercent: mongoose.Types.Decimal128,
+        OBPPercent: mongoose.Types.Decimal128,
+        OPS: mongoose.Types.Decimal128,
+        OPSPlus: mongoose.Types.Decimal128,
+        KPercent: mongoose.Types.Decimal128,
+        wOBA: mongoose.Types.Decimal128,
+        wRCPlus: mongoose.Types.Decimal128,
+        BABIP: mongoose.Types.Decimal128,
+        ISO: mongoose.Types.Decimal128,
+        wRCPlus: Number
+    },
+    PitcherStats: {
+        Games: Number,
+        IP: Number, 
+        ERA: mongoose.Types.Decimal128,
+        FIP: mongoose.Types.Decimal128,
+        BB: Number,
+        StrikeOuts: Number,
+        HitByPitches: Number,
+        HR: Number,
+        ER: Number,
+        HA: Number,
+        WHIP: Number,
+        ERAMinus: Number,
+        FIPMinus: Number,
+        SV: Number,
+        BSV: Number,
+        SVPercent: Number,
+        KPerNine: mongoose.Types.Decimal128,
+        FIPMinusRank: Number,
+        BBPerNine: mongoose.Types.Decimal128
+    }
 });
 
 /*Determine the stats calculations and stuff here. This is where the stat updates will be stored for now.
