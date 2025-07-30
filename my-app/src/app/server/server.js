@@ -6,6 +6,8 @@ import cors from "cors";
 import Player from './models/player.js';
 import Team from './models/team.js';
 import MainGame from './models/main_game.js';
+import TempPlayerStats from "./models/tempPlayerStats.js";
+
 import mongoose from 'mongoose';
 import bodyParser from "body-parser";
 import { withCoalescedInvoke } from "next/dist/lib/coalesced-function.js";
@@ -92,6 +94,18 @@ app.get("/teams", async function(req, res) {
     try{
         const teamsArray = await Team.find({});
         res.send(teamsArray);
+    }
+    catch(err){
+        res.status(500).json({message: "err", err});
+    }
+});
+
+app.get("/tempPlayerStats", async function(req, res)
+{
+    try{
+        const tempPlayer = await TempPlayerStats.find({});
+        console.log("TempPlayerStats acquired");
+        res.send(tempPlayer);
     }
     catch(err){
         res.status(500).json({message: "err", err});
@@ -284,6 +298,7 @@ app.post("/updateFirstBase", jsonParser, async function(req, res)
         const MainGameInfo = req.body['main_game_info'];
         const isActive = req.body['isActive'];
         const currentPlayer = req.body['currentPlayer'];
+        let tempPlayerOBJ = req.body['tempPlayerOBJ'];
         console.log(currentPlayer);
 
         const currentPlayerID = await Player.find({name: currentPlayer});
@@ -307,6 +322,14 @@ app.post("/updateFirstBase", jsonParser, async function(req, res)
             currentStrikes: 0
         }, {new: true}); 
         }
+        console.log("Before OneBUpdate");
+        tempPlayerOBJ.OneBUpdate = 1;
+        
+        let tPOBJDB = await TempPlayerStats.findByIdAndUpdate(tempPlayerOBJ._id, {$inc: {'HitterStats.OneB': 1}});
+        /**^^^^ This updates  the OneB, but not the virtual. */
+
+        console.log("TempPlayerONEB: ", tempPlayerOBJ.HitterStats.OneB);
+        console.log("After OneB Update");
         
         
 

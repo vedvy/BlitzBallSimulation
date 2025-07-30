@@ -5,66 +5,70 @@ var Schema = mongoose.Schema;
 const tempPlayerStatsSchema = new Schema({
     name: {type: String, required: true},
     HitterStats: {
-        Games: Number,
-        PlateAppearences: Number,
-        AtBats: Number,
-        Hits: Number,
-        OneB: Number,
-        TwoB: Number,
-        ThreeB: Number,
-        HomeRuns: Number,
-        BB: Number,
-        HitByPitches: Number,
-        RunsBattedIn: Number,
-        Runs: Number,
-        TotalBases: Number,
-        StrikeOuts: Number,
-        AVG: mongoose.Types.Decimal128,
-        SLGPercent: mongoose.Types.Decimal128,
-        OBPPercent: mongoose.Types.Decimal128,
-        OPS: mongoose.Types.Decimal128,
-        OPSPlus: mongoose.Types.Decimal128,
-        KPercent: mongoose.Types.Decimal128,
-        wOBA: mongoose.Types.Decimal128,
-        wRCPlus: mongoose.Types.Decimal128,
-        BABIP: mongoose.Types.Decimal128,
-        ISO: mongoose.Types.Decimal128,
-        wRCPlus: Number
+        Games: {type: Number, default: 0},
+        PlateAppearences: {type: Number, default: 0},
+        AtBats: {type: Number, default: 0},
+        Hits: {type: Number, default: 0},
+        OneB: {type: Number, default: 0},
+        TwoB: {type: Number, default: 0},
+        ThreeB: {type: Number, default: 0},
+        HomeRuns: {type: Number, default: 0},
+        BB: {type: Number, default: 0},
+        HitByPitches: {type: Number, default: 0},
+        RunsBattedIn: {type: Number, default: 0},
+        Runs: {type: Number, default: 0},
+        TotalBases: {type: Number, default: 0},
+        StrikeOuts: {type: Number, default: 0},
+        AVG: {type: mongoose.Types.Decimal128, default: 1},
+        SLGPercent: {type: mongoose.Types.Decimal128, default: 1},
+        OBPPercent: {type: mongoose.Types.Decimal128, default: 1},
+        OPS: {type: mongoose.Types.Decimal128, default: 1},
+        OPSPlus: {type: mongoose.Types.Decimal128, default: 1},
+        KPercent: {type: mongoose.Types.Decimal128, default: 1},
+        wOBA: {type: mongoose.Types.Decimal128, default: 1},
+        wRCPlus: {type: mongoose.Types.Decimal128, default: 1},
+        BABIP: {type: mongoose.Types.Decimal128, default: 1},
+        ISO: {type: mongoose.Types.Decimal128, default: 1},
+        wRCPlus: {type: Number, default: 0}
     },
     PitcherStats: {
-        Games: Number,
-        IP: Number, 
-        ERA: mongoose.Types.Decimal128,
-        FIP: mongoose.Types.Decimal128,
-        BB: Number,
-        StrikeOuts: Number,
-        HitByPitches: Number,
-        HR: Number,
-        ER: Number,
-        HA: Number,
-        WHIP: Number,
-        ERAMinus: Number,
-        FIPMinus: Number,
-        SV: Number,
-        BSV: Number,
-        SVPercent: Number,
-        KPerNine: mongoose.Types.Decimal128,
-        FIPMinusRank: Number,
-        BBPerNine: mongoose.Types.Decimal128
+        Games: {type: Number, default: 0},
+        IP: {type: Number, default: 0}, 
+        ERA: {type: mongoose.Types.Decimal128, default: 1},
+        FIP: {type: mongoose.Types.Decimal128, default: 1},
+        BB: {type: Number, default: 0},
+        StrikeOuts: {type: Number, default: 0},
+        HitByPitches: {type: Number, default: 0},
+        HR: {type: Number, default: 0},
+        ER: {type: Number, default: 0},
+        HA: {type: Number, default: 0},
+        WHIP: {type: Number, default: 0},
+        ERAMinus: {type: Number, default: 0},
+        FIPMinus: {type: Number, default: 0},
+        SV: {type: Number, default: 0},
+        BSV: {type: Number, default: 0},
+        SVPercent: {type: Number, default: 0},
+        KPerNine: {type: mongoose.Types.Decimal128, default: 1},
+        FIPMinusRank: {type: Number, default: 0},
+        BBPerNine: {type: mongoose.Types.Decimal128, default: 1}
     }
-}, {toJSON: {virtuals: true}});
+}, {toJSON: {virtuals: true}}, {toObject: {virtuals: true}});
 
-tempPlayerStatsSchema.virtual("1BUpdate").set(function()
+tempPlayerStatsSchema.virtual("OneBUpdate").get(function()
 {
-    this.set({OneB: this.OneB+1});
+    return this.HitterStats.OneB;
+}).set(function(v)
+{
+    let newOneB = this.HitterStats.OneB + 1;
+    this.HitterStats.OneB = newOneB;
 });
 
-tempPlayerStatsSchema.virtual("2BUpdate").set(function()
+tempPlayerStatsSchema.virtual("TwoBUpdate").set(function()
 {
     this.set({TwoB: this.TwoB+1})
 });
 
-tempPlayerStatsSchema.virtual("3BUpdate").set(function()
+tempPlayerStatsSchema.virtual("ThreeBUpdate").set(function()
 {
     this.set({ThreeB: this.ThreeB+1});
 });
@@ -142,3 +146,5 @@ What to do now:
 1. Track AB, PA, 1-HR Bs, and Walks, and RBIs. Once you have those, just input the formulas.
 2. If you want to see rwal-time stats, write to the logs before the DB. OPS is important in real-time.
 */
+
+module.exports = mongoose.model("TempPlayerStats", tempPlayerStatsSchema);

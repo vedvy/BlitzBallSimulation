@@ -56,7 +56,11 @@ async function createGame(mainGameObject){
 
 async function createTempPlayerStats(tempPlayerOBJ)
 {
-    let newTempPlayer = new TempPlayerStats(tempPlayerOBJ);
+    let newTempPlayer = new TempPlayerStats({
+        name: tempPlayerOBJ.name,
+        HitterStats: tempPlayerOBJ.HitterStats,
+        PitcherStats: tempPlayerOBJ.PitcherStats
+    });
     return newTempPlayer.save();
 }
 
@@ -189,6 +193,15 @@ async function initializeDB()
                 FIPMinusRank: 0,
                 BBPerNine: 1
     }
+
+    const tempPlayerOBJ = {
+        name: "Zimbo",
+        HitterStats: HitterStats1,
+        PitcherStats: PitcherStats1
+    };
+    console.log(tempPlayerOBJ);
+
+    let tempPlayerRef1 = await createTempPlayerStats(tempPlayerOBJ);
 
     if(db)
     {

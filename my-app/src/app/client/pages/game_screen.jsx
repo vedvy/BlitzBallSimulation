@@ -24,10 +24,13 @@ export default function GameScreen()
         var teamRed = dataModel.teams[0];
         var teamBlue = dataModel.teams[1];
         var mainGameInfo = dataModel.main_game_info[0];
+        var tempPlayerOBJ = dataModel.tempPlayerStats[0];
         console.log(dataModel.main_game_info[0].firstBaseActive);
         console.log(teamRed.teamPlayers);
         console.log(teamBlue.teamPlayers);
         console.log(dataModel.view);
+        console.log(tempPlayerOBJ.name);
+        console.log(tempPlayerOBJ.HitterStats.OneB);
 
 
 
@@ -154,14 +157,14 @@ export default function GameScreen()
         if(currentPlayerOnPlate)
         {
             await axios.post("http://localhost:8000/updateFirstBase", {main_game_info: mainGameInfo,
-            isActive: isActive, currentPlayer: currentPlayerOnPlate
+            isActive: isActive, currentPlayer: currentPlayerOnPlate, tempPlayerOBJ: tempPlayerOBJ
             });
         }
         else
         {
             let currentPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
             await axios.post("http://localhost:8000/updateFirstBase", {main_game_info: mainGameInfo,
-            isActive: isActive, currentPlayer: currentPlayer
+            isActive: isActive, currentPlayer: currentPlayer, tempPlayerOBJ: tempPlayerOBJ
         });
         }
         
@@ -243,7 +246,7 @@ export default function GameScreen()
             }
             else if(1 + runs === 3)
             {
-               let currentPlayer = mainGameInfo.secondBaseActive.playerOnPlateDisplay; 
+               let currentPlayer = mainGameInfo.firstBaseActive.playerOnPlateDisplay; 
                await updateTBActive(true, currentPlayer);
             }
             else
