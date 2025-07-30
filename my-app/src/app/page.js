@@ -4,7 +4,7 @@ import Image from "next/image";
 // import styles from "./page.module.css"
 import GameScreen from "./client/pages/game_screen";
 import { DataProvider } from "./client/components/context.jsx";
-/*Figure out tomorrow morning or smthg if this context and provider work before doing server and mongo stuff*/
+/*Add the Creation Screen here and determine how to structure it in the Provider.*/
 
 export default function Home() {
   return (

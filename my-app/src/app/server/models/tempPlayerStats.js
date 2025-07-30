@@ -52,7 +52,29 @@ const tempPlayerStatsSchema = new Schema({
         FIPMinusRank: Number,
         BBPerNine: mongoose.Types.Decimal128
     }
+}, {toJSON: {virtuals: true}});
+
+tempPlayerStatsSchema.virtual("1BUpdate").set(function()
+{
+    this.set({OneB: this.OneB+1});
 });
+
+tempPlayerStatsSchema.virtual("2BUpdate").set(function()
+{
+    this.set({TwoB: this.TwoB+1})
+});
+
+tempPlayerStatsSchema.virtual("3BUpdate").set(function()
+{
+    this.set({ThreeB: this.ThreeB+1});
+});
+
+tempPlayerStatsSchema.virtual("HRUpdate").set(function()
+{
+    this.set({HomeRuns: this.HomeRuns+1});
+});
+
+/*Calculations can be done easily through virtuals and their respective setters.*/
 
 /*Determine the stats calculations and stuff here. This is where the stat updates will be stored for now.
 If the game played from start to end without any forceQuit, then every Player stats should have their stats
@@ -76,7 +98,7 @@ AVG: Number of hits / Number of AT Bats.
 Plate Appearence: Walk, HBP, or sacrifice fly count towards this.|  
 SLG %: Similar to total Bases. (Singles * 1 + Doubles * 2 + Triples * 3 + HR * 4) / AB
 OBP %: (Hits + Walks + HBP) / PA
-OPS: OBP + SLG
+OPS: OBP + SLG%
 OPS+: (100 * (OBP% / OBPAVG) + 100 * (SLG% / (SLG%AVG) - 1))
 K%: Strikeouts / PA
 wOBA: weighted On Base Average. (BB * .69) + (.72 * HBP) + (.89 * 1B) + (1.27 * 2B) + (1.62 * 3B) + (2.1 * HR). 

@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import Player from './models/player.js';
 import Team from './models/team.js';
 import MainGameInfo from './models/main_game.js';
+import TempPlayerStats from './models/tempPlayerStats.js'
 
 
 
@@ -51,6 +52,12 @@ async function createGame(mainGameObject){
         gameOver: mainGameObject.gameOver,
     });
     return newGame.save();
+}
+
+async function createTempPlayerStats(tempPlayerOBJ)
+{
+    let newTempPlayer = new TempPlayerStats(tempPlayerOBJ);
+    return newTempPlayer.save();
 }
 
 async function initializeDB()
@@ -132,6 +139,56 @@ async function initializeDB()
     };
 
     let gameRef1 = await createGame(game1);
+
+    let HitterStats1 = {
+            Games: 0,
+            PlateAppearences: 0,
+            AtBats: 0,
+            Hits: 0,
+            OneB: 0,
+            TwoB: 0,
+            ThreeB: 0,
+            HomeRuns: 0,
+            BB: 0,
+            HitByPitches: 0,
+            RunsBattedIn: 0,
+            Runs: 0,
+            TotalBases: 0,
+            StrikeOuts: 0,
+            AVG: 1,
+            SLGPercent: 1,
+            OBPPercent: 1,
+            OPS: 1,
+            OPSPlus: 1,
+            KPercent: 1,
+            wOBA: 1,
+            wRCPlus: 1,
+            BABIP: 1,
+            ISO: 1,
+            wRCPlus: 0
+    }
+
+    let PitcherStats1 = {
+                Games: 0,
+                IP: 0, 
+                ERA: 1,
+                FIP: 1,
+                BB: 0,
+                StrikeOuts: 0,
+                HitByPitches: 0,
+                HR: 0,
+                ER: 0,
+                HA: 0,
+                WHIP: 0,
+                ERAMinus: 0,
+                FIPMinus: 0,
+                SV: 0,
+                BSV: 0,
+                SVPercent: 0,
+                KPerNine: 1,
+                FIPMinusRank: 0,
+                BBPerNine: 1
+    }
 
     if(db)
     {
