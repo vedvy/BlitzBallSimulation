@@ -488,3 +488,24 @@ a.secondary {
 /*Keep position as static for now, determine is better positioning should be made*/
 
 }
+
+/*Player Stats CSS*/
+ 
+.table_stats{
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+.table_rows{
+  height: 100%;
+}
+
+.table_stats,
+.table_rows,
+.table_headers,
+.table_data{
+  border: 1px solid black;
+  font-weight: bold;
+}
+

@@ -1,6 +1,7 @@
 import styles from "../page.module.css";
 import SelectPlayer from "./selectPlayer";
 import EndGameScreen from "./endGameScreen";
+import PlayerStats from "./playerStats";
 import { useState, useEffect, useContext } from "react";
 import { DataContext } from "../components/context";
 import axios from "axios";
@@ -308,6 +309,9 @@ export default function GameField(
                     </div>
                     
                     }
+                    {dataModel.view === "playerStats" && <div className={styles.game_field}>
+                        <PlayerStats/>
+                        </div>}
                     
                     <div className={styles.logger_section}>
                         <h2 style={{textAlign: "center"}}>Game Logs</h2>
