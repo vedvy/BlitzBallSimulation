@@ -326,6 +326,8 @@ export default function GameScreen()
                 return;
             default:
                 score_increment++;
+                let currentPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+                await axios.post("http://localhost:8000/updateHRStat", {currentPlayer: currentPlayer});
                 if(teamRed.teamChoices === "hitter")
                 {
                     let gameLog = `${teamRed.currentPlayerDisplay} has gone far and smashed a home run!!!`;

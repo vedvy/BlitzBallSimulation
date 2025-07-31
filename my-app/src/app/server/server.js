@@ -383,6 +383,9 @@ app.post("/updateSecondBase", jsonParser, async function(req, res)
             currentHBP: 0,
             currentStrikes: 0 
         }, {new: true});
+        let tempPlayerUpdate = (await TempPlayerStats.find({name: currentPlayer}).exec())[0];
+        let UpdatingPlayerTwoB = await TempPlayerStats.findByIdAndUpdate(tempPlayerUpdate._id, {$inc: {'HitterStats.TwoB': 1}});
+        
         }
         else
         {
@@ -421,6 +424,8 @@ app.post("/updateThirdBase", jsonParser, async function(req, res)
             currentHBP: 0,
             currentStrikes: 0
         }, {new: true});
+        let tempPlayerUpdate = (await TempPlayerStats.find({name: currentPlayer}).exec())[0];
+        let UpdatingPlayerThreeB = await TempPlayerStats.findByIdAndUpdate(tempPlayerUpdate._id, {$inc: {'HitterStats.ThreeB': 1}});
         }
         else
         {
@@ -438,6 +443,22 @@ app.post("/updateThirdBase", jsonParser, async function(req, res)
     {
         res.status(500).json({message: "err", err});
     }
+});
+
+app.post("/updateHRStat", jsonParser, async function(req, res)
+{   
+    try{
+        const currentPlayer = req.body['currentPlayer'];
+    let tempPlayerUpdate = (await TempPlayerStats.find({name: currentPlayer}).exec())[0];
+    let UpdatingPlayerHR = await TempPlayerStats.findByIdAndUpdate(tempPlayerUpdate._id, {$inc: {'HitterStats.HomeRuns': 1}});
+    res.send(200);
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+    
+
 });
 
 app.post("/updateScores", jsonParser, async function(req, res){
