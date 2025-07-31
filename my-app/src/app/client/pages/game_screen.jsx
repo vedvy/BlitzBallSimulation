@@ -112,13 +112,13 @@ export default function GameScreen()
         {
             if(!mainGameInfo.firstBaseActive.isActive)
             {
-                await updateFBActive(true);
+                await updateFBActive(true, null, true, false);
                 await dataModel.fetchData("selectPlayer");
                 return;
             }
             else
             {
-                await updateBases(1);
+                await updateBases(1, true, false);
             }
         }
         else
@@ -134,13 +134,13 @@ export default function GameScreen()
         {
             if(!mainGameInfo.firstBaseActive.isActive)
             {
-                await updateFBActive(true);
+                await updateFBActive(true, null, false, true);
                 await dataModel.fetchData("selectPlayer");
                 return;
             }
             else
             {
-                await updateBases(1);
+                await updateBases(1, false, true);
             }
         }
         else
@@ -151,7 +151,7 @@ export default function GameScreen()
         }
     }
 
-    const updateFBActive = async (isActive, currentPlayerOnPlate) =>
+    const updateFBActive = async (isActive, currentPlayerOnPlate, BBFlag, HBPFlag) =>
     {
         console.log("Inside first base active");
         if(currentPlayerOnPlate)
@@ -164,7 +164,8 @@ export default function GameScreen()
         {
             let currentPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
             await axios.post("http://localhost:8000/updateFirstBase", {main_game_info: mainGameInfo,
-            isActive: isActive, currentPlayer: currentPlayer, tempPlayerOBJ: tempPlayerOBJ
+            isActive: isActive, currentPlayer: currentPlayer, tempPlayerOBJ: tempPlayerOBJ,
+            BBFlag: BBFlag, HBPFlag: HBPFlag
         });
         }
         
@@ -212,7 +213,7 @@ export default function GameScreen()
     }
 
 
-    const updateBases = async (runs) =>{
+    const updateBases = async (runs, BBFlag, HBPFlag) =>{
         console.log("inside update bases");
         var score_increment = 0;
         if(mainGameInfo.thirdBaseActive.isActive === true)
@@ -257,7 +258,7 @@ export default function GameScreen()
         switch(runs){
             case 1: 
                 console.log("Case 1 active");
-                await updateFBActive(true);
+                await updateFBActive(true, null, BBFlag, HBPFlag);
                 if(teamRed.teamChoices === "hitter")
                 {
                     let gameLog = `${teamRed.currentPlayerDisplay} has hit a single!`;
