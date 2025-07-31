@@ -89,17 +89,18 @@ Put stats calculations and necessary conditionals here! there's a lot of them.*/
 /*
 Batter Stats: 
 ---------------------
+Games: Should be incremented only once for every player in the mainGameInfo only.
 1B to HR: Based on hitting score.
 BB: walk
 HBP: add to mainGameInfo field to count twice, Hit By Pitch
 >>>> Following below may need tracking who is  on which base.
-RBI: Runs Batted In, player hits and runner scores.
-Runs: Whoever scores.
-Total bases: Single 1, Double 2, Triple 3, HR 4. Walk is 0.
+RBI: Runs Batted In, player hits and runner scores. Just update with the number of runs scored on their turn.
+Runs: Whoever scores. increments based on whether player gets to Home Plate within the inning.
+Total bases: Single 1, Double 2, Triple 3, HR 4. Walk is 0. (1 * 1B + 2 * 2B + 3 * 3B + 4 * HR)
 Strikeouts:..
-At Bats: (PA - Walks + HBP) . Number of times player comes up to bat. Default is AB, unless it's a walk then PA. Takes in Hit scores and Outs. No bunts or flys.
+At Bats: Only includes Outs, Hits, Strikeouts. Number of times player comes up to bat. Default is AB, unless it's a walk then PA. Takes in Hit scores and Outs. No bunts or flys.
 AVG: Number of hits / Number of AT Bats. 
-Plate Appearence: Walk, HBP, or sacrifice fly count towards this.|  
+Plate Appearence: Increments for every time a player steps into the box.
 SLG %: Similar to total Bases. (Singles * 1 + Doubles * 2 + Triples * 3 + HR * 4) / AB
 OBP %: (Hits + Walks + HBP) / PA
 OPS: OBP + SLG%

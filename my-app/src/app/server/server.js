@@ -292,22 +292,22 @@ app.post("/incrementHBP", jsonParser, async function(req, res)
 
 app.post("/updateFirstBase", jsonParser, async function(req, res)
 {
-    
+    /*Have a BB and HBP flag too to update those fields.*/
     try{
         console.log("inside first base");
         const MainGameInfo = req.body['main_game_info'];
         const isActive = req.body['isActive'];
         const currentPlayer = req.body['currentPlayer'];
-        let tempPlayerOBJ = req.body['tempPlayerOBJ'];
+        
         console.log(currentPlayer);
 
         const currentPlayerID = await Player.find({name: currentPlayer});
 
-        console.log(currentPlayerID);
+        console.log(currentPlayerID[0]._id);
         if(isActive)
         {
             const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
-            firstBaseActive: {isActive: isActive, playerOnPlate: currentPlayerID._id, playerOnPlateDisplay: currentPlayer},
+            firstBaseActive: {isActive: isActive, playerOnPlate: currentPlayerID[0]._id, playerOnPlateDisplay: currentPlayer},
             currentBalls: 0,
             currentHBP: 0,
             currentStrikes: 0
@@ -321,18 +321,11 @@ app.post("/updateFirstBase", jsonParser, async function(req, res)
             currentHBP: 0,
             currentStrikes: 0
         }, {new: true}); 
+
+            let tempPlayerUpdate = (await TempPlayerStats.find({name: currentPlayer}).exec())[0];
+            let UpdatingPlayerOneB = await TempPlayerStats.findByIdAndUpdate(tempPlayerUpdate._id, {$inc: {'HitterStats.OneB': 1}});
         }
-        console.log("Before OneBUpdate");
-        tempPlayerOBJ.OneBUpdate = 1;
-        
-        let tPOBJDB = await TempPlayerStats.findByIdAndUpdate(tempPlayerOBJ._id, {$inc: {'HitterStats.OneB': 1}});
-        /**^^^^ This updates  the OneB, but not the virtual. */
-
-        console.log("TempPlayerONEB: ", tempPlayerOBJ.HitterStats.OneB);
-        console.log("After OneB Update");
-        
-        
-
+    
         res.send(200);
     }
     catch(err)
@@ -352,6 +345,9 @@ app.post("/updateSecondBase", jsonParser, async function(req, res)
         console.log(currentPlayer);
 
         const currentPlayerID = await Player.find({name: currentPlayer});
+
+        /*Use the currentPlayer name as the query for tempPlayerStats. Then update 2B.
+        Same Idea for 3B and HR*/
 
         if(isActive)
         {

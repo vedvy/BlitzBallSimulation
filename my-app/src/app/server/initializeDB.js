@@ -194,14 +194,69 @@ async function initializeDB()
                 BBPerNine: 1
     }
 
-    const tempPlayerOBJ = {
-        name: "Zimbo",
+    const tempPlayer1 = {
+        name: player1.name,
         HitterStats: HitterStats1,
         PitcherStats: PitcherStats1
     };
-    console.log(tempPlayerOBJ);
 
-    let tempPlayerRef1 = await createTempPlayerStats(tempPlayerOBJ);
+    let tempPlayerRef1 = await createTempPlayerStats(tempPlayer1);
+
+    const tempPlayer2 = {
+        name: player2.name,
+        HitterStats: HitterStats1,
+        PitcherStats: PitcherStats1
+    }
+
+    let tempPlayerRef2 = await createTempPlayerStats(tempPlayer2);
+
+    const tempPlayer3 = {
+        name: player3.name,
+        HitterStats: HitterStats1,
+        PitcherStats: PitcherStats1
+    }
+
+    let tempPlayerRef3 = await createTempPlayerStats(tempPlayer3);
+
+    const tempPlayer4 = {
+        name: player4.name,
+        HitterStats: HitterStats1,
+        PitcherStats: PitcherStats1
+    }
+
+    let tempPlayerRef4 = await createTempPlayerStats(tempPlayer4);
+
+    const tempPlayer5 = {
+        name: player5.name,
+        HitterStats: HitterStats1,
+        PitcherStats: PitcherStats1
+    }
+
+    let tempPlayerRef5 = await createTempPlayerStats(tempPlayer5);
+
+    const tempPlayer6 = {
+        name: player6.name,
+        HitterStats: HitterStats1,
+        PitcherStats: PitcherStats1
+    }
+
+    let tempPlayerRef6 = await createTempPlayerStats(tempPlayer6);
+
+    const tempPlayer7 = {
+        name: player7.name,
+        HitterStats: HitterStats1,
+        PitcherStats: PitcherStats1
+    }
+
+    let tempPlayerRef7 = await createTempPlayerStats(tempPlayer7);
+
+    const tempPlayer8 = {
+        name: player8.name,
+        HitterStats: HitterStats1,
+        PitcherStats: PitcherStats1
+    }
+
+    let tempPlayerRef8 = await createTempPlayerStats(tempPlayer8);
 
     if(db)
     {
