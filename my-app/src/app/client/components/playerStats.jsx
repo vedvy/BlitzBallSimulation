@@ -6,15 +6,19 @@ import { DataContext } from "../components/context";
 export default function PlayerStats()
 {
     const dataModel = useContext(DataContext);
-
+    const [statsView, set_stats_view] = useState("Batting");
+    console.log(statsView);
     if(!dataModel.loading)
     {
         var playerStats = dataModel.tempPlayerStats;
-
     }
 
     return  (
         <div className="game_main_content">
+        {statsView === "Batting" &&
+        <div>
+            <h1 style={{color: "white"}}>Player Stats: {statsView}</h1>
+            <br></br>
             <table className={styles.table_stats}>
                 <tbody>
                     <tr className={styles.table_rows}>
@@ -45,7 +49,7 @@ export default function PlayerStats()
 
                     </tr>
                     {playerStats.map((player, index) => 
-                    <tr className={styles.table_rows}>
+                    <tr className={styles.table_rows} key={index}>
                         <td className={styles.table_data}>{player.name}</td>
                         <td className={styles.table_data}>{player.HitterStats.Games}</td>
                         <td className={styles.table_data}>{player.HitterStats.PlateAppearences}</td>
@@ -75,6 +79,67 @@ export default function PlayerStats()
                 </tbody>
                 
             </table>
+        </div>}
+        {statsView === "Pitching" && 
+        <div>
+            <h1 style={{color: "white"}}>Player Stats: {statsView}</h1>
+            <br></br>
+            <table className={styles.table_stats}>
+                <tbody>
+                    <tr className={styles.table_rows}>
+                        <th className={styles.table_header}>Player</th>
+                        <th className={styles.table_header}>Games</th>
+                        <th className={styles.table_header}>Innings Pitched</th>
+                        <th className={styles.table_header}>ERA</th>
+                        <th className={styles.table_header}>FIP</th>
+                        <th className={styles.table_header}>BB</th>
+                        <th className={styles.table_header}>K</th>
+                        <th className={styles.table_header}>HBP</th>
+                        <th className={styles.table_header}>HR</th>
+                        <th className={styles.table_header}>ER</th>
+                        <th className={styles.table_header}>HA</th>
+                        <th className={styles.table_header}>WHIP</th>
+                        <th className={styles.table_header}>ERA-</th>
+                        <th className={styles.table_header}>FIP-</th>
+                        <th className={styles.table_header}>SV</th>
+                        <th className={styles.table_header}>BSV</th>
+                        <th className={styles.table_header}>SV%</th>
+                        <th className={styles.table_header}>K/9</th>
+                        <th className={styles.table_header}>FIP- Rank</th>
+                        <th className={styles.table_header}>BB/9</th>
+
+                    </tr>
+                    {playerStats.map((player, index) => 
+                    <tr className={styles.table_rows} key={index}>
+                        <td className={styles.table_data}>{player.name}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.Games}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.InningsPitched}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.EarnedRunAverage}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.FieldingIndPitching}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.Walks}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.StrikeOuts}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.HitByPitches}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.HomeRuns}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.EarnedRuns}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.HitsAllowed}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.WalksHitsInningsPitched}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.ERAMinus}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.FIPMinus}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.Save}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.BlownSave}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.SVPercent}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.KPerNine}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.FIPMinusRank}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.BBPerNine}</td>
+                        
+                    </tr>)}
+                    
+                </tbody>
+                
+            </table>
+        </div>}
+
+            <button className={styles.switchStatsViewButton} onClick={() => {statsView === "Batting" ? set_stats_view("Pitching") : set_stats_view("Batting");}}>Switch Stats View</button>
         </div>
     )
 }
