@@ -59,7 +59,7 @@ export const DataProvider = ({children}) => {
         }
         else
         {
-            switchViews("playerStats");
+            switchViews("selectPlayer");
         }
         
         set_loading(false);

@@ -519,4 +519,11 @@ a.secondary {
   background-color: lightslategray;
   font-size: larger;
   font-family: Georgia, 'Times New Roman', Times, serif;
+  cursor: pointer;
+}
+
+.switchStatsViewButton:hover{
+  color: white;
+  background-color: cornflowerblue;
+  transition-duration: 0.2s;
 }

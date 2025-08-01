@@ -162,9 +162,10 @@ export default function GameScreen()
         }
         else
         {
-            let currentPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+            let currentHitterPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+            let currentPitchingPlayer = teamRed.teamChoices === "pitcher" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
             await axios.post("http://localhost:8000/updateFirstBase", {main_game_info: mainGameInfo,
-            isActive: isActive, currentPlayer: currentPlayer, tempPlayerOBJ: tempPlayerOBJ,
+            isActive: isActive, currentHitterPlayer: currentHitterPlayer, currentPitchingPlayer: currentPitchingPlayer, tempPlayerOBJ: tempPlayerOBJ,
             BBFlag: BBFlag, HBPFlag: HBPFlag
         });
         }
@@ -326,8 +327,11 @@ export default function GameScreen()
                 return;
             default:
                 score_increment++;
-                let currentPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
-                await axios.post("http://localhost:8000/updateHRStat", {currentPlayer: currentPlayer});
+                let currentHitterPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+                let currentPitchingPlayer = teamRed.teamChoices === "pitcher" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+                await axios.post("http://localhost:8000/updateHRStat", {currentHitterPlayer: currentHitterPlayer,
+                    currentPitchingPlayer: currentPitchingPlayer
+                });
                 if(teamRed.teamChoices === "hitter")
                 {
                     let gameLog = `${teamRed.currentPlayerDisplay} has gone far and smashed a home run!!!`;

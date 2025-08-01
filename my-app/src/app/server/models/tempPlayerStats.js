@@ -129,9 +129,9 @@ IP: Innings Pitched. 3 outs in an inning. Outs / 3. If 1/3, .1, 2/3 = .2, 3/3 = 
 ERA: Earned Run Avg. 9*(ER/ IP). If 
 FIP: Constant. Fielding Independent Pitching. (13 * HR) + 3 * (Walks + HBP) - 2*(K). All divided by IP + FIP constant (3.72).
 If IP <= 0, Mark as N/A.
-BB: Walks given up,
-K: Strikouts given up
-HBP: hits by pitch given up
+BB: Walks given up, DONE
+K: Strikouts given up. DONE
+HBP: hits by pitch given up DONE
 HR: HR givdn up.
 ER: Earned runs. Runs given up essentially.
 HA: Hits Allowed? Hits given up

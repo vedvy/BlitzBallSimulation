@@ -46,6 +46,7 @@ export default function PlayerStats()
                         <th className={styles.table_header}>wRC+</th>
                         <th className={styles.table_header}>BABIP</th>
                         <th className={styles.table_header}>ISO</th>
+                        <th className={styles.table_header}>wRCPlus Rank</th>
 
                     </tr>
                     {playerStats.map((player, index) => 
@@ -74,6 +75,7 @@ export default function PlayerStats()
                         <td className={styles.table_data}>{player.HitterStats.wRCPlus.toString()}</td>
                         <td className={styles.table_data}>{player.HitterStats.BatAvgBallsInPlay.toString()}</td>
                         <td className={styles.table_data}>{player.HitterStats.IsolatedPower.toString()}</td>
+                        <td className={styles.table_data}>{player.HitterStats.wRCPlusRank}</td>
                     </tr>)}
                     
                 </tbody>

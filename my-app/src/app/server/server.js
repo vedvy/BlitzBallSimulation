@@ -222,8 +222,8 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
             const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {$push: {logMessages: gameLog}},
             {new: true}
         );
-            let tempPlayerRed = await TempPlayerStats.find({name: teamRed.currentPlayerDisplay});
-            let tempPlayerBlue = await TempPlayerStats.find({name: teamBlue.currentPlayerDisplay});
+            let tempPlayerRed = (await TempPlayerStats.find({name: teamRed.currentPlayerDisplay}).exec())[0];
+            let tempPlayerBlue = (await TempPlayerStats.find({name: teamBlue.currentPlayerDisplay}).exec())[0];
             if(StrikeOut)
             {
                 await TempPlayerStats.findByIdAndUpdate(tempPlayerRed._id, {$inc: {'PitcherStats.StrikeOuts': 1, 
@@ -252,8 +252,9 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
             {new: true}
         );
 
-            let tempPlayerRed = await TempPlayerStats.find({name: teamRed.currentPlayerDisplay});
-            let tempPlayerBlue = await TempPlayerStats.find({name: teamBlue.currentPlayerDisplay});
+            let tempPlayerRed = (await TempPlayerStats.find({name: teamRed.currentPlayerDisplay}).exec())[0];
+            let tempPlayerBlue = (await TempPlayerStats.find({name: teamBlue.currentPlayerDisplay}).exec())[0];
+
             if(StrikeOut)
             {
                 await TempPlayerStats.findByIdAndUpdate(tempPlayerBlue._id, {$inc: {'PitcherStats.StrikeOuts': 1, 
@@ -340,46 +341,54 @@ app.post("/updateFirstBase", jsonParser, async function(req, res)
         console.log("inside first base");
         const MainGameInfo = req.body['main_game_info'];
         const isActive = req.body['isActive'];
-        const currentPlayer = req.body['currentPlayer'];
+        const currentHitterPlayer = req.body['currentPlayer'];
+        const currentPitchingPlayer = req.body['currentPitchingPlayer'];
         
-        
-        console.log(currentPlayer);
+        console.log(currentHitterPlayer);
 
-        const currentPlayerID = await Player.find({name: currentPlayer});
+        const currentHitterPlayerID = await Player.find({name: currentHitterPlayer});
 
-        console.log(currentPlayerID[0]._id);
+        console.log(currentHitterPlayerID[0]._id);
         if(isActive)
         {
             const BBFlag = req.body['BBFlag'];
             const HBPFlag = req.body['HBPFlag'];
 
             const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
-            firstBaseActive: {isActive: isActive, playerOnPlate: currentPlayerID[0]._id, playerOnPlateDisplay: currentPlayer},
+            firstBaseActive: {isActive: isActive, playerOnPlate: currentHitterPlayerID[0]._id, playerOnPlateDisplay: currentHitterPlayer},
             currentBalls: 0,
             currentHBP: 0,
             currentStrikes: 0
         }, {new: true});
 
-            let tempPlayerUpdate = (await TempPlayerStats.find({name: currentPlayer}).exec())[0];
+            let tempHitterPlayerUpdate = (await TempPlayerStats.find({name: currentHitterPlayer}).exec())[0];
+            let tempPitchingPlayerUpdate = (await TempPlayerStats.find({name: currentPitchingPlayer}).exec())[0];
+
             if(BBFlag)
             {
-                let UpdatingPlayerBB = await TempPlayerStats.findByIdAndUpdate(tempPlayerUpdate._id, {$inc: {'HitterStats.Walks': 1, 'HitterStats.PlateAppearences': 1}});
-                let gameLog = `${currentPlayer} walks to first base!`;
+                await TempPlayerStats.findByIdAndUpdate(tempHitterPlayerUpdate._id, {$inc: {'HitterStats.Walks': 1, 'HitterStats.PlateAppearences': 1}});
+                await TempPlayerStats.findByIdAndUpdate(tempPitchingPlayerUpdate._id, 
+                    {$inc: {'PitcherStats.Walks': 1}}
+                );
+                let gameLog = `${currentHitterPlayer} walks to first base!`;
                 const updateGameLogs = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
                     $push: {logMessages: gameLog}
                 });
             }
             else if(HBPFlag)
             {
-                let UpdatingPlayerHBP = await TempPlayerStats.findByIdAndUpdate(tempPlayerUpdate._id, {$inc: {'HitterStats.HitByPitches': 1, 'HitterStats.PlateAppearences': 1}});
-                let gameLog = `${currentPlayer} endures the pain of 2 Hit By Pitches and walks!`;
+                await TempPlayerStats.findByIdAndUpdate(tempHitterPlayerUpdate._id, {$inc: {'HitterStats.HitByPitches': 1, 'HitterStats.PlateAppearences': 1}});
+                await TempPlayerStats.findByIdAndUpdate(tempPitchingPlayerUpdate._id, 
+                    {$inc: {'PitcherStats.HitByPitches': 1}}
+                );
+                let gameLog = `${currentHitterPlayer} endures the pain of 2 Hit By Pitches and walks!`;
                 const updateGameLogs = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
                     $push: {logMessages: gameLog}
                 });
             }
             else
             {
-                let UpdatingPlayerOneB = await TempPlayerStats.findByIdAndUpdate(tempPlayerUpdate._id, {$inc: {'HitterStats.OneB': 1, 'HitterStats.PlateAppearences': 1,
+                let UpdatingPlayerOneB = await TempPlayerStats.findByIdAndUpdate(tempHitterPlayerUpdate._id, {$inc: {'HitterStats.OneB': 1, 'HitterStats.PlateAppearences': 1,
                     'HitterStats.AtBats': 1
                 }});
             }
@@ -497,11 +506,17 @@ app.post("/updateThirdBase", jsonParser, async function(req, res)
 app.post("/updateHRStat", jsonParser, async function(req, res)
 {   
     try{
-        const currentPlayer = req.body['currentPlayer'];
-    let tempPlayerUpdate = (await TempPlayerStats.find({name: currentPlayer}).exec())[0];
-    let UpdatingPlayerHR = await TempPlayerStats.findByIdAndUpdate(tempPlayerUpdate._id, {$inc: {'HitterStats.HomeRuns': 1,
+    const currentHitterPlayer = req.body['currentHitterPlayer'];
+    const currentPitchingPlayer = req.body['currentPitchingPlayer'];
+    let tempHitterPlayerUpdate = (await TempPlayerStats.find({name: currentHitterPlayer}).exec())[0];
+    await TempPlayerStats.findByIdAndUpdate(tempHitterPlayerUpdate._id, {$inc: {'HitterStats.HomeRuns': 1,
         'HitterStats.PlateAppearences': 1, 'HitterStats.AtBats': 1
     }});
+
+    let tempPitchingPlayerUpdate = (await TempPlayerStats.find({name: currentPitchingPlayer}).exec())[0];
+    await TempPlayerStats.findByIdAndUpdate(tempPitchingPlayerUpdate._id, {$inc: {'PitcherStats.HomeRuns': 1}})
+
+
     res.send(200);
     }
     catch(err)
