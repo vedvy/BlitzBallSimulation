@@ -54,17 +54,22 @@ export default function PlayerStats()
                         <td className={styles.table_data}>{player.HitterStats.TwoB}</td>
                         <td className={styles.table_data}>{player.HitterStats.ThreeB}</td>
                         <td className={styles.table_data}>{player.HitterStats.HomeRuns}</td>
-                        {/* <td className={styles.table_data}>{player.HitterStats.BB}</td>
+                        <td className={styles.table_data}>{player.HitterStats.Walks}</td>
                         <td className={styles.table_data}>{player.HitterStats.HitByPitches}</td>
                         <td className={styles.table_data}>{player.HitterStats.RunsBattedIn}</td>
                         <td className={styles.table_data}>{player.HitterStats.Runs}</td>
                         <td className={styles.table_data}>{player.HitterStats.TotalBases}</td>
                         <td className={styles.table_data}>{player.HitterStats.StrikeOuts}</td>
-                        <td className={styles.table_data}>{player.HitterStats.AVG}</td>
-                        <td className={styles.table_data}>{player.HitterStats.SLGPercent}</td>
-                        <td className={styles.table_data}>{player.HitterStats.OBPPercent}</td>
-                        <td className={styles.table_data}>{player.HitterStats.OPS}</td>
-                        <td className={styles.table_data}>{player.HitterStats.OPSPlus}</td> */}
+                        <td className={styles.table_data}>{player.HitterStats.Average.toString()}</td>
+                        <td className={styles.table_data}>{player.HitterStats.SLGPercent.toString()}</td>
+                        <td className={styles.table_data}>{player.HitterStats.OBPPercent.toString()}</td>
+                        <td className={styles.table_data}>{player.HitterStats.OnBasePlusSlugging.toString()}</td>
+                        <td className={styles.table_data}>{player.HitterStats.OPSPlus.toString()}</td>
+                        <td className={styles.table_data}>{player.HitterStats.KPercent.toString()}</td>
+                        <td className={styles.table_data}>{player.HitterStats.wOBA.toString()}</td>
+                        <td className={styles.table_data}>{player.HitterStats.wRCPlus.toString()}</td>
+                        <td className={styles.table_data}>{player.HitterStats.BatAvgBallsInPlay.toString()}</td>
+                        <td className={styles.table_data}>{player.HitterStats.IsolatedPower.toString()}</td>
                     </tr>)}
                     
                 </tbody>

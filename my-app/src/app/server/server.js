@@ -320,7 +320,7 @@ app.post("/updateFirstBase", jsonParser, async function(req, res)
             let tempPlayerUpdate = (await TempPlayerStats.find({name: currentPlayer}).exec())[0];
             if(BBFlag)
             {
-                let UpdatingPlayerBB = await TempPlayerStats.findByIdAndUpdate(tempPlayerUpdate._id, {$inc: {'HitterStats.BB': 1}});
+                let UpdatingPlayerBB = await TempPlayerStats.findByIdAndUpdate(tempPlayerUpdate._id, {$inc: {'HitterStats.Walks': 1}});
                 let gameLog = `${currentPlayer} walks to first base!`;
                 const updateGameLogs = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
                     $push: {logMessages: gameLog}
