@@ -89,7 +89,7 @@ Put stats calculations and necessary conditionals here! there's a lot of them.*/
 /*
 Batter Stats: 
 ---------------------
-Games: Should be incremented only once for every player in the mainGameInfo only.
+Games: Should be incremented only once for every player in the mainGameInfo only. Do at the very end, as a confirmation.
 1B to HR: Based on hitting score. DONE
 BB: walk. DONE
 HBP: add to mainGameInfo field to count twice, Hit By Pitch. DONE
@@ -107,6 +107,7 @@ Plate Appearence: Increments for every time a player steps into the box.
 ----------The rest of these require the League Averages to be calculated or another variable to be calculated before
 its own. What I'm saying is: Keep these stat updates until last, use the end game values calculate all of them and
 then update the fields while the game over screen appears.
+----------------------
 AVG: Number of hits / Number of AT Bats.
 SLG %: Similar to total Bases. (Singles * 1 + Doubles * 2 + Triples * 3 + HR * 4) / AB
 OBP %: (Hits + Walks + HBP) / PA
@@ -132,7 +133,7 @@ If IP <= 0, Mark as N/A.
 BB: Walks given up, DONE
 K: Strikouts given up. DONE
 HBP: hits by pitch given up DONE
-HR: HR givdn up.
+HR: HR givdn up. DONE
 ER: Earned runs. Runs given up essentially.
 HA: Hits Allowed? Hits given up
 WHIP: (Walks + Hits) / IP. 

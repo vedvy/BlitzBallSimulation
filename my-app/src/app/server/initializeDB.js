@@ -175,8 +175,8 @@ async function initializeDB()
     let PitcherStats1 = {
                 Games: 0,
                 InningsPitched: 0, 
-                EarnedRunAverage: 1,
-                FieldingIndPitching: 1,
+                EarnedRunAverage: 1.00,
+                FieldingIndPitching: 1.00,
                 Walks: 0,
                 StrikeOuts: 0,
                 HitByPitches: 0,
@@ -189,9 +189,9 @@ async function initializeDB()
                 Save: 0,
                 BlownSave: 0,
                 SVPercent: 0,
-                KPerNine: 1,
+                KPerNine: 1.00,
                 FIPMinusRank: 0,
-                BBPerNine: 1
+                BBPerNine: 1.00
     }
 
     const tempPlayer1 = {

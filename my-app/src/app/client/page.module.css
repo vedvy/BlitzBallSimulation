@@ -527,3 +527,16 @@ a.secondary {
   background-color: cornflowerblue;
   transition-duration: 0.2s;
 }
+
+.switchGameOverButton{
+  background-color: lightslategray;
+  cursor: pointer;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: large;
+}
+
+.switchGameOverButton:hover{
+  color: white;
+  background-color: burlywood;
+  transition-duration: 0.2s;
+}
