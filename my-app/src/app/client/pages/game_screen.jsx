@@ -25,13 +25,8 @@ export default function GameScreen()
         var teamBlue = dataModel.teams[1];
         var mainGameInfo = dataModel.main_game_info[0];
         var tempPlayerOBJ = dataModel.tempPlayerStats[0];
-        console.log(dataModel.main_game_info[0].firstBaseActive);
-        console.log(teamRed.teamPlayers);
-        console.log(teamBlue.teamPlayers);
-        console.log(dataModel.view);
-        console.log(tempPlayerOBJ.name);
-        console.log(tempPlayerOBJ.HitterStats.OneB);
-
+        var redTeamPlayers = dataModel.redTeamPlayers;
+        var blueTeamPlayers = dataModel.blueTeamPlayers;
 
 
         
@@ -40,13 +35,18 @@ export default function GameScreen()
     const [localStrikes, set_local_strikes] = useState(mainGameInfo.currentStrikes);
     const [localBalls, set_local_balls] = useState(mainGameInfo.currentBalls);
     const [localHBP, set_local_HBP] = useState(mainGameInfo.currentHBP);
+
+    const [outOptionsOn, set_outOptions] = useState(false);
+    const [outType, set_outType] = useState();
+    const [outFielder, set_outFielder] = useState();
     
 
-    const incrementOuts = async (isStrikeOut) =>
+    const incrementOuts = async (isStrikeOut, playerName) =>
     {
         if(mainGameInfo.currentOuts === 2)
         {
             console.log("Switching Team Positions");
+
             await axios.post("http://localhost:8000/switchPositions", {redTeam: teamRed, 
             blueTeam: teamBlue, 
             main_game_info: mainGameInfo});
@@ -54,6 +54,7 @@ export default function GameScreen()
 
             await axios.post("http://localhost:8000/incrementOuts", {main_game_info: mainGameInfo, 
                 resetOuts: true, teamRed: teamRed, teamBlue: teamBlue, isStrikeOut: isStrikeOut
+                , outType: outType, outFielder: playerName
             });
 
             if(mainGameInfo.topOfInning)
@@ -83,7 +84,8 @@ export default function GameScreen()
         else
         {
             await axios.post("http://localhost:8000/incrementOuts", {main_game_info: mainGameInfo, 
-                resetOuts: false, teamRed: teamRed, teamBlue: teamBlue, isStrikeOut: isStrikeOut
+                resetOuts: false, teamRed: teamRed, teamBlue: teamBlue, isStrikeOut: isStrikeOut, 
+                outType: outType, outFielder: playerName
             });
         }
         await dataModel.fetchData("selectPlayer");
@@ -95,7 +97,8 @@ export default function GameScreen()
         if(mainGameInfo.currentStrikes === 2 || localStrikes === 2)
         {
             set_local_strikes(0);
-            await incrementOuts(true);
+            let playerName = teamRed.teamChoices === "pitcher" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+            await incrementOuts(true, playerName);
             
         }
         else
@@ -385,10 +388,30 @@ export default function GameScreen()
                     )}
                     {teamRed.teamChoices === "pitcher" && (
                     (!mainGameInfo.gameOver && dataModel.view === "gameField" && <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_red} onClick={async () => {await incrementOuts(false);}}>Out</span>
-                        <span className={styles.player_buttons_red} onClick={async () => {await incrementStrikes();}}>Strike</span>
-                        <span className={styles.player_buttons_red} onClick={async () => {await incrementBalls();}}>Ball</span>
-                        <span className={styles.player_buttons_red} onClick={async () => {await incrementHBP();}}>Hit By Pitch</span>
+                        
+                        {!outOptionsOn && 
+                        <div>
+                            <span className={styles.player_buttons_red} onClick={() => {set_outOptions(true);}}>Out</span>
+                            <span className={styles.player_buttons_red} onClick={async () => {await incrementStrikes();}}>Strike</span>
+                            <span className={styles.player_buttons_red} onClick={async () => {await incrementBalls();}}>Ball</span>
+                            <span className={styles.player_buttons_red} onClick={async () => {await incrementHBP();}}>Hit By Pitch</span>    
+                        </div>}
+                        {outOptionsOn && !outType &&
+                        <div>
+                            <span className={styles.player_buttons_red} onClick={() => {set_outType("GroundOut");}}>GroundOut</span>
+                            <span className={styles.player_buttons_red} onClick={() => {set_outType("LineOut");}}>LineOut</span>
+                            <span className={styles.player_buttons_red} onClick={() => {set_outType("PopOut");}}>PopOut</span>
+                            <span className={styles.player_buttons_red} onClick={() => {set_outType(); set_outOptions(false);}}>Cancel</span>
+                        </div>}
+                        {outOptionsOn && outType &&
+                        <div>
+                            {redTeamPlayers.map((player, index) => 
+                            <span className={styles.player_buttons_red} key={index} onClick={async () => {set_outFielder(player); await incrementOuts(false, player);}}>{player}</span>
+                            )}
+                            <span className={styles.player_buttons_blue} onClick={() => {set_outType(false); set_outOptions(false); set_outFielder();}}>Cancel</span>
+                        </div>}
+
+                        
                     </div>)
                     )}
                 </div>
@@ -406,10 +429,27 @@ export default function GameScreen()
                     
                     {teamBlue.teamChoices === "pitcher" && (
                     (!mainGameInfo.gameOver && dataModel.view === "gameField" && <div className={styles.choice_buttons_main}>
-                        <span className={styles.player_buttons_blue} onClick={async () => {await incrementOuts(false);}}>Out</span>
-                        <span className={styles.player_buttons_blue} onClick={async () => {await incrementStrikes();}}>Strike</span>
-                        <span className={styles.player_buttons_blue} onClick={async () => {await incrementBalls();}}>Ball</span>
-                        <span className={styles.player_buttons_blue} onClick={async () => {await incrementHBP();}}> Hit By Pitch</span>
+                        {!outOptionsOn && 
+                        <div>
+                            <span className={styles.player_buttons_blue} onClick={() => {set_outOptions(true);}}>Out</span>
+                            <span className={styles.player_buttons_blue} onClick={async () => {await incrementStrikes();}}>Strike</span>
+                            <span className={styles.player_buttons_blue} onClick={async () => {await incrementBalls();}}>Ball</span>
+                            <span className={styles.player_buttons_blue} onClick={async () => {await incrementHBP();}}>Hit By Pitch</span>    
+                        </div>}
+                        {outOptionsOn && !outType &&
+                        <div>
+                            <span className={styles.player_buttons_blue} onClick={() => {set_outType("GroundOut");}}>GroundOut</span>
+                            <span className={styles.player_buttons_blue} onClick={() => {set_outType("LineOut");}}>LineOut</span>
+                            <span className={styles.player_buttons_blue} onClick={() => {set_outType("PopOut");}}>PopOut</span>
+                            <span className={styles.player_buttons_blue} onClick={() => {set_outType(false); set_outOptions(false)}}>Cancel</span>
+                        </div>}
+                        {outOptionsOn && outType &&
+                        <div>
+                            {redTeamPlayers.map((player, index) => 
+                            <span className={styles.player_buttons_blue} key={index} onClick={async () => {set_outFielder(player); await incrementOuts(false, player);}}>{player}</span>
+                            )}
+                            <span className={styles.player_buttons_blue} onClick={() => {set_outType(false); set_outOptions(false); set_outFielder();}}>Cancel</span>
+                        </div>}
                     </div>)
                     )}
                     {teamBlue.teamChoices === "hitter" && (

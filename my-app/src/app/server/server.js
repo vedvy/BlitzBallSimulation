@@ -190,6 +190,9 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
         const teamRed = req.body['teamRed'];
         const teamBlue = req.body['teamBlue'];
         const StrikeOut = req.body['isStrikeOut'];
+        const outType = req.body['outType'];
+        const outFielder = req.body['outFielder'];
+
 
         if(resetOuts)
         {
@@ -217,8 +220,11 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
         
         if(teamRed.teamChoices === "pitcher")
         {
-            let gameLog = `${teamRed.currentPlayerDisplay} got ${teamBlue.currentPlayerDisplay} OUT! 
-            Strikeout: ${StrikeOut}`;
+            let gameLog = `${outFielder} got ${teamBlue.currentPlayerDisplay} OUT! Strikeout: ${StrikeOut}`;
+            if(outType)
+            {
+                gameLog += `Out Type: ${outType}`;
+            }
             const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {$push: {logMessages: gameLog}},
             {new: true}
         );
@@ -246,8 +252,11 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
         }
         else
         {
-            let gameLog =  `${teamBlue.currentPlayerDisplay} got ${teamRed.currentPlayerDisplay} OUT!
-            StrikeOut: ${StrikeOut}`;
+            let gameLog =  `${outFielder} got ${teamRed.currentPlayerDisplay} OUT! StrikeOut: ${StrikeOut}`;
+            if(outType)
+            {
+                gameLog += `Out Type: ${outType}`;
+            }
             const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {$push: {logMessages: gameLog}},
             {new: true}
         );
@@ -341,7 +350,7 @@ app.post("/updateFirstBase", jsonParser, async function(req, res)
         console.log("inside first base");
         const MainGameInfo = req.body['main_game_info'];
         const isActive = req.body['isActive'];
-        const currentHitterPlayer = req.body['currentPlayer'];
+        const currentHitterPlayer = req.body['currentHitterPlayer'];
         const currentPitchingPlayer = req.body['currentPitchingPlayer'];
         
         console.log(currentHitterPlayer);
