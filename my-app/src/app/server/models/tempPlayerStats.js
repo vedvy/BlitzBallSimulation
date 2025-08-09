@@ -96,7 +96,7 @@ HBP: add to mainGameInfo field to count twice, Hit By Pitch. DONE
 >>>> Following below may need tracking who is  on which base.
 RBI: Runs Batted In, player hits and runner scores. Just update with the number of runs scored on their turn.
 Runs: Whoever scores. increments based on whether player gets to Home Plate within the inning.
-Total bases: Single 1, Double 2, Triple 3, HR 4. Walk is 0. (1 * 1B + 2 * 2B + 3 * 3B + 4 * HR)
+
 Strikeouts:.. DONE
 At Bats: Only includes Outs, Hits, Strikeouts. Number of times player comes up to bat. Default is AB, unless it's a walk then PA. Takes in Hit scores and Outs. No bunts or flys.
 ^^^DONE?
@@ -107,7 +107,9 @@ Plate Appearence: Increments for every time a player steps into the box.
 ----------The rest of these require the League Averages to be calculated or another variable to be calculated before
 its own. What I'm saying is: Keep these stat updates until last, use the end game values calculate all of them and
 then update the fields while the game over screen appears.
+Should these be calculated and updated when GameOver initiates?
 ----------------------
+Total bases: Single 1, Double 2, Triple 3, HR 4. Walk is 0. (1 * 1B + 2 * 2B + 3 * 3B + 4 * HR)
 AVG: Number of hits / Number of AT Bats.
 SLG %: Similar to total Bases. (Singles * 1 + Doubles * 2 + Triples * 3 + HR * 4) / AB
 OBP %: (Hits + Walks + HBP) / PA
@@ -136,6 +138,7 @@ HBP: hits by pitch given up DONE
 HR: HR givdn up. DONE
 ER: Earned runs. Runs given up essentially.
 HA: Hits Allowed? Hits given up
+------Below either can be calculate at the end or require additonal variable reads.-------
 WHIP: (Walks + Hits) / IP. 
 ERA-: 100 * (ERA / ERAAVG). If IP <= 0, N/A.
 FIP-: Same formula, but with FIP.
