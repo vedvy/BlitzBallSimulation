@@ -189,9 +189,11 @@ export default function GameScreen()
         }
         else
         {
-            let currentPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+            let currentHitterPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+            let currentPitchingPlayer = teamRed.teamChoices === "pitcher" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+
             await axios.post("http://localhost:8000/updateSecondBase", {main_game_info: mainGameInfo,
-            isActive: isActive, currentPlayer: currentPlayer
+            isActive: isActive, currentHitterPlayer: currentHitterPlayer, currentPitchingPlayer: currentPitchingPlayer
         });
         }
 
@@ -207,9 +209,11 @@ export default function GameScreen()
         }
         else
         {
-            let currentPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+            let currentHitterPlayer = teamRed.teamChoices === "hitter" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+            let currentPitchingPlayer = teamRed.teamChoices === "pitcher" ? teamRed.currentPlayerDisplay : teamBlue.currentPlayerDisplay;
+
             await axios.post("http://localhost:8000/updateThirdBase", {main_game_info: mainGameInfo,
-            isActive: isActive, currentPlayer: currentPlayer
+            isActive: isActive, currentHitterPlayer: currentHitterPlayer, currentPitchingPlayer: currentPitchingPlayer
         });
         }
 
