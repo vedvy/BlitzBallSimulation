@@ -224,10 +224,12 @@ export default function GameScreen()
     const updateBases = async (runs, BBFlag, HBPFlag) =>{
         console.log("inside update bases");
         var score_increment = 0;
+        let scoringPlayersArray = [];
         if(mainGameInfo.thirdBaseActive.isActive === true)
         {
             console.log("third base was active");
             await updateTBActive(false);
+            scoringPlayersArray.push(mainGameInfo.thirdBaseActive.playerOnPlateDisplay);
             score_increment++;
 
         }
@@ -241,6 +243,7 @@ export default function GameScreen()
                 await updateTBActive(true, currentPlayer);
             }
             else{
+                scoringPlayersArray.push(mainGameInfo.secondBaseActive.playerOnPlateDisplay);
                 score_increment++;
             }
         }
@@ -260,6 +263,7 @@ export default function GameScreen()
             }
             else
             {
+                scoringPlayersArray.push(mainGameInfo.firstBaseActive.playerOnPlateDisplay);
                 score_increment++;
             }
         }
@@ -272,7 +276,8 @@ export default function GameScreen()
                     let gameLog = `${teamRed.currentPlayerDisplay} has hit a single!`;
                     await axios.post("http://localhost:8000/updateScores", 
                         {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
-                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                            mainGameInfo: mainGameInfo, gameLog: gameLog, scoringPlayersArray: scoringPlayersArray,
+                            currentHitter: teamRed.currentPlayerDisplay
                         }
                     );
                 }
@@ -281,7 +286,8 @@ export default function GameScreen()
                     let gameLog = `${teamBlue.currentPlayerDisplay} has hit a single!`;
                     await axios.post("http://localhost:8000/updateScores", 
                         {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
-                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                            mainGameInfo: mainGameInfo, gameLog: gameLog, scoringPlayersArray: scoringPlayersArray,
+                            currentHitter: teamBlue.currentPlayerDisplay
                         }
                     );
                 }
@@ -295,7 +301,8 @@ export default function GameScreen()
                     let gameLog = `${teamRed.currentPlayerDisplay} has hit a double!`;
                     await axios.post("http://localhost:8000/updateScores", 
                         {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
-                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                            mainGameInfo: mainGameInfo, gameLog: gameLog, scoringPlayersArray: scoringPlayersArray,
+                            currentHitter: teamRed.currentPlayerDisplay
                         }
                     );
                 }
@@ -304,7 +311,8 @@ export default function GameScreen()
                     let gameLog = `${teamBlue.currentPlayerDisplay} has hit a double!`;
                     await axios.post("http://localhost:8000/updateScores", 
                         {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
-                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                            mainGameInfo: mainGameInfo, gameLog: gameLog, scoringPlayersArray: scoringPlayersArray,
+                            currentHitter: teamBlue.currentPlayerDisplay
                         }
                     );
                 }
@@ -317,7 +325,8 @@ export default function GameScreen()
                     let gameLog = `${teamRed.currentPlayerDisplay} has hit a triple!`;
                     await axios.post("http://localhost:8000/updateScores", 
                         {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
-                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                            mainGameInfo: mainGameInfo, gameLog: gameLog, scoringPlayersArray: scoringPlayersArray,
+                            currentHitter: teamRed.currentPlayerDisplay
                         }
                     );
                 }
@@ -326,7 +335,8 @@ export default function GameScreen()
                     let gameLog = `${teamBlue.currentPlayerDisplay} has hit a triple!`;
                     await axios.post("http://localhost:8000/updateScores", 
                         {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
-                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                            mainGameInfo: mainGameInfo, gameLog: gameLog, scoringPlayersArray: scoringPlayersArray,
+                            currentHitter: teamBlue.currentPlayerDisplay
                         }
                     );
                 }
@@ -344,7 +354,8 @@ export default function GameScreen()
                     let gameLog = `${teamRed.currentPlayerDisplay} has gone far and smashed a home run!!!`;
                     await axios.post("http://localhost:8000/updateScores", 
                         {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
-                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                            mainGameInfo: mainGameInfo, gameLog: gameLog, scoringPlayersArray: scoringPlayersArray,
+                            currentHitter: teamRed.currentPlayerDisplay
                         }
                     );
                 }
@@ -353,7 +364,8 @@ export default function GameScreen()
                     let gameLog = `${teamBlue.currentPlayerDisplay} cracked the bat and scored a home run!!!`;
                     await axios.post("http://localhost:8000/updateScores", 
                         {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
-                            mainGameInfo: mainGameInfo, gameLog: gameLog
+                            mainGameInfo: mainGameInfo, gameLog: gameLog, scoringPlayersArray: scoringPlayersArray,
+                            currentHitter: teamBlue.currentPlayerDisplay
                         }
                     );
                 }

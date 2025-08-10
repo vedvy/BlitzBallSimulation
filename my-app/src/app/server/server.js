@@ -554,6 +554,7 @@ app.post("/updateHRStat", jsonParser, async function(req, res)
     
 
 });
+
 /*Provide player who was at bat when the score increments and update their RBI with scoreAddition
 Also provide an array of players who made it to Home Plate to increment their Runs counter.
 Use this to also update ER*/
@@ -565,6 +566,9 @@ app.post("/updateScores", jsonParser, async function(req, res){
         const scoreAddition = req.body['score_increment'];
         const MainGameInfo = req.body['mainGameInfo'];
         const gameLog = req.body['gameLog'];
+        const scoringPlayersArray = req.body['scoringPlayersArray'];
+        const currentHitter = req.body['currentHitter'];
+
         console.log("updateScores: ");
         console.log(MainGameInfo._id);
         console.log(gameLog);
@@ -574,6 +578,8 @@ app.post("/updateScores", jsonParser, async function(req, res){
             const updateTeamRed = await Team.findByIdAndUpdate(teamRed._id, {
                 $inc: {teamScore: scoreAddition}
             }, {new: true});
+            
+
         }
         else
         {
@@ -582,6 +588,14 @@ app.post("/updateScores", jsonParser, async function(req, res){
                     $inc: {teamScore: scoreAddition}
                 }, {new: true}
             );
+        }
+
+        let currentHitterID = (await TempPlayerStats.find({name: currentHitter}).exec())[0];
+        await TempPlayerStats.findByIdAndUpdate(currentHitterID._id, {$inc: {'HitterStats.RunsBattedIn': scoreAddition}});
+        for(let i = 0; i < scoringPlayersArray.length; i++)
+        {
+            let playerID = (await TempPlayerStats.find({name: scoringPlayersArray[i]}).exec())[0];
+            await TempPlayerStats.findByIdAndUpdate(playerID._id, {$inc: {'HitterStats.Runs': 1}});
         }
         
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {$push: {logMessages: gameLog}},
