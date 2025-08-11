@@ -573,12 +573,13 @@ app.post("/updateScores", jsonParser, async function(req, res){
         console.log(MainGameInfo._id);
         console.log(gameLog);
 
+        var currentPitcher = "";
         if(updateRedScores)
         {
             const updateTeamRed = await Team.findByIdAndUpdate(teamRed._id, {
                 $inc: {teamScore: scoreAddition}
             }, {new: true});
-            
+            currentPitcher = teamRed.currentPlayerDisplay;
 
         }
         else
@@ -588,6 +589,7 @@ app.post("/updateScores", jsonParser, async function(req, res){
                     $inc: {teamScore: scoreAddition}
                 }, {new: true}
             );
+            currentPitcher = teamBlue.currentPlayerDisplay;
         }
 
         let currentHitterID = (await TempPlayerStats.find({name: currentHitter}).exec())[0];
@@ -598,6 +600,9 @@ app.post("/updateScores", jsonParser, async function(req, res){
             await TempPlayerStats.findByIdAndUpdate(playerID._id, {$inc: {'HitterStats.Runs': 1}});
         }
         
+        let currentPitcherID = (await TempPlayerStats.find({name: currentPitcher}).exec())[0];
+        await TempPlayerStats.findByIdAndUpdate(currentPitcherID._id, {$inc: {'PitcherStats.EarnedRuns': scoreAddition}});
+
         const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {$push: {logMessages: gameLog}},
             {new: true}
         );

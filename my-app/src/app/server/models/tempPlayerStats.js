@@ -94,8 +94,8 @@ Games: Should be incremented only once for every player in the mainGameInfo only
 BB: walk. DONE
 HBP: add to mainGameInfo field to count twice, Hit By Pitch. DONE
 >>>> Following below may need tracking who is  on which base.
-RBI: Runs Batted In, player hits and runner scores. Just update with the number of runs scored on their turn.
-Runs: Whoever scores. increments based on whether player gets to Home Plate within the inning.
+RBI: Runs Batted In, player hits and runner scores. Just update with the number of runs scored on their turn. DONE
+Runs: Whoever scores. increments based on whether player gets to Home Plate within the inning. DONE
 
 Strikeouts:.. DONE
 At Bats: Only includes Outs, Hits, Strikeouts. Number of times player comes up to bat. Default is AB, unless it's a walk then PA. Takes in Hit scores and Outs. No bunts or flys.
@@ -130,15 +130,16 @@ Pitcher Stats:
 Games: Simple.
 IP: Innings Pitched. 3 outs in an inning. Outs / 3. If 1/3, .1, 2/3 = .2, 3/3 = Next Whole Int.
 ERA: Earned Run Avg. 9*(ER/ IP). If 
-FIP: Constant. Fielding Independent Pitching. (13 * HR) + 3 * (Walks + HBP) - 2*(K). All divided by IP + FIP constant (3.72).
 If IP <= 0, Mark as N/A.
 BB: Walks given up, DONE
 K: Strikouts given up. DONE
 HBP: hits by pitch given up DONE
 HR: HR givdn up. DONE
-ER: Earned runs. Runs given up essentially.
-HA: Hits Allowed? Hits given up
+ER: Earned runs. Runs given up essentially. DONE
+HA: Hits Allowed? Hits given up DONE
 ------Below either can be calculate at the end or require additonal variable reads.-------
+ERA: Earned Run Avg. 9*(ER/ IP). If 
+FIP: Constant. Fielding Independent Pitching. (13 * HR) + 3 * (Walks + HBP) - 2*(K). All divided by IP + FIP constant (3.72).
 WHIP: (Walks + Hits) / IP. 
 ERA-: 100 * (ERA / ERAAVG). If IP <= 0, N/A.
 FIP-: Same formula, but with FIP.
