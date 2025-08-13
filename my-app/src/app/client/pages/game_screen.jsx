@@ -160,8 +160,7 @@ export default function GameScreen()
         if(currentPlayerOnPlate)
         {
             await axios.post("http://localhost:8000/updateFirstBase", {main_game_info: mainGameInfo,
-            isActive: isActive, currentPlayer: currentPlayerOnPlate, tempPlayerOBJ: tempPlayerOBJ
-            });
+            isActive: isActive, currentHitterPlayer: currentPlayerOnPlate});
         }
         else
         {
@@ -184,7 +183,7 @@ export default function GameScreen()
         if(currentPlayerOnPlate)
         {
             await axios.post("http://localhost:8000/updateSecondBase", {main_game_info: mainGameInfo,
-            isActive: isActive, currentPlayer: currentPlayerOnPlate
+            isActive: isActive, currentHitterPlayer: currentPlayerOnPlate
             });
         }
         else
@@ -204,7 +203,7 @@ export default function GameScreen()
         if(currentPlayerOnPlate)
         {
             await axios.post("http://localhost:8000/updateThirdBase", {main_game_info: mainGameInfo,
-            isActive: isActive, currentPlayer: currentPlayerOnPlate
+            isActive: isActive, currentHitterPlayer: currentPlayerOnPlate
             });
         }
         else
@@ -461,7 +460,7 @@ export default function GameScreen()
                         </div>}
                         {outOptionsOn && outType &&
                         <div>
-                            {redTeamPlayers.map((player, index) => 
+                            {bluefTeamPlayers.map((player, index) => 
                             <span className={styles.player_buttons_blue} key={index} onClick={async () => {set_outFielder(player); await incrementOuts(false, player);}}>{player}</span>
                             )}
                             <span className={styles.player_buttons_blue} onClick={() => {set_outType(false); set_outOptions(false); set_outFielder();}}>Cancel</span>

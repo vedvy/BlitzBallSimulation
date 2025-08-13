@@ -233,8 +233,6 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
             if(StrikeOut)
             {
                 await TempPlayerStats.findByIdAndUpdate(tempPlayerRed._id, {$inc: {'PitcherStats.StrikeOuts': 1, 
-                    'HitterStats.PlateAppearences': 1,
-                    'HitterStats.AtBats': 1
                 }});
                 await TempPlayerStats.findByIdAndUpdate(tempPlayerBlue._id, {$inc: {'HitterStats.StrikeOuts': 1,
                     'HitterStats.PlateAppearences': 1, 
@@ -243,9 +241,6 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
             }
             else
             {
-                await TempPlayerStats.findByIdAndUpdate(tempPlayerRed._id, {$inc: {'HitterStats.PlateAppearences': 1,
-                    'HitterStats.AtBats': 1
-                }});
                 await TempPlayerStats.findByIdAndUpdate(tempPlayerBlue._id, {$inc: {'HitterStats.PlateAppearences': 1, 'HitterStats.AtBats': 1
                 }});
             }
@@ -266,9 +261,7 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
 
             if(StrikeOut)
             {
-                await TempPlayerStats.findByIdAndUpdate(tempPlayerBlue._id, {$inc: {'PitcherStats.StrikeOuts': 1, 
-                    'HitterStats.PlateAppearences': 1,
-                    'HitterStats.AtBats': 1
+                await TempPlayerStats.findByIdAndUpdate(tempPlayerBlue._id, {$inc: {'PitcherStats.StrikeOuts': 1,
                 }});
                 await TempPlayerStats.findByIdAndUpdate(tempPlayerRed._id, {$inc: {'HitterStats.StrikeOuts': 1,
                     'HitterStats.PlateAppearences': 1, 
@@ -277,9 +270,6 @@ app.post("/incrementOuts", jsonParser, async function(req, res){
             }
             else
             {
-                await TempPlayerStats.findByIdAndUpdate(tempPlayerBlue._id, {$inc: {'HitterStats.PlateAppearences': 1,
-                    'HitterStats.AtBats': 1
-                }});
                 await TempPlayerStats.findByIdAndUpdate(tempPlayerRed._id, {$inc: {'HitterStats.PlateAppearences': 1, 'HitterStats.AtBats': 1
                 }});
             }
@@ -447,22 +437,25 @@ app.post("/updateSecondBase", jsonParser, async function(req, res)
         if(isActive)
         {
             const updateGameInfo = await MainGame.findByIdAndUpdate(MainGameInfo._id, {
-            secondBaseActive: {isActive: isActive, playerOnPlate: currentHitterPlayerID._id, playerOnPlateDisplay: currentPlayer},
+            secondBaseActive: {isActive: isActive, playerOnPlate: currentHitterPlayerID[0]._id, playerOnPlateDisplay: currentHitterPlayer},
             currentBalls: 0,
             currentHBP: 0,
             currentStrikes: 0 
         }, {new: true});
         
-        let tempHittingPlayerUpdate = (await TempPlayerStats.find({name: currentHitterPlayer}).exec())[0];
-        let UpdatingHitterPlayerStats = await TempPlayerStats.findByIdAndUpdate(tempHittingPlayerUpdate._id, {$inc: {'HitterStats.TwoB': 1, 
+        if(currentPitcherPlayer)
+        {
+            let tempHittingPlayerUpdate = (await TempPlayerStats.find({name: currentHitterPlayer}).exec())[0];
+            let UpdatingHitterPlayerStats = await TempPlayerStats.findByIdAndUpdate(tempHittingPlayerUpdate._id, {$inc: {'HitterStats.TwoB': 1, 
             'HitterStats.PlateAppearence': 1, 'HitterStats.AtBats': 1, 'HitterStats.Hits': 1
         }});
 
-        let tempPitchingPlayerUpdate = (await TempPlayerStats.find({name: currentPitcherPlayer}).exec())[0];
-        let UpdatingPitcherPlayerStats = await TempPlayerStats.findByIdAndUpdate(tempPitchingPlayerUpdate._id,
+            let tempPitchingPlayerUpdate = (await TempPlayerStats.find({name: currentPitcherPlayer}).exec())[0];
+            let UpdatingPitcherPlayerStats = await TempPlayerStats.findByIdAndUpdate(tempPitchingPlayerUpdate._id,
             {$inc: {'PitcherStats.HitsAllowed': 1}}
         );
-        
+        }
+
         }
         else
         {
@@ -481,6 +474,9 @@ app.post("/updateSecondBase", jsonParser, async function(req, res)
         res.status(500).json({message: "err", err});
     }
 });
+
+/*The OneB, TwoB, ThreeB updates should be done based on the decision buttons. Pressing 'single' shouldn't increment
+ThreeB.*/
 
 app.post("/updateThirdBase", jsonParser, async function(req, res)
 {
@@ -501,15 +497,20 @@ app.post("/updateThirdBase", jsonParser, async function(req, res)
             currentHBP: 0,
             currentStrikes: 0
         }, {new: true});
-        let tempHitterPlayerUpdate = (await TempPlayerStats.find({name: currentHitterPlayer}).exec())[0];
-        let UpdatingHitterPlayerStats = await TempPlayerStats.findByIdAndUpdate(tempHitterPlayerUpdate._id, {$inc: {'HitterStats.ThreeB': 1,
+
+        if(currentPitcherPlayer)
+        {
+            let tempHitterPlayerUpdate = (await TempPlayerStats.find({name: currentHitterPlayer}).exec())[0];
+            let UpdatingHitterPlayerStats = await TempPlayerStats.findByIdAndUpdate(tempHitterPlayerUpdate._id, {$inc: {'HitterStats.ThreeB': 1,
             'HitterStats.PlateAppearences': 1, 'HitterStats.AtBats': 1, 'HitterStats.Hits': 1
         }});
 
-        let tempPitchingPlayerUpdate = (await TempPlayerStats.find({name: currentPitcherPlayer}).exec())[0];
-        let UpdatingPitcherPlayerStats = await TempPlayerStats.findByIdAndUpdate(tempPitchingPlayerUpdate._id,
+            let tempPitchingPlayerUpdate = (await TempPlayerStats.find({name: currentPitcherPlayer}).exec())[0];
+            let UpdatingPitcherPlayerStats = await TempPlayerStats.findByIdAndUpdate(tempPitchingPlayerUpdate._id,
             {$inc: {'PitcherStats.HitsAllowed': 1}}
         );
+        }
+        
         }
         else
         {
@@ -579,7 +580,7 @@ app.post("/updateScores", jsonParser, async function(req, res){
             const updateTeamRed = await Team.findByIdAndUpdate(teamRed._id, {
                 $inc: {teamScore: scoreAddition}
             }, {new: true});
-            currentPitcher = teamRed.currentPlayerDisplay;
+            currentPitcher = teamBlue.currentPlayerDisplay;
 
         }
         else
@@ -589,7 +590,7 @@ app.post("/updateScores", jsonParser, async function(req, res){
                     $inc: {teamScore: scoreAddition}
                 }, {new: true}
             );
-            currentPitcher = teamBlue.currentPlayerDisplay;
+            currentPitcher = teamRed.currentPlayerDisplay;
         }
 
         let currentHitterID = (await TempPlayerStats.find({name: currentHitter}).exec())[0];
