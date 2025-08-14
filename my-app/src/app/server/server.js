@@ -656,9 +656,11 @@ app.post("/updateInnings", jsonParser, async function(req, res)
 /*Use this function call below to calculate the league avgs. Determine whether to store in 
 another collection or just temp storage.*/
 
+
 app.post("/calculateLeagueAverages", jsonParser, async function(req, res)
 {
     let tempPlayerArray = await TempPlayerStats.find({});
+     
 
 });
 
@@ -670,7 +672,8 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
 {
     try{
         let tempPlayerArray = await TempPlayerStats.find({});
-    for(let i = 0; i < tempPlayerArray.length; i++)
+    
+        for(let i = 0; i < tempPlayerArray.length; i++)
     {
         let player = (await TempPlayerStats.findById(tempPlayerArray[i]._id).exec())[0];
         /*--------------------------- HITTER STATS CALCULATIONS ----------------------------------------*/
@@ -694,7 +697,7 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         let ISO = (player.HitterStats.TwoB + 2 * player.HitterStats.ThreeB + 3 * player.HitterStats.HomeRuns) / player.HitterStats.AtBats;
         /*IMPORTANT: wRC+ RANK Requires the wRC+ stats to sort each player!*/
         /*At this point, update the entire player's stats here before calculating the pitcher stats stuff*/
-        
+
 
         /*--------------------------PITCHER STATS------------------------------*/
         /*Don't forget to increment Games here too!*/
@@ -713,19 +716,19 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         {
             finalIP = IP + 0.00;
         }
-        let ERA = (player.PitcherStats.EarnedRuns / finalIP) * 9;
+        let ERA = (player.PitcherStats.EarnedRuns / IP) * 9;
         
         let FIPSum = (13 * player.PitcherStats.HomeRuns) + (3 * (player.PitcherStats.Walks + player.PitcherStats.HitByPitches))
         - (2 * player.PitcherStats.StrikeOuts);
-        let finalFIP = (FIPSum / finalIP) + 3.72;
-        let WHIP = (player.PitcherStats.Walks + player.PitcherStats.HitsAllowed) / (finalIP);
+        let finalFIP = (FIPSum / IP) + 3.72;
+        let WHIP = (player.PitcherStats.Walks + player.PitcherStats.HitsAllowed) / (IP);
         /*IMPORTANT: ERA- and FIP- require their respective league averages!!*/
         /*Once you have the SV and BSV, calculate the SV%*/
         //Check this one in case IP must be different!
-        let KPerNineStat = (player.PitcherStats.StrikeOuts * 9) / (finalIP);
+        let KPerNineStat = (player.PitcherStats.StrikeOuts * 9) / (IP);
         /*FIP- requires league averages to be sorted.*/
         //Also check this one for same IP issue?
-        let BBPerNineStat = (player.PitcherStats.Walks * 9) / (finalIP); 
+        let BBPerNineStat = (player.PitcherStats.Walks * 9) / (IP); 
         /*UPDATE PITCHER STATS HERE!!*/
 
     }
