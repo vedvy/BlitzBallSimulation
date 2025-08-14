@@ -37,6 +37,7 @@ const tempPlayerStatsSchema = new Schema({
         EarnedRunAverage: {type: Number, default: 1.00},
         FieldingIndPitching: {type: Number, default: 1.00},
         Walks: {type: Number, default: 0},
+        Outs: {type: Number, default: 0},
         StrikeOuts: {type: Number, default: 0},
         HitByPitches: {type: Number, default: 0},
         HomeRuns: {type: Number, default: 0},

@@ -276,7 +276,7 @@ export default function GameScreen()
                     await axios.post("http://localhost:8000/updateScores", 
                         {updateRedScores: true, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
                             mainGameInfo: mainGameInfo, gameLog: gameLog, scoringPlayersArray: scoringPlayersArray,
-                            currentHitter: teamRed.currentPlayerDisplay
+                            currentHitter: teamRed.currentPlayerDisplay, BBFlag: BBFlag, HBPFlag: HBPFlag
                         }
                     );
                 }
@@ -286,7 +286,7 @@ export default function GameScreen()
                     await axios.post("http://localhost:8000/updateScores", 
                         {updateRedScores: false, teamRed: teamRed, teamBlue: teamBlue, score_increment: score_increment,
                             mainGameInfo: mainGameInfo, gameLog: gameLog, scoringPlayersArray: scoringPlayersArray,
-                            currentHitter: teamBlue.currentPlayerDisplay
+                            currentHitter: teamBlue.currentPlayerDisplay, BBFlag: BBFlag, HBPFlag: HBPFlag
                         }
                     );
                 }

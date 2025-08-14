@@ -95,6 +95,7 @@ export default function PlayerStats()
                         <th className={styles.table_header}>ERA</th>
                         <th className={styles.table_header}>FIP</th>
                         <th className={styles.table_header}>BB</th>
+                        <th className={styles.table_header}>Outs</th>
                         <th className={styles.table_header}>K</th>
                         <th className={styles.table_header}>HBP</th>
                         <th className={styles.table_header}>HR</th>
@@ -119,6 +120,7 @@ export default function PlayerStats()
                         <td className={styles.table_data}>{player.PitcherStats.EarnedRunAverage}</td>
                         <td className={styles.table_data}>{player.PitcherStats.FieldingIndPitching}</td>
                         <td className={styles.table_data}>{player.PitcherStats.Walks}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.Outs}</td>
                         <td className={styles.table_data}>{player.PitcherStats.StrikeOuts}</td>
                         <td className={styles.table_data}>{player.PitcherStats.HitByPitches}</td>
                         <td className={styles.table_data}>{player.PitcherStats.HomeRuns}</td>
