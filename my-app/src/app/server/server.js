@@ -7,11 +7,13 @@ import Player from './models/player.js';
 import Team from './models/team.js';
 import MainGame from './models/main_game.js';
 import TempPlayerStats from "./models/tempPlayerStats.js";
+import leagueAverages from "./models/leagueAverages.js";
 
 import mongoose from 'mongoose';
 import bodyParser from "body-parser";
 import { withCoalescedInvoke } from "next/dist/lib/coalesced-function.js";
 import { createStaticHandler } from "react-router-dom";
+
 
 // const express = require("express");
 
@@ -660,7 +662,72 @@ another collection or just temp storage.*/
 app.post("/calculateLeagueAverages", jsonParser, async function(req, res)
 {
     let tempPlayerArray = await TempPlayerStats.find({});
-     
+    var OneBSum, TwoBSum, ThreeBSum, HittingHRSum, HittingBBSum, HittingHBPSum, ABSum, PASum, HitsSum, OBPPercent, wOBA;
+    var IPSum, KSum, ERA, ERSum, PitchingHRSum, PitchingBBSum, PitchingHBPSum, FIP;
+
+    for(let i = 0; i < tempPlayerArray.length; i++)
+    {
+        let player = (await TempPlayerStats.findById(tempPlayerArray[i]._id).exec())[0];
+        let hittingPlayer = player.HitterStats; 
+
+        OneBSum += hittingPlayer.OneB;
+        TwoBSum += hittingPlayer.TwoB;
+        ThreeBSum += hittingPlayer.ThreeB;
+        HittingHRSum += hittingPlayer.HomeRuns;
+        HittingBBSum += hittingPlayer.Walks;
+        HittingHBPSum += hittingPlayer.HitByPitches;
+        ABSum += hittingPlayer.AtBats;
+        PASum += hittingPlayer.PlateAppearences;
+        HitsSum += hittingPlayer.Hits;
+        
+        let pitchingPlayer = player.PitcherStats;
+        IPSum += pitchingPlayer.InningsPitched;
+        KSum += pitchingPlayer.StrikeOuts;
+        ERSum += pitchingPlayer.EarnedRuns;
+        PitchingHRSum += pitchingPlayer.HomeRuns;
+        PitchingBBSum += pitchingPlayer.Walks;
+        PitchingHBPSum += pitchingPlayer.HitByPitches;
+    }
+
+    OBPPercent = (HitsSum + HittingHBPSum + HittingBBSum) / PASum;
+    let wOBASum = (0.69 * HittingBBSum) + (0.72 * HittingHBPSum) + (0.89 * OneBSum) + (1.27 * TwoBSum) + (1.62 * ThreeBSum) + (2.1 * HittingHRSum);
+    wOBA = (wOBASum) / (HittingBBSum + ABSum + HittingHBPSum);
+
+
+    ERA = (ERSum / IPSum) * 9;
+    let FIPSum = (13 * PitchingHRSum) + (3 * (PitchingBBSum + PitchingHBPSum)) - (2 * KSum);
+    FIP = (FIPSum / IPSum) + 3.72;
+
+    let LeagueAverages = new leagueAverages({
+        HitterStats:
+        {
+            OneB: OneBSum,
+            TwoB: TwoBSum,
+            ThreeB: ThreeBSum,
+            HomeRuns: HittingHRSum,
+            Walks: HittingWalksSum,
+            HitByPitches: HittingHBPSum,
+            AtBats: ABSum,
+            PlateAppearences: PASum,
+            Hits: HitsSum,
+            OBPPercent: OBPPercent,
+            SLGPercent: 0,
+            wOBA: wOBASum
+        },
+        PitcherStats:
+        {
+            StrikeOuts: KSum,
+            InningsPitched: IPSum,
+            EarnedRunAverage: ERA,
+            EarnedRuns: ERSum,
+            HomeRuns: PitchingHRSum,
+            Walks: PitchingBBSum,
+            HitByPitches: PitchingHBPSum,
+            FIPAvg: FIP
+        }
+    });
+
+    await LeagueAverages.save();
 
 });
 
@@ -672,7 +739,8 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
 {
     try{
         let tempPlayerArray = await TempPlayerStats.find({});
-    
+        var totalBasesSum = 0;
+
         for(let i = 0; i < tempPlayerArray.length; i++)
     {
         let player = (await TempPlayerStats.findById(tempPlayerArray[i]._id).exec())[0];
@@ -680,11 +748,14 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         /*don't forget to increment Games*/
         let totalBases = player.HitterStats.OneB + (2 * player.HitterStats.TwoB) + (3 * player.HitterStats.ThreeB)
         + (4 * player.HitterStats.HomeRuns);
+        totalBasesSum += totalBases;
+
         let playerAVG = player.HitterStats.Hits / player.HitterStats.AtBats;
         let SlugPercent = totalBases / player.HitterStats.AtBats;
         let OBPPercent = (player.HitterStats.Hits + player.HitterStats.Walks + player.HitterStats.HitByPitches) / player.HitterStats.PlateAppearences;
         let OPSStat = (SlugPercent + OBPPercent);
         /*IMPORTANT: OPS+ requires the league average of OBP%.*/
+
         let StrikeoutPercent = (player.HitterStats.StrikeOuts / player.HitterStats.PlateAppearences);
         //wOBA: weighted On Base Average. (BB * .69) + (.72 * HBP) + (.89 * 1B) + (1.27 * 2B) + (1.62 * 3B) + (2.1 * HR). 
         //Then the sum is divided by (AB + BB + HBP)
@@ -692,10 +763,12 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         + (player.HitterStats.TwoB * 1.27) + (player.HitterStats.ThreeB) + (player.HitterStats.HomeRuns * 2.1);
         let finalWOBA = (wOBASum) / (player.HitterStats.AtBats + player.HitterStats.Walks + player.HitterStats.HitByPitches);
         /*IMPORTANT: wRC+ requires league averages of wOBA!*/
+
         let BABIPDenom = (player.HitterStats.AtBats - player.HitterStats.HomeRuns - player.HitterStats.StrikeOuts);
         let finalBABIP = BABIPDenom <= 0 ? undefined : ((player.HitterStats.Hits - player.HitterStats.HomeRuns) / BABIPDenom);
         let ISO = (player.HitterStats.TwoB + 2 * player.HitterStats.ThreeB + 3 * player.HitterStats.HomeRuns) / player.HitterStats.AtBats;
         /*IMPORTANT: wRC+ RANK Requires the wRC+ stats to sort each player!*/
+
         /*At this point, update the entire player's stats here before calculating the pitcher stats stuff*/
 
 
@@ -732,6 +805,8 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         /*UPDATE PITCHER STATS HERE!!*/
 
     }
+
+    /*Until I come up with a better system, use the totalBasesSum here to properly update the final stat: OPS+*/
     res.send(200);
     }
     catch(err)
