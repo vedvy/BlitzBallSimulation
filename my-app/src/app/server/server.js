@@ -777,8 +777,18 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
 
         /*At this point, update the entire player's stats here before calculating the pitcher stats stuff*/
         await TempPlayerStats.findByIdAndUpdate(player._id, {
-            
-        })
+            $inc: {'HitterStats.Games': 1},
+            'HitterStats.totalBases': totalBases,
+            'HitterStats.Average': playerAVG,
+            'HitterStats.SLGPercent': SlugPercent,
+            'HitterStats.OBPPercent': OBPPercent,
+            'HitterStats.OnBasePlusSlugging': OPSStat,
+            'HitterStats.KPercent': StrikeoutPercent,
+            'HitterStats.wOBA': finalWOBA,
+            'HitterStats.wRCPlus': wRCPlus,
+            'HitterStats.BatAvgBallsInPlay': finalBABIP,
+            'HitterStats.IsolatedPower': ISO
+        });
 
         /*--------------------------PITCHER STATS------------------------------*/
         /*Don't forget to increment Games here too!*/
@@ -817,8 +827,39 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         let BBPerNineStat = (player.PitcherStats.Walks * 9) / (IP); 
         /*UPDATE PITCHER STATS HERE!!*/
 
+        await TempPlayerStats.findByIdAndUpdate(player._id, {
+            $inc: {'PitcherStats.Games': 1},
+            'PitcherStats.InningsPitched': finalIP,
+            'PitcherStats.EarnedRunAverage': ERA,
+            'PitcherStats.FieldingIndPitching': finalFIP,
+            'PitcherStats.WalksHitsInningsPitched': WHIP,
+            'PitcherStats.ERAMinus': ERAMinus,
+            'PitcherStats.FIPMinus': FIPMinus,
+            'PitcherStats.KPerNine': KPerNineStat,
+            'PitcherStats.BBPerNine': BBPerNineStat
+        });
+
     }
     /*Until I come up with a better system, use the totalBasesSum here to properly update the final stat: OPS+*/
+    let wRCMinusArray = tempPlayerArray.sort(compareWRCDescending);
+    let FIPMinusArray = tempPlayerArray.sort(compareFIPMinusAscending);
+
+    let SLGPercentAverage = (totalBasesSum / LeagueAverages.HitterStats.AtBats);
+
+
+    for(let i = 0; i < tempPlayerArray.length; i++)
+    {
+        let player = (await TempPlayerStats.findById(tempPlayerArray[i]._id).exec())[0];
+        let OPSPlus = (100 * (player.HitterStats.OBPPercent / LeagueAverages.HitterStats.OBPPercent)) 
+        + (100 * (player.HitterStats.SLGPercent / SLGPercentAverage));
+
+        await TempPlayerStats.findByIdAndUpdate(player._id, {
+            'HitterStats.OPSPlus': OPSPlus,
+            'HitterStats.wRCPlusRank': wRCMinusArray.indexOf(player.name),
+            'PitcherStats.FIPMinusRank': FIPMinusArray.indexOf(player.name)
+        });
+    }
+    
     res.send(200);
     }
     catch(err)
@@ -827,6 +868,16 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
     }
     
 });
+
+function compareWRCDescending(a, b)
+{
+    return b.HitterStats.wRCPlus - a.HitterStats.wRCPlus;
+}
+
+function compareFIPMinusAscending(a, b)
+{
+    return a.PitcherStats.FIPMinus - b.PitcherStats.FIPMinus;
+}
 
 app.listen(8000, () => {console.log("Server listening on port 8000...");});
 
