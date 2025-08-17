@@ -739,6 +739,8 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
 {
     try{
         let tempPlayerArray = await TempPlayerStats.find({});
+        let LeagueAverages = (await leagueAverages.find({}).exec())[0];
+
         var totalBasesSum = 0;
 
         for(let i = 0; i < tempPlayerArray.length; i++)
@@ -755,6 +757,7 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         let OBPPercent = (player.HitterStats.Hits + player.HitterStats.Walks + player.HitterStats.HitByPitches) / player.HitterStats.PlateAppearences;
         let OPSStat = (SlugPercent + OBPPercent);
         /*IMPORTANT: OPS+ requires the league average of OBP%.*/
+        // let OPSPlus = (100 * (OBPPercent / LeagueAverages.HitterStats.OBPPercent)) + (100 * ())
 
         let StrikeoutPercent = (player.HitterStats.StrikeOuts / player.HitterStats.PlateAppearences);
         //wOBA: weighted On Base Average. (BB * .69) + (.72 * HBP) + (.89 * 1B) + (1.27 * 2B) + (1.62 * 3B) + (2.1 * HR). 
@@ -763,6 +766,9 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         + (player.HitterStats.TwoB * 1.27) + (player.HitterStats.ThreeB) + (player.HitterStats.HomeRuns * 2.1);
         let finalWOBA = (wOBASum) / (player.HitterStats.AtBats + player.HitterStats.Walks + player.HitterStats.HitByPitches);
         /*IMPORTANT: wRC+ requires league averages of wOBA!*/
+        let wRCPlus = player.HitterStats.PlateAppearences + player.HitterStats.Games >= 20 ? 
+        (100 * (finalWOBA / LeagueAverages.HitterStats.wOBA)) : undefined;
+
 
         let BABIPDenom = (player.HitterStats.AtBats - player.HitterStats.HomeRuns - player.HitterStats.StrikeOuts);
         let finalBABIP = BABIPDenom <= 0 ? undefined : ((player.HitterStats.Hits - player.HitterStats.HomeRuns) / BABIPDenom);
@@ -770,7 +776,9 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         /*IMPORTANT: wRC+ RANK Requires the wRC+ stats to sort each player!*/
 
         /*At this point, update the entire player's stats here before calculating the pitcher stats stuff*/
-
+        await TempPlayerStats.findByIdAndUpdate(player._id, {
+            
+        })
 
         /*--------------------------PITCHER STATS------------------------------*/
         /*Don't forget to increment Games here too!*/
@@ -795,17 +803,21 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         - (2 * player.PitcherStats.StrikeOuts);
         let finalFIP = (FIPSum / IP) + 3.72;
         let WHIP = (player.PitcherStats.Walks + player.PitcherStats.HitsAllowed) / (IP);
-        /*IMPORTANT: ERA- and FIP- require their respective league averages!!*/
+        
+        let ERAMinus = player.PitcherStats.InningsPitched <= 0 ? undefined : 
+        (100 * (ERA / LeagueAverages.PitcherStats.EarnedRunAverage));
+        let FIPMinus = player.PitcherStats.InningsPitched <= 0 ? undefined :
+        (100 * (finalFIP / LeagueAverages.PitcherStats.FIPAvg));
         /*Once you have the SV and BSV, calculate the SV%*/
-        //Check this one in case IP must be different!
+        
         let KPerNineStat = (player.PitcherStats.StrikeOuts * 9) / (IP);
         /*FIP- requires league averages to be sorted.*/
-        //Also check this one for same IP issue?
+
+        
         let BBPerNineStat = (player.PitcherStats.Walks * 9) / (IP); 
         /*UPDATE PITCHER STATS HERE!!*/
 
     }
-
     /*Until I come up with a better system, use the totalBasesSum here to properly update the final stat: OPS+*/
     res.send(200);
     }
