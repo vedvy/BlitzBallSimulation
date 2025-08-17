@@ -661,16 +661,24 @@ another collection or just temp storage.*/
 
 app.post("/calculateLeagueAverages", jsonParser, async function(req, res)
 {
-    let tempPlayerArray = await TempPlayerStats.find({});
-    var OneBSum, TwoBSum, ThreeBSum, HittingHRSum, HittingBBSum, HittingHBPSum, ABSum, PASum, HitsSum, OBPPercent, wOBA;
-    var IPSum, KSum, ERA, ERSum, PitchingHRSum, PitchingBBSum, PitchingHBPSum, FIP;
+    try{
+        let tempPlayerArray = await TempPlayerStats.find({});
+    var OneBSum = 0, TwoBSum = 0, ThreeBSum = 0, HittingHRSum = 0, HittingBBSum = 0, HittingHBPSum = 0, ABSum = 0, 
+    PASum = 0, HitsSum = 0, OBPPercent = 0, wOBA = 0;
+    var IPSum = 0, KSum = 0, ERA = 0, ERSum = 0, PitchingHRSum = 0, PitchingBBSum = 0, PitchingHBPSum = 0, FIP = 0;
 
     for(let i = 0; i < tempPlayerArray.length; i++)
     {
-        let player = (await TempPlayerStats.findById(tempPlayerArray[i]._id).exec())[0];
+        console.log(tempPlayerArray[i]);
+        console.log(tempPlayerArray[i]._id);
+        let player = (await TempPlayerStats.findById(tempPlayerArray[i]._id));
+        console.log(player);
         let hittingPlayer = player.HitterStats; 
+        
 
         OneBSum += hittingPlayer.OneB;
+        console.log(hittingPlayer.OneB);
+        console.log(OneBSum);
         TwoBSum += hittingPlayer.TwoB;
         ThreeBSum += hittingPlayer.ThreeB;
         HittingHRSum += hittingPlayer.HomeRuns;
@@ -694,9 +702,11 @@ app.post("/calculateLeagueAverages", jsonParser, async function(req, res)
     wOBA = (wOBASum) / (HittingBBSum + ABSum + HittingHBPSum);
 
 
-    ERA = (ERSum / IPSum) * 9;
-    let FIPSum = (13 * PitchingHRSum) + (3 * (PitchingBBSum + PitchingHBPSum)) - (2 * KSum);
-    FIP = (FIPSum / IPSum) + 3.72;
+    // ERA = (ERSum / IPSum) * 9;
+    // let FIPSum = (13 * PitchingHRSum) + (3 * (PitchingBBSum + PitchingHBPSum)) - (2 * KSum);
+    // FIP = (FIPSum / IPSum) + 3.72;
+    // console.log(FIPSum);
+    // console.log(FIP);
 
     let LeagueAverages = new leagueAverages({
         HitterStats:
@@ -705,7 +715,7 @@ app.post("/calculateLeagueAverages", jsonParser, async function(req, res)
             TwoB: TwoBSum,
             ThreeB: ThreeBSum,
             HomeRuns: HittingHRSum,
-            Walks: HittingWalksSum,
+            Walks: HittingBBSum,
             HitByPitches: HittingHBPSum,
             AtBats: ABSum,
             PlateAppearences: PASum,
@@ -718,16 +728,23 @@ app.post("/calculateLeagueAverages", jsonParser, async function(req, res)
         {
             StrikeOuts: KSum,
             InningsPitched: IPSum,
-            EarnedRunAverage: ERA,
+            EarnedRunAverage: 0.00,
             EarnedRuns: ERSum,
             HomeRuns: PitchingHRSum,
             Walks: PitchingBBSum,
             HitByPitches: PitchingHBPSum,
-            FIPAvg: FIP
+            FIPAvg: 0.00
         }
     });
 
     await LeagueAverages.save();
+    res.send(200);
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+    
 
 });
 
@@ -795,6 +812,7 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         let IP = (player.PitcherStats.Outs / 3);
         let IPdec = IP - Math.floor(IP);
         var finalIP = 0;
+        /*TODO: IP gets calculated here, so handle the FIPSUM and FIPAvg stuff here instead. AND ERA AVG. DAMN*/
         if(IPdec > 0 && IPdec < 0.4)
         {
             finalIP = Math.floor(IP) + 0.1;

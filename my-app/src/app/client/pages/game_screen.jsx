@@ -65,6 +65,9 @@ export default function GameScreen()
                     await axios.post("http://localhost:8000/updateGameOver", {
                         main_game_info: mainGameInfo, forceQuit: false
                     });
+                    await axios.post("http://localhost:8000/calculateLeagueAverages");
+                    await axios.post("http://localhost:8000/updateRemainingStats");
+
                     await dataModel.fetchData("gameOver");
                     return;
 
@@ -460,7 +463,7 @@ export default function GameScreen()
                         </div>}
                         {outOptionsOn && outType &&
                         <div>
-                            {bluefTeamPlayers.map((player, index) => 
+                            {blueTeamPlayers.map((player, index) => 
                             <span className={styles.player_buttons_blue} key={index} onClick={async () => {set_outFielder(player); await incrementOuts(false, player);}}>{player}</span>
                             )}
                             <span className={styles.player_buttons_blue} onClick={() => {set_outType(false); set_outOptions(false); set_outFielder();}}>Cancel</span>
