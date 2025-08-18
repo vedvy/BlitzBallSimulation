@@ -45,10 +45,10 @@ export default function GameField(
         console.log(confirmText);
         if(confirmText === "ForceQuit")
         {
-            await axios.post("http://localhost:8000/updateGameOver", {main_game_info: mainGameInfo, forceQuit: true})
             await axios.post("http://localhost:8000/calculateLeagueAverages");
             await axios.post("http://localhost:8000/updateRemainingStats");
             
+            await axios.post("http://localhost:8000/updateGameOver", {main_game_info: mainGameInfo, forceQuit: true})
             await dataModel.fetchData("gameOver");
         }
     }

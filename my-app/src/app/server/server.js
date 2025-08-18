@@ -755,47 +755,89 @@ is called, but before the actual game over screen is displayed*/
 app.post("/updateRemainingStats", jsonParser, async function(req, res)
 {
     try{
+        console.log("Inside update Remaining Stats");
         let tempPlayerArray = await TempPlayerStats.find({});
         let LeagueAverages = (await leagueAverages.find({}).exec())[0];
-
+        console.log("Found League Averages object");
         var totalBasesSum = 0;
         var IPSum = 0;
 
         for(let i = 0; i < tempPlayerArray.length; i++)
     {
         let player = (await TempPlayerStats.findById(tempPlayerArray[i]._id));
+        console.log(player.name);
         /*--------------------------- HITTER STATS CALCULATIONS ----------------------------------------*/
         /*don't forget to increment Games*/
         let totalBases = player.HitterStats.OneB + (2 * player.HitterStats.TwoB) + (3 * player.HitterStats.ThreeB)
         + (4 * player.HitterStats.HomeRuns);
         totalBasesSum += totalBases;
-
+        
         let playerAVG = player.HitterStats.Hits / player.HitterStats.AtBats;
+        if(isNaN(playerAVG))
+        {
+            playerAVG = undefined;
+        }
         let SlugPercent = totalBases / player.HitterStats.AtBats;
+        if(isNaN(SlugPercent))
+        {
+            SlugPercent = undefined;
+        }
         let OBPPercent = (player.HitterStats.Hits + player.HitterStats.Walks + player.HitterStats.HitByPitches) / player.HitterStats.PlateAppearences;
+        if(isNaN(OBPPercent))
+        {
+            OBPPercent = undefined;
+        }
         let OPSStat = (SlugPercent + OBPPercent);
+        if(isNaN(OPSStat))
+        {
+            OPSStat = undefined;
+        }
+        console.log("Random consolle log 1");
         /*IMPORTANT: OPS+ requires the league average of OBP%.*/
         // let OPSPlus = (100 * (OBPPercent / LeagueAverages.HitterStats.OBPPercent)) + (100 * ())
 
         let StrikeoutPercent = (player.HitterStats.StrikeOuts / player.HitterStats.PlateAppearences);
+        if(isNaN(StrikeoutPercent))
+        {
+            StrikeoutPercent = undefined;
+        }
         //wOBA: weighted On Base Average. (BB * .69) + (.72 * HBP) + (.89 * 1B) + (1.27 * 2B) + (1.62 * 3B) + (2.1 * HR). 
         //Then the sum is divided by (AB + BB + HBP)
         let wOBASum = (player.HitterStats.Walks * 0.69) + (player.HitterStats.HitByPitches * 0.72) + (player.HitterStats.OneB * 0.89)
         + (player.HitterStats.TwoB * 1.27) + (player.HitterStats.ThreeB) + (player.HitterStats.HomeRuns * 2.1);
         let finalWOBA = (wOBASum) / (player.HitterStats.AtBats + player.HitterStats.Walks + player.HitterStats.HitByPitches);
+        if(isNaN(finalWOBA))
+        {
+            finalWOBA = undefined;
+        }
         /*IMPORTANT: wRC+ requires league averages of wOBA!*/
         let wRCPlus = player.HitterStats.PlateAppearences + player.HitterStats.Games >= 20 ? 
         (100 * (finalWOBA / LeagueAverages.HitterStats.wOBA)) : undefined;
-
+        if(isNaN(wRCPlus))
+        {
+            wRCPlus = undefined;
+        }
         let BABIPDenom = (player.HitterStats.AtBats - player.HitterStats.HomeRuns - player.HitterStats.StrikeOuts);
+
         let finalBABIP = BABIPDenom <= 0 ? undefined : ((player.HitterStats.Hits - player.HitterStats.HomeRuns) / BABIPDenom);
         let ISO = (player.HitterStats.TwoB + 2 * player.HitterStats.ThreeB + 3 * player.HitterStats.HomeRuns) / player.HitterStats.AtBats;
+        if(isNaN(ISO))
+        {
+            ISO = undefined;
+        }
+        
         /*IMPORTANT: wRC+ RANK Requires the wRC+ stats to sort each player!*/
 
         /*At this point, update the entire player's stats here before calculating the pitcher stats stuff*/
+        
+        console.log(totalBases, " ", playerAVG, " ", SlugPercent, " ", OBPPercent, 
+            " ", OPSStat, " ", StrikeoutPercent, " ", finalWOBA, " ", wRCPlus, " ",
+             finalBABIP, " ", ISO
+        );
+        console.log("Before update hit  stats");
         await TempPlayerStats.findByIdAndUpdate(player._id, {
             $inc: {'HitterStats.Games': 1},
-            'HitterStats.totalBases': totalBases,
+            'HitterStats.TotalBases': totalBases,
             'HitterStats.Average': playerAVG,
             'HitterStats.SLGPercent': SlugPercent,
             'HitterStats.OBPPercent': OBPPercent,
@@ -806,7 +848,7 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
             'HitterStats.BatAvgBallsInPlay': finalBABIP,
             'HitterStats.IsolatedPower': ISO
         });
-
+        console.log("Done updating Hitting Stats");
         /*--------------------------PITCHER STATS------------------------------*/
         /*Don't forget to increment Games here too!*/
         let IP = (player.PitcherStats.Outs / 3);
@@ -826,23 +868,32 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         {
             finalIP = IP + 0.00;
         }
+        
         let ERA = (player.PitcherStats.EarnedRuns / IP) * 9;
+        if(isNaN(ERA))
+        {
+            ERA = undefined;
+        } 
         
         let FIPSum = (13 * player.PitcherStats.HomeRuns) + (3 * (player.PitcherStats.Walks + player.PitcherStats.HitByPitches))
         - (2 * player.PitcherStats.StrikeOuts);
-        let finalFIP = (FIPSum / IP) + 3.72;
-        let WHIP = (player.PitcherStats.Walks + player.PitcherStats.HitsAllowed) / (IP);
         
+        console.log("ranodm conasole log 2");
+        let finalFIP = IP <= 0 ? undefined : (FIPSum / IP) + 3.72;
+        
+        
+        let WHIP = IP <= 0 ? undefined : (player.PitcherStats.Walks + player.PitcherStats.HitsAllowed) / (IP);
         
         /*Once you have the SV and BSV, calculate the SV%*/
         
-        let KPerNineStat = (player.PitcherStats.StrikeOuts * 9) / (IP);
+        let KPerNineStat = IP <= 0 ? undefined : (player.PitcherStats.StrikeOuts * 9) / (IP);
         /*FIP- requires league averages to be sorted.*/
 
         
-        let BBPerNineStat = (player.PitcherStats.Walks * 9) / (IP); 
+        let BBPerNineStat = IP <= 0 ? undefined : (player.PitcherStats.Walks * 9) / (IP); 
+        
         /*UPDATE PITCHER STATS HERE!!*/
-
+        console.log("before pitching stats update");
         await TempPlayerStats.findByIdAndUpdate(player._id, {
             $inc: {'PitcherStats.Games': 1},
             'PitcherStats.InningsPitched': finalIP,
@@ -852,25 +903,37 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
             'PitcherStats.KPerNine': KPerNineStat,
             'PitcherStats.BBPerNine': BBPerNineStat
         });
-
+        console.log("Done with updating Pitching stats");
     }
+    console.log("Out of big ass loop");
     /*Until I come up with a better system, use the totalBasesSum here to properly update the final stat: OPS+*/
-    let wRCMinusArray = tempPlayerArray.sort(compareWRCDescending);
-    
+    let wRCPlusArray = tempPlayerArray.sort(compareWRCDescending);
+    console.log(LeagueAverages.PitcherStats.StrikeOuts);
 
-    let SLGPercentAverage = (totalBasesSum / LeagueAverages.HitterStats.AtBats);
-    let ERAAverage = (LeagueAverages.PitcherStats.EarnedRuns / IPSum) * 9;
-    let FIPAverageSum = (13 * LeagueAverages.PitcherStats.HomeRuns) + (3 * (LeagueAverages.PitcherStats.Walks + PitchingHBPSum)) 
+    let SLGPercentAverage = LeagueAverages.HitterStats.AtBats <= 0 ? undefined : (totalBasesSum / LeagueAverages.HitterStats.AtBats);
+    console.log("SLGPercentAverage: ", SLGPercentAverage);
+    let ERAAverage = IPSum <= 0 ? undefined : (LeagueAverages.PitcherStats.EarnedRuns / IPSum) * 9;
+    console.log("ERAAverage: ", ERAAverage);
+    let FIPAverageSum = (13 * LeagueAverages.PitcherStats.HomeRuns) + (3 * (LeagueAverages.PitcherStats.Walks + LeagueAverages.PitcherStats.HitByPitches)) 
     - (2 * LeagueAverages.PitcherStats.StrikeOuts);
-    let FIPAverage = (FIPAverageSum / IPSum) + 3.72;
+    console.log("FIPAverageSum: ", FIPAverageSum);
+    let FIPAverage = IPSum <= 0 ? undefined : (FIPAverageSum / IPSum) + 3.72;
+    console.log("FIPAverage: ", FIPAverage);
     // console.log(FIPSum);
     // console.log(FIP);
-
+    console.log("Before second for loop");
     for(let i = 0; i < tempPlayerArray.length; i++)
     {
         let player = (await TempPlayerStats.findById(tempPlayerArray[i]._id));
-        let OPSPlus = (100 * (player.HitterStats.OBPPercent / LeagueAverages.HitterStats.OBPPercent)) 
+        let OPSPlus = (LeagueAverages.HitterStats.OBPPercent <= 0 || SLGPercentAverage <= 0) ? undefined :
+        (100 * (player.HitterStats.OBPPercent / LeagueAverages.HitterStats.OBPPercent)) 
         + (100 * (player.HitterStats.SLGPercent / SLGPercentAverage));
+        console.log(isNaN(OPSPlus));
+        if(isNaN(OPSPlus))
+        {
+            OPSPlus = undefined;
+        }
+        console.log("OPSPlus: ", OPSPlus);
         
         let ERAMinus = player.PitcherStats.InningsPitched <= 0 ? undefined : 
         (100 * (ERAAverage / LeagueAverages.PitcherStats.EarnedRunAverage));
@@ -880,12 +943,13 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
 
         await TempPlayerStats.findByIdAndUpdate(player._id, {
             'HitterStats.OPSPlus': OPSPlus,
-            'HitterStats.wRCPlusRank': wRCMinusArray.indexOf(player.name),
+            'HitterStats.wRCPlusRank': wRCPlusArray.indexOf(player.name),
             'PitcherStats.EarnedRunAverage': ERAMinus,
             'PitcherStats.FIPMinus': FIPMinus
             
         });
     }
+    console.log("After second for loop");
     /*Do one more for-loop for the FIPMinus Array. Refactoring will take too long for now.*/
     let FIPMinusArray = tempPlayerArray.sort(compareFIPMinusAscending);
     for(let i = 0; i < tempPlayerArray.length; i++)

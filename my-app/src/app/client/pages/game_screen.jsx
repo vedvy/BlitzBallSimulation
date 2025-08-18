@@ -61,12 +61,13 @@ export default function GameScreen()
             {
                 if(mainGameInfo.currentInning === 3) //Prompt for possible 4th inning/overtime
                 {
+                    await axios.post("http://localhost:8000/calculateLeagueAverages");
+                    await axios.post("http://localhost:8000/updateRemainingStats");
                     
                     await axios.post("http://localhost:8000/updateGameOver", {
                         main_game_info: mainGameInfo, forceQuit: false
                     });
-                    await axios.post("http://localhost:8000/calculateLeagueAverages");
-                    await axios.post("http://localhost:8000/updateRemainingStats");
+                    
 
                     await dataModel.fetchData("gameOver");
                     return;
