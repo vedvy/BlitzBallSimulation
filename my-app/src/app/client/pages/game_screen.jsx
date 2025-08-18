@@ -501,9 +501,9 @@ export default function GameScreen()
             />
             }
 
-            <div className={styles.footer}>
+            {/* <div className={styles.footer}>
                 Created by Vedant Vyas, circa 2025
-            </div>   
+            </div>    */}
         </div>
     )
 }

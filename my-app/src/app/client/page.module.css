@@ -248,13 +248,14 @@ a.secondary {
 .game_main_content{
   display: flex;
   width: 100%;
-  height: 550px;
+  height: 560px;
 }
 
 .game_field{
   flex-grow: 4;
   background-color: green;
   position: relative;
+  overflow: auto;
 }
 
 .inner_field{
@@ -490,10 +491,17 @@ a.secondary {
 }
 
 /*Player Stats CSS*/
- 
+.table_div{
+  overflow: auto;
+  width: auto;
+  height: auto;
+} 
+
+
 .table_stats{
   width: 100%;
   height: 100%;
+  overflow: auto;
   text-align: center;
   color: black;
   background-color: lightgoldenrodyellow;
@@ -501,6 +509,8 @@ a.secondary {
 
 .table_rows{
   height: 100%;
+  width:  100%;
+  padding: 10px;
 }
 
 .table_stats,
@@ -514,7 +524,7 @@ a.secondary {
 .switchStatsViewButton{
   display: grid;
   margin: auto;
-  margin-top: 30px;
+  margin-top: 20px;
   padding: 100px;
   background-color: lightslategray;
   font-size: larger;
@@ -533,6 +543,7 @@ a.secondary {
   cursor: pointer;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: large;
+  
 }
 
 .switchGameOverButton:hover{

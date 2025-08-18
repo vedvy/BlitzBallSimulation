@@ -882,7 +882,7 @@ app.post("/updateRemainingStats", jsonParser, async function(req, res)
         let finalFIP = IP <= 0 ? undefined : (FIPSum / IP) + 3.72;
         
         
-        let WHIP = IP <= 0 ? undefined : (player.PitcherStats.Walks + player.PitcherStats.HitsAllowed) / (IP);
+        let WHIP = (IP === 0) ? undefined : (player.PitcherStats.Walks + player.PitcherStats.HitsAllowed) / (IP);
         
         /*Once you have the SV and BSV, calculate the SV%*/
         

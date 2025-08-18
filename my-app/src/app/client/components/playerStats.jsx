@@ -65,16 +65,16 @@ export default function PlayerStats()
                         <td className={styles.table_data}>{player.HitterStats.Runs}</td>
                         <td className={styles.table_data}>{player.HitterStats.TotalBases}</td>
                         <td className={styles.table_data}>{player.HitterStats.StrikeOuts}</td>
-                        <td className={styles.table_data}>{player.HitterStats.Average}</td>
-                        <td className={styles.table_data}>{player.HitterStats.SLGPercent}</td>
-                        <td className={styles.table_data}>{player.HitterStats.OBPPercent}</td>
-                        <td className={styles.table_data}>{player.HitterStats.OnBasePlusSlugging}</td>
-                        <td className={styles.table_data}>{player.HitterStats.OPSPlus}</td>
-                        <td className={styles.table_data}>{player.HitterStats.KPercent}</td>
-                        <td className={styles.table_data}>{player.HitterStats.wOBA}</td>
-                        <td className={styles.table_data}>{player.HitterStats.wRCPlus}</td>
-                        <td className={styles.table_data}>{player.HitterStats.BatAvgBallsInPlay}</td>
-                        <td className={styles.table_data}>{player.HitterStats.IsolatedPower}</td>
+                        <td className={styles.table_data}>{player.HitterStats.Average.toFixed(2)}</td>
+                        <td className={styles.table_data}>{player.HitterStats.SLGPercent.toFixed(2)}</td>
+                        <td className={styles.table_data}>{player.HitterStats.OBPPercent === null ? "N/A" : player.HitterStats.OBPPercent.toFixed(2)}</td>
+                        <td className={styles.table_data}>{player.HitterStats.OnBasePlusSlugging === null ? "N/A" : player.HitterStats.OnBasePlusSlugging.toFixed(2)}</td>
+                        <td className={styles.table_data}>{player.HitterStats.OPSPlus === null ? "N/A" : player.HitterStats.OPSPlus.toFixed(0)}</td>
+                        <td className={styles.table_data}>{player.HitterStats.KPercent === null ? "N/A" : player.HitterStats.KPercent.toFixed(2)}</td>
+                        <td className={styles.table_data}>{player.HitterStats.wOBA === null ? "N/A" : player.HitterStats.wOBA.toFixed(2)}</td>
+                        <td className={styles.table_data}>{player.HitterStats.wRCPlus === null ? "N/A" : player.HitterStats.wRCPlus.toFixed(0)}</td>
+                        <td className={styles.table_data}>{player.HitterStats.BatAvgBallsInPlay === null ? "N/A" : player.HitterStats.BatAvgBallsInPlay.toFixed(2)}</td>
+                        <td className={styles.table_data}>{player.HitterStats.IsolatedPower === null ? "N/A" : player.HitterStats.IsolatedPower.toFixed(2)}</td>
                         <td className={styles.table_data}>{player.HitterStats.wRCPlusRank}</td>
                     </tr>)}
                     
@@ -117,8 +117,8 @@ export default function PlayerStats()
                         <td className={styles.table_data}>{player.name}</td>
                         <td className={styles.table_data}>{player.PitcherStats.Games}</td>
                         <td className={styles.table_data}>{player.PitcherStats.InningsPitched}</td>
-                        <td className={styles.table_data}>{player.PitcherStats.EarnedRunAverage}</td>
-                        <td className={styles.table_data}>{player.PitcherStats.FieldingIndPitching}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.EarnedRunAverage === null ? "N/A" : player.PitcherStats.EarnedRunAverage.toFixed(2)}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.FieldingIndPitching === null ? "N/A" : player.PitcherStats.FieldingIndPitching.toFixed(2)}</td>
                         <td className={styles.table_data}>{player.PitcherStats.Walks}</td>
                         <td className={styles.table_data}>{player.PitcherStats.Outs}</td>
                         <td className={styles.table_data}>{player.PitcherStats.StrikeOuts}</td>
@@ -126,15 +126,15 @@ export default function PlayerStats()
                         <td className={styles.table_data}>{player.PitcherStats.HomeRuns}</td>
                         <td className={styles.table_data}>{player.PitcherStats.EarnedRuns}</td>
                         <td className={styles.table_data}>{player.PitcherStats.HitsAllowed}</td>
-                        <td className={styles.table_data}>{player.PitcherStats.WalksHitsInningsPitched}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.WalksHitsInningsPitched === null ? "N/A" : player.PitcherStats.WalksHitsInningsPitched.toFixed(2)}</td>
                         <td className={styles.table_data}>{player.PitcherStats.ERAMinus}</td>
                         <td className={styles.table_data}>{player.PitcherStats.FIPMinus}</td>
                         <td className={styles.table_data}>{player.PitcherStats.Save}</td>
                         <td className={styles.table_data}>{player.PitcherStats.BlownSave}</td>
                         <td className={styles.table_data}>{player.PitcherStats.SVPercent}</td>
-                        <td className={styles.table_data}>{player.PitcherStats.KPerNine}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.KPerNine === null ? "N/A" : player.PitcherStats.KPerNine.toFixed(2)}</td>
                         <td className={styles.table_data}>{player.PitcherStats.FIPMinusRank}</td>
-                        <td className={styles.table_data}>{player.PitcherStats.BBPerNine}</td>
+                        <td className={styles.table_data}>{player.PitcherStats.BBPerNine === null ? "N/A" : player.PitcherStats.BBPerNine.toFixed(2)}</td>
                         
                     </tr>)}
                     
