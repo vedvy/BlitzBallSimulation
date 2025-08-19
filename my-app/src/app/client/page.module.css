@@ -558,6 +558,7 @@ a.secondary {
   width: 100%;
   display: grid;
   justify-content: center;
+  gap: 10px;
 }
 
 .addPlayersSection{
