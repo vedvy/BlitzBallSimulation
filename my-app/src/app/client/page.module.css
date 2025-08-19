@@ -551,3 +551,20 @@ a.secondary {
   background-color: burlywood;
   transition-duration: 0.2s;
 }
+
+/*Set Up Screen CSS*/
+.setUpScreenContainer{
+  height: 100%;
+  width: 100%;
+  display: grid;
+  
+}
+
+.addPlayersSection{
+  text-align: center;
+
+}
+
+.deletePlayersSection{
+  text-align: center;
+}
