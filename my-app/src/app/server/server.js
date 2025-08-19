@@ -129,6 +129,37 @@ app.get("/maingame", async function(req, res){
     }
 });
 
+/*POST Section for Set Up Screen*/
+
+app.post("/newPlayer", jsonParser, async function(req, res){
+    try{
+        const newPlayerName = req.body['newPlayerName'];
+        console.log(newPlayerName);
+        let newPlayer = new Player({
+            name: newPlayerName
+        });
+        
+        await newPlayer.save();
+        res.send(200);
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+})
+
+app.post("/deletePlayer", jsonParser, async function(req, res){
+    try{
+        const player = req.body['playerToDelete'];
+        console.log(player);
+        await Player.findByIdAndDelete(player._id);
+        res.send(200);
+    }
+    catch(err){
+        res.status(500).json({message: "err", err});
+    }
+});
+
 /*POST Section for Game Screen*/
 
 app.post("/switchPositions", jsonParser, async function(req, res) {
