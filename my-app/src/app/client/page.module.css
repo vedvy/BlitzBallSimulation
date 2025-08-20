@@ -558,7 +558,13 @@ a.secondary {
   width: 100%;
   display: grid;
   justify-content: center;
+  align-items: center;
   gap: 10px;
+}
+
+.addDeleteContainer{
+  width: 500px;
+  overflow: auto;
 }
 
 .addPlayersSection{
@@ -574,11 +580,9 @@ a.secondary {
   padding-right: 5px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   color: black;
-  background-color: white;
+  border: 2px solid black;
   
 }
-
-
 
 .deletePlayersSection{
   text-align: center;
@@ -586,6 +590,7 @@ a.secondary {
 }
 
 .deletePlayersNames{
+  background-color: green;
   cursor: pointer;
 }
 .deletePlayersNames:hover{
@@ -593,7 +598,18 @@ a.secondary {
   color: white;
 }
 
+.assignTeamsContainer{
+  width: 500px;
+
+}
+
+.assignTeamsHeader{
+  text-align: center;
+  gap: 15px;
+}
+
 .pageButton{
   padding: 15px;
   cursor: pointer;
 }
+

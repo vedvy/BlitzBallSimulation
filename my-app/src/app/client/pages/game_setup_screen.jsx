@@ -30,6 +30,8 @@ export default function SetUpScreen()
     if(!dataModel.loading)
     {
         var playersArray = dataModel.players;
+        var current_page = dataModel.current_page;
+        console.log(current_page);
     }
     
     const [formData, set_form_data] = useState({
@@ -53,26 +55,33 @@ export default function SetUpScreen()
         const newPlayerInput = formData.newPlayer.trim();
         console.log(newPlayerInput);
         await axios.post("http://localhost:8000/newPlayer", {newPlayerName: newPlayerInput});
-        await dataModel.setUpFetchData();
+        await dataModel.setUpFetchData("AddDeletePage");
         return;
     }
 
     const deletePlayer = async (player) => {
         await axios.post("http://localhost:8000/deletePlayer", {playerToDelete: player});
-        await dataModel.setUpFetchData();
+        await dataModel.setUpFetchData("AddDeletePage");
         return;
     }
     
+    const nextPage = async () => {
+        if(current_page === "AddDeletePage")
+        {
+            await dataModel.setUpFetchData("AssignTeams");
+        }
+    }
+
     console.log(delete_details.confirmDelete);
     return(
         <div className={styles.setUpScreenContainer}>
-            {current_step === "AddDeletePage" && <div>
+            {current_page === "AddDeletePage" && <div className={styles.addDeleteContainer}>
                {!delete_players_page && <div className={styles.addPlayersSection}>
                 <h1>Add Players Page</h1>
                 {/*Add the input form here.*/}
                 <br/>
                 <h1>Current Players: </h1>
-                {dataModel.players.map((player, index) => 
+                {dataModel.players.length && dataModel.players.map((player, index) => 
                 <h3 key={index} className={styles.addPlayersNames}>{player.name}</h3>)}
                 <hr/>
                 <h1>Add a new player here: </h1>
@@ -96,7 +105,7 @@ export default function SetUpScreen()
                 <h1>Delete Players Page</h1>
                 <br/>
                 <h1>Current Players: </h1>
-                {dataModel.players.map((player, index) => 
+                {dataModel.players.length && dataModel.players.map((player, index) => 
                 <h3 key={index} className={styles.deletePlayersNames} onClick={() => {update_delete_info({confirmDelete: true, player: player});}}>{player.name}</h3>)}
                 <button onClick={() => {update_delete_players_page(!delete_players_page)}} className={styles.pageButton}>{!delete_players_page ? "Delete Players" : "Add a Player"}</button>
                 {/*Show mappings of players with names.*/}
@@ -107,8 +116,8 @@ export default function SetUpScreen()
                     <h3>All statistics and data associated with {delete_details.player.name} will be deleted and gone forever.
                     Are you sure you still want to delete this player?</h3>
                     <br/>
-                    <button className={styles.quitSubmitButton} onClick={() => {update_delete_info({confirmDelete: false, player: ""}); deletePlayer(delete_details.player);}}>Yes, delete this player right now!</button>
-                    <button className={styles.quitCancelButton} onClick={() => {update_delete_info({confirmDelete: false, player: ""});}}>No thanks.</button>
+                    <button className={styles.quitSubmitButton} onClick={async () => {update_delete_info({confirmDelete: false, player: ""}); await deletePlayer(delete_details.player);}}>Yes, delete this player right now!</button>
+                    <button className={styles.quitCancelButton} onClick={async () => {update_delete_info({confirmDelete: false, player: ""});}}>No thanks.</button>
                 </div>
                 }
             </div>}
@@ -116,7 +125,14 @@ export default function SetUpScreen()
             
              
             </div>}
-            <button>NEXT PAGE</button>
+            {current_page === "AssignTeams" && 
+            <div className={styles.assignTeamsContainer}>
+                <div className={styles.assignnTeamsHeader}>
+                    {playersArray.length && playersArray.map((player, index) => 
+                    <span key={index}>{player.name}</span>)}
+                </div>
+            </div>}
+            <button onClick={async () => {await nextPage();}}>NEXT PAGE</button>
         </div>
     )
 }
