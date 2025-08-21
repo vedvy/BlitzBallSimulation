@@ -4,6 +4,7 @@ import { useState, useContext } from "react";
 import axios from "axios";
 
 import { SetUpScreenDataContext } from "../components/setUpScreenContext";
+import player from "@/app/server/models/player";
 
 export default function SetUpScreen()
 {
@@ -23,6 +24,7 @@ export default function SetUpScreen()
 
     const [red_team_lineup, update_red_team_lineup] = useState([]);
     const [blue_team_lineup, update_blue_team_lineup] = useState([]);
+    
 
     const [delete_players_page, update_delete_players_page] = useState(false);
     const [delete_details, update_delete_info] = useState({
@@ -34,9 +36,14 @@ export default function SetUpScreen()
     if(!dataModel.loading)
     {
         var playersArray = dataModel.players;
+        var mutatablePlayersArray = [];
+        playersArray.map((players, index) => mutatablePlayersArray.push(players.name));
+        console.log(mutatablePlayersArray);
         var current_page = dataModel.current_page;
         console.log(current_page);
     }
+
+    const [mutPlayersArray, update_mutPA] = useState(mutatablePlayersArray);
     
     const [formData, set_form_data] = useState({
         newPlayer: ""
@@ -75,6 +82,32 @@ export default function SetUpScreen()
             await dataModel.setUpFetchData("AssignTeams");
         }
     }
+
+    function removePlayerFromTeam(player, team, update_function) 
+    {
+        console.log(team);
+        console.log(player);
+        team = team.filter(teamPlayer => !teamPlayer.includes(player));
+        mutatablePlayersArray.push(player);
+        update_mutPA(mutatablePlayersArray);
+        console.log(team);
+        update_function(team);
+        return team;
+    }
+
+    function addPlayerToTeam(player, team, update_function)
+    {
+        let currentLineup = team;
+        currentLineup.push(player);
+        update_function(currentLineup);
+        let newMutPA = mutPlayersArray;
+        console.log(mutPlayersArray);
+        newMutPA = newMutPA.filter(playerMember => !playerMember.includes(player));
+        update_mutPA(newMutPA);
+        console.log(mutPlayersArray);
+        return currentLineup;
+    }
+
 
     console.log(delete_details.confirmDelete);
     return(
@@ -132,10 +165,10 @@ export default function SetUpScreen()
             {current_page === "AssignTeams" && 
             <div className={styles.assignTeamsContainer}>
                 <div className={styles.assignTeamsHeader}>
-                    {playersArray.length && playersArray.map((player, index) => 
+                    {mutPlayersArray.length && mutPlayersArray.map((player, index) => 
                     <span key={index} className={choose_red_team ? styles.assignTeamNamesRed : styles.assignTeamNamesBlue}
-                    onClick={choose_red_team ? () => {red_team_lineup.push(player.name); } : () => {blue_team_lineup.push(player.name);}}>
-                        {player.name}</span>)}
+                    onClick={choose_red_team ? () => {addPlayerToTeam(player, red_team_lineup, update_red_team_lineup);} : () => {addPlayerToTeam(player, blue_team_lineup, update_blue_team_lineup);}}>
+                        {player}</span>)}
                     <br/>
                     <br/>
                     <button onClick={() =>{set_choose_red_team(true);}} className={choose_red_team ? styles.inactiveButton : styles.player_buttons_red}>Choose for Red Team</button>
@@ -145,12 +178,12 @@ export default function SetUpScreen()
                    <br/>
                    <h1>Red Team: </h1> 
                    {red_team_lineup.length && red_team_lineup.map((player, index) => 
-                <span key={index}>{player}</span>)}
+                <span key={index} className={styles.deletePlayersNames} onClick={() => {removePlayerFromTeam(player, red_team_lineup, update_red_team_lineup);}}>{player}</span>)}
                 </div>
                 <div>
                     <h1>Blue Team:  </h1>
                     {blue_team_lineup.length && blue_team_lineup.map((player, index) => 
-                <span key={index}>{player}</span>)}
+                <span key={index} className={styles.deletePlayersNames} onClick={() => {removePlayerFromTeam(player, blue_team_lineup, update_blue_team_lineup);}}>{player}</span>)}
                 </div>
             </div>}
             <button onClick={async () => {await nextPage();}}>NEXT PAGE</button>
