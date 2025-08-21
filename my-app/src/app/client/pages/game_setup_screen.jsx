@@ -88,8 +88,10 @@ export default function SetUpScreen()
         console.log(team);
         console.log(player);
         team = team.filter(teamPlayer => !teamPlayer.includes(player));
-        mutatablePlayersArray.push(player);
-        update_mutPA(mutatablePlayersArray);
+        let newMutPA = mutPlayersArray;
+        console.log(mutPlayersArray);
+        newMutPA.push(player);
+        update_mutPA(newMutPA);
         console.log(team);
         update_function(team);
         return team;
@@ -174,9 +176,10 @@ export default function SetUpScreen()
                     <button onClick={() =>{set_choose_red_team(true);}} className={choose_red_team ? styles.inactiveButton : styles.player_buttons_red}>Choose for Red Team</button>
                     <button onClick={() => {set_choose_red_team(false);}} className={choose_red_team ? styles.player_buttons_blue : styles.inactiveButton}>Choose for Blue Team</button>
                 </div>
-                <div>
+                <div className={styles.assignTeamRedHeader}>
                    <br/>
                    <h1>Red Team: </h1> 
+                   <br/>
                    {red_team_lineup.length && red_team_lineup.map((player, index) => 
                 <span key={index} className={styles.deletePlayersNames} onClick={() => {removePlayerFromTeam(player, red_team_lineup, update_red_team_lineup);}}>{player}</span>)}
                 </div>

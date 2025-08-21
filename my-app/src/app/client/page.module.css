@@ -636,6 +636,12 @@ a.secondary {
   padding: 10px;
 }
 
+.assignTeamRedHeader{
+  padding: 10px;
+  background-color: lightcoral;
+  display: inline;
+}
+
 .pageButton{
   padding: 15px;
   cursor: pointer;
