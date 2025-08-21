@@ -599,13 +599,41 @@ a.secondary {
 }
 
 .assignTeamsContainer{
+  display: grid;
   width: 500px;
 
 }
 
 .assignTeamsHeader{
   text-align: center;
-  gap: 15px;
+  margin-top: 20px;
+}
+
+.assignTeamNamesRed,
+.assignTeamNamesBlue{
+  border: 2px solid black;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: large;
+  margin-left: 5px;
+  padding: 10px 5px;
+  cursor: pointer;
+}
+
+.assignTeamNamesRed:hover{
+  background-color: lightcoral;
+  color: white;
+}
+
+.assignTeamNamesBlue:hover{
+  background-color: lightblue;
+  color: white;
+}
+
+.inactiveButton{
+  color: darkgray;
+  background-color: gray;
+  cursor:default;
+  padding: 10px;
 }
 
 .pageButton{

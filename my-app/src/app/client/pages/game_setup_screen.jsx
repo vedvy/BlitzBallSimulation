@@ -19,7 +19,11 @@ export default function SetUpScreen()
     the real-time stats updates for players and either discard for early quit or apply to all players if game is completed fully?). 
     Later on, add a button to prompt whether a 4th inning should be played (it sometimes happens.)*/
     const [current_step, set_current_step] = useState("AddDeletePage");
-    
+    const [choose_red_team, set_choose_red_team] = useState(true);
+
+    const [red_team_lineup, update_red_team_lineup] = useState([]);
+    const [blue_team_lineup, update_blue_team_lineup] = useState([]);
+
     const [delete_players_page, update_delete_players_page] = useState(false);
     const [delete_details, update_delete_info] = useState({
         confirmDelete: false,
@@ -127,9 +131,26 @@ export default function SetUpScreen()
             </div>}
             {current_page === "AssignTeams" && 
             <div className={styles.assignTeamsContainer}>
-                <div className={styles.assignnTeamsHeader}>
+                <div className={styles.assignTeamsHeader}>
                     {playersArray.length && playersArray.map((player, index) => 
-                    <span key={index}>{player.name}</span>)}
+                    <span key={index} className={choose_red_team ? styles.assignTeamNamesRed : styles.assignTeamNamesBlue}
+                    onClick={choose_red_team ? () => {red_team_lineup.push(player.name); } : () => {blue_team_lineup.push(player.name);}}>
+                        {player.name}</span>)}
+                    <br/>
+                    <br/>
+                    <button onClick={() =>{set_choose_red_team(true);}} className={choose_red_team ? styles.inactiveButton : styles.player_buttons_red}>Choose for Red Team</button>
+                    <button onClick={() => {set_choose_red_team(false);}} className={choose_red_team ? styles.player_buttons_blue : styles.inactiveButton}>Choose for Blue Team</button>
+                </div>
+                <div>
+                   <br/>
+                   <h1>Red Team: </h1> 
+                   {red_team_lineup.length && red_team_lineup.map((player, index) => 
+                <span key={index}>{player}</span>)}
+                </div>
+                <div>
+                    <h1>Blue Team:  </h1>
+                    {blue_team_lineup.length && blue_team_lineup.map((player, index) => 
+                <span key={index}>{player}</span>)}
                 </div>
             </div>}
             <button onClick={async () => {await nextPage();}}>NEXT PAGE</button>
