@@ -613,7 +613,7 @@ a.secondary {
 .assignTeamNamesBlue{
   border: 2px solid black;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  font-size: large;
+  font-size: 24px;
   margin-left: 5px;
   padding: 10px 5px;
   cursor: pointer;
@@ -633,13 +633,21 @@ a.secondary {
   color: darkgray;
   background-color: gray;
   cursor:default;
-  padding: 10px;
+  padding: 20px;
 }
 
 .assignTeamRedHeader{
-  padding: 10px;
   background-color: lightcoral;
-  display: inline;
+  border: 2px solid black;
+  width: 500px;
+  height: 200px;
+}
+
+.assignTeamBlueHeader{
+  background-color: lightblue;
+  border: 2px solid black;
+  width: 500px;
+  height: 200px;
 }
 
 .pageButton{

@@ -24,7 +24,10 @@ export default function SetUpScreen()
 
     const [red_team_lineup, update_red_team_lineup] = useState([]);
     const [blue_team_lineup, update_blue_team_lineup] = useState([]);
-    
+    const [position_choices, set_position_choices] = useState({
+        pitching: "",
+        hitting: ""
+    });
 
     const [delete_players_page, update_delete_players_page] = useState(false);
     const [delete_details, update_delete_info] = useState({
@@ -110,6 +113,25 @@ export default function SetUpScreen()
         return currentLineup;
     }
 
+    function choosePosition(firstPosition, teamChosen, otherTeam)
+    {
+       firstPosition === "Pitching" ? set_position_choices({pitching: teamChosen, hitting: otherTeam}) : set_position_choices({pitching: otherTeam, hitting: teamChosen});
+    }
+
+    const confirmAllChoices = async () => {
+        if(red_team_lineup.length < 1 || blue_team_lineup < 1)
+        {
+            alert("Each team must have at least one player in their lineups!");
+            return;
+        }
+        if(!position_choices.pitching.trim() || !position_choices.hitting.trim())
+        {
+            alert("Choose a position for each team to start with before starting the game!");
+            return;
+        }
+        alert("All thingys work! Making gamme");
+        //set up backend stuff and figure out how to switch screens for games from here.
+    }
 
     console.log(delete_details.confirmDelete);
     return(
@@ -159,6 +181,7 @@ export default function SetUpScreen()
                     <button className={styles.quitCancelButton} onClick={async () => {update_delete_info({confirmDelete: false, player: ""});}}>No thanks.</button>
                 </div>
                 }
+            
             </div>}
             <br/>
             
@@ -166,8 +189,9 @@ export default function SetUpScreen()
             </div>}
             {current_page === "AssignTeams" && 
             <div className={styles.assignTeamsContainer}>
+                <h2>Select the Players For Your Teams</h2>
                 <div className={styles.assignTeamsHeader}>
-                    {mutPlayersArray.length && mutPlayersArray.map((player, index) => 
+                    {mutPlayersArray.map((player, index) => 
                     <span key={index} className={choose_red_team ? styles.assignTeamNamesRed : styles.assignTeamNamesBlue}
                     onClick={choose_red_team ? () => {addPlayerToTeam(player, red_team_lineup, update_red_team_lineup);} : () => {addPlayerToTeam(player, blue_team_lineup, update_blue_team_lineup);}}>
                         {player}</span>)}
@@ -175,21 +199,31 @@ export default function SetUpScreen()
                     <br/>
                     <button onClick={() =>{set_choose_red_team(true);}} className={choose_red_team ? styles.inactiveButton : styles.player_buttons_red}>Choose for Red Team</button>
                     <button onClick={() => {set_choose_red_team(false);}} className={choose_red_team ? styles.player_buttons_blue : styles.inactiveButton}>Choose for Blue Team</button>
+                    <br/>
                 </div>
                 <div className={styles.assignTeamRedHeader}>
-                   <br/>
                    <h1>Red Team: </h1> 
+                   <button className={position_choices.pitching === "red" ? styles.inactiveButton : styles.assignTeamNamesRed} onClick={() => {choosePosition("Pitching", "red", "blue")}}>Pitching</button>
+                   <button className={position_choices.hitting === "red" ? styles.inactiveButton : styles.assignTeamNamesRed} onClick={() => {choosePosition("Hitting", "red", "blue")}}>Hitting</button>
                    <br/>
-                   {red_team_lineup.length && red_team_lineup.map((player, index) => 
-                <span key={index} className={styles.deletePlayersNames} onClick={() => {removePlayerFromTeam(player, red_team_lineup, update_red_team_lineup);}}>{player}</span>)}
+                   <br/>
+                   {red_team_lineup.map((player, index) => 
+                <span key={index} className={styles.deletePlayersNames} style={{fontSize:"20px"}} onClick={() => {removePlayerFromTeam(player, red_team_lineup, update_red_team_lineup);}}>{player}</span>)}
                 </div>
-                <div>
+                <div className={styles.assignTeamBlueHeader}>
                     <h1>Blue Team:  </h1>
-                    {blue_team_lineup.length && blue_team_lineup.map((player, index) => 
-                <span key={index} className={styles.deletePlayersNames} onClick={() => {removePlayerFromTeam(player, blue_team_lineup, update_blue_team_lineup);}}>{player}</span>)}
+                    <button className={position_choices.pitching === "blue" ? styles.inactiveButton : styles.assignTeamNamesBlue} onClick={() => {choosePosition("Pitching", "blue", "red")}}>Pitching</button>
+                    <button className={position_choices.hitting === "blue" ? styles.inactiveButton : styles.assignTeamNamesBlue} onClick={() => {choosePosition("Hitting", "blue", "red")}}>Hitting</button>
+                    <br/>
+                    <br/>
+                    {blue_team_lineup.map((player, index) => 
+                <span key={index} className={styles.deletePlayersNames} style={{fontSize:"20px"}} onClick={() => {removePlayerFromTeam(player, blue_team_lineup, update_blue_team_lineup);}}>{player}</span>)}
                 </div>
+                <br/>
+            <button onClick={async () => {await confirmAllChoices();}}>Click here once you are absolutely ready to start the game. Properly confirm your lineups and positions</button>
             </div>}
-            <button onClick={async () => {await nextPage();}}>NEXT PAGE</button>
+            {current_page === "AddDeletePage" && <button onClick={async () => {await nextPage();}}>NEXT PAGE</button>}
+            
         </div>
     )
 }

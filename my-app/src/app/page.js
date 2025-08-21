@@ -4,7 +4,7 @@ import Image from "next/image";
 // import styles from "./page.module.css"
 import GameScreen from "./client/pages/game_screen";
 import SetUpScreen from "./client/pages/game_setup_screen";
-// import { DataProvider, DataContext } from "./client/components/context.jsx";
+import { DataProvider, DataContext } from "./client/components/context.jsx";
 import { SetUpScreenDataContext, SetUpScreenDataProvider } from "./client/components/setUpScreenContext";
 
 import { useContext } from "react";
