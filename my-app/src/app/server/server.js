@@ -172,6 +172,81 @@ app.post("/deletePlayer", jsonParser, async function(req, res){
     }
 });
 
+app.post("/createNewGame", jsonParser, async function(req, res)
+{
+    try{
+        const red_team_lineup = req.body['red_team_lineup'];
+        const blue_team_lineup = req.body['blue_team_lineup'];
+        const position_choices = req.body['position_choices'];
+
+        var redTeamIDs = [];
+        for(let i = 0; i < red_team_lineup.length; i++)
+        {
+            let playerID = (await Player.find({name: red_team_lineup[i]}))[0];
+            redTeamIDs.push(playerID._id);
+        }
+        var blueTeamIDs = [];
+        for(let i = 0; i < blue_team_lineup.length; i++)
+        {
+            let playerID = (await Player.find({name: blue_team_lineup[i]}))[0];
+            blueTeamIDs.push(playerID._id);
+        }
+
+        const teamRedObj = new Team({
+        teamColor: "red",
+        teamPlayers: redTeamIDs,
+        teamScore: 0,
+        teamChoices: position_choices.pitching === red_team_lineup ? "pitcher" : "hitter"
+    });
+    let savedTeamRed = await teamRedObj.save();
+
+        const teamBlueObj = new Team({
+        teamColor: "blue",
+        teamPlayers: blueTeamIDs,
+        teamScore: 0,
+        teamChoices: position_choices.pitching === blue_team_lineup ? "pitcher" : "hitter"
+    });
+
+    let savedTeamBlue = await teamBlueObj.save();
+
+    const game1 = new MainGame({
+        teamRed: savedTeamRed,
+        teamBlue: savedTeamBlue,
+        currentOuts: 0,
+        currentStrikes: 0,
+        currentInning: 1,
+        topOfInning: false,
+        firstBaseActive: {isActive: false},
+        secondBaseActive: {isActive: false},
+        thirdBaseActive: {isActive: false},
+        gameOver: false
+    });
+
+    await game1.save();
+
+    for(let i = 0; i < red_team_lineup.length; i++)
+    {
+        let tempPlayerStat = new TempPlayerStats({
+            name: red_team_lineup[i]
+        });
+        await tempPlayerStat.save();
+    }
+
+    for(let i = 0; i < blue_team_lineup.length; i++)
+        {
+            let tempPlayerStat = new TempPlayerStats({
+            name: blue_team_lineup[i]
+        });
+            await tempPlayerStat.save();
+        }
+    
+        res.send(200);
+    }
+    catch(err){
+        res.status(500).json({message: "err", err});
+    }
+});
+
 /*POST Section for Game Screen*/
 
 app.post("/switchPositions", jsonParser, async function(req, res) {

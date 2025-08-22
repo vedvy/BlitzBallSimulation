@@ -1,6 +1,6 @@
 'use client'
 import styles from "../page.module.css"
-import { useState, useContext } from "react";
+import { useState, useContext , useEffect, useRef} from "react";
 import axios from "axios";
 
 import { SetUpScreenDataContext } from "../components/setUpScreenContext";
@@ -39,14 +39,29 @@ export default function SetUpScreen()
     if(!dataModel.loading)
     {
         var playersArray = dataModel.players;
-        var mutatablePlayersArray = [];
-        playersArray.map((players, index) => mutatablePlayersArray.push(players.name));
         console.log(mutatablePlayersArray);
         var current_page = dataModel.current_page;
         console.log(current_page);
     }
 
+    var mutatablePlayersArray = [];
     const [mutPlayersArray, update_mutPA] = useState(mutatablePlayersArray);
+
+    var loadedOnce = useRef(false);
+
+    const fetchData = async () => {
+        if(!loadedOnce.current)
+        {
+            loadedOnce.current = true;
+            playersArray.map((players, index) => mutatablePlayersArray.push(players.name));
+            update_mutPA(mutatablePlayersArray);
+        }
+        
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, [])
     
     const [formData, set_form_data] = useState({
         newPlayer: ""
@@ -80,9 +95,9 @@ export default function SetUpScreen()
     }
     
     const nextPage = async () => {
-        if(current_page === "AddDeletePage")
+        if(current_step === "AddDeletePage")
         {
-            await dataModel.setUpFetchData("AssignTeams");
+            set_current_step("AssignTeams");
         }
     }
 
@@ -129,14 +144,17 @@ export default function SetUpScreen()
             alert("Choose a position for each team to start with before starting the game!");
             return;
         }
-        alert("All thingys work! Making gamme");
+        await axios.post("http://localhost:8000/createNewGame", {red_team_lineup: red_team_lineup, blue_team_lineup: blue_team_lineup,
+            position_choices: position_choices
+        });
+        alert("Database updated. Switch providers to GameScreen to play game!");
         //set up backend stuff and figure out how to switch screens for games from here.
     }
 
     console.log(delete_details.confirmDelete);
     return(
         <div className={styles.setUpScreenContainer}>
-            {current_page === "AddDeletePage" && <div className={styles.addDeleteContainer}>
+            {current_step === "AddDeletePage" && <div className={styles.addDeleteContainer}>
                {!delete_players_page && <div className={styles.addPlayersSection}>
                 <h1>Add Players Page</h1>
                 {/*Add the input form here.*/}
@@ -187,7 +205,7 @@ export default function SetUpScreen()
             
              
             </div>}
-            {current_page === "AssignTeams" && 
+            {current_step === "AssignTeams" && 
             <div className={styles.assignTeamsContainer}>
                 <h2>Select the Players For Your Teams</h2>
                 <div className={styles.assignTeamsHeader}>
