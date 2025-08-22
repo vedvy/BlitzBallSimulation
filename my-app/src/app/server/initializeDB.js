@@ -4,9 +4,10 @@ import mongoose from 'mongoose';
 
 import Player from './models/player.js';
 import Team from './models/team.js';
-import MainGameInfo from './models/main_game.js';
+import MainGame from './models/main_game.js';
 import TempPlayerStats from './models/tempPlayerStats.js'
 
+import ScreenView from './models/screenView.js';
 
 
 let userArgs = process.argv.slice(2);
@@ -39,7 +40,7 @@ async function createTeam(teamObject){
 
 async function createGame(mainGameObject){
 
-    let newGame = new MainGameInfo({
+    let newGame = new MainGame({
         teamRed: mainGameObject.teamRed,
         teamBlue: mainGameObject.teamBlue,
         currentOuts: mainGameObject.currentOuts,
@@ -112,151 +113,159 @@ async function initializeDB()
     let playerRef8 = await createPlayer(player8);
     console.log("AAfter player refs");
 
-    const team1 = {
-        teamColor: "red",
-        teamPlayers: [playerRef1.id, playerRef2, playerRef3, playerRef4],
-        teamScore: 0,
-        teamChoices: "hitter"
-    };
+    // const team1 = {
+    //     teamColor: "red",
+    //     teamPlayers: [playerRef1.id, playerRef2, playerRef3, playerRef4],
+    //     teamScore: 0,
+    //     teamChoices: "hitter"
+    // };
     
-    const team2 = {
-        teamColor: "blue",
-        teamPlayers: [playerRef5, playerRef6, playerRef7, playerRef8],
-        teamScore: 0,
-        teamChoices: "pitcher"
-    };
+    // const team2 = {
+    //     teamColor: "blue",
+    //     teamPlayers: [playerRef5, playerRef6, playerRef7, playerRef8],
+    //     teamScore: 0,
+    //     teamChoices: "pitcher"
+    // };
 
-    let teamRef1 = await createTeam(team1);
-    let teamRef2 = await createTeam(team2);
+    // let teamRef1 = await createTeam(team1);
+    // let teamRef2 = await createTeam(team2);
 
-    const game1 = {
-        teamRed: teamRef1,
-        teamBlue: teamRef2,
-        currentOuts: 0,
-        currentStrikes: 0,
-        currentInning: 1,
-        topOfInning: false,
-        firstBaseActive: {isActive: false},
-        secondBaseActive: {isActive: false},
-        thirdBaseActive: {isActive: false},
-        gameOver: false
-    };
+    // const game1 = {
+    //     teamRed: teamRef1,
+    //     teamBlue: teamRef2,
+    //     currentOuts: 0,
+    //     currentStrikes: 0,
+    //     currentInning: 1,
+    //     topOfInning: false,
+    //     firstBaseActive: {isActive: false},
+    //     secondBaseActive: {isActive: false},
+    //     thirdBaseActive: {isActive: false},
+    //     gameOver: false
+    // };
 
-    let gameRef1 = await createGame(game1);
+    // let gameRef1 = await createGame(game1);
 
-    let HitterStats1 = {
-            Games: 0,
-            PlateAppearences: 0,
-            AtBats: 0,
-            Hits: 0,
-            OneB: 0,
-            TwoB: 0,
-            ThreeB: 0,
-            HomeRuns: 0,
-            Walks: 0,
-            HitByPitches: 0,
-            RunsBattedIn: 0,
-            Runs: 0,
-            TotalBases: 0,
-            StrikeOuts: 0,
-            Average: 1.00,
-            SLGPercent: 1.00,
-            OBPPercent: 1.00,
-            OnBasePlusSlugging: 1.00,
-            OPSPlus: 1.00,
-            KPercent: 1.00,
-            wOBA: 1.00,
-            wRCPlus: 1.00,
-            BatAvgBallsInPlay: 1.00,
-            IsolatedPower: 1.00,
-            wRCPlus: 0
-    }
+    // let HitterStats1 = {
+    //         Games: 0,
+    //         PlateAppearences: 0,
+    //         AtBats: 0,
+    //         Hits: 0,
+    //         OneB: 0,
+    //         TwoB: 0,
+    //         ThreeB: 0,
+    //         HomeRuns: 0,
+    //         Walks: 0,
+    //         HitByPitches: 0,
+    //         RunsBattedIn: 0,
+    //         Runs: 0,
+    //         TotalBases: 0,
+    //         StrikeOuts: 0,
+    //         Average: 1.00,
+    //         SLGPercent: 1.00,
+    //         OBPPercent: 1.00,
+    //         OnBasePlusSlugging: 1.00,
+    //         OPSPlus: 1.00,
+    //         KPercent: 1.00,
+    //         wOBA: 1.00,
+    //         wRCPlus: 1.00,
+    //         BatAvgBallsInPlay: 1.00,
+    //         IsolatedPower: 1.00,
+    //         wRCPlus: 0
+    // }
 
-    let PitcherStats1 = {
-                Games: 0,
-                InningsPitched: 0, 
-                EarnedRunAverage: 1.00,
-                FieldingIndPitching: 1.00,
-                Walks: 0,
-                StrikeOuts: 0,
-                HitByPitches: 0,
-                HomeRuns: 0,
-                EarnedRuns: 0,
-                HitsAllowed: 0,
-                WalksHitsInningsPitched: 0,
-                ERAMinus: 0,
-                FIPMinus: 0,
-                Save: 0,
-                BlownSave: 0,
-                SVPercent: 0,
-                KPerNine: 1.00,
-                FIPMinusRank: 0,
-                BBPerNine: 1.00
-    }
+    // let PitcherStats1 = {
+    //             Games: 0,
+    //             InningsPitched: 0, 
+    //             EarnedRunAverage: 1.00,
+    //             FieldingIndPitching: 1.00,
+    //             Walks: 0,
+    //             StrikeOuts: 0,
+    //             HitByPitches: 0,
+    //             HomeRuns: 0,
+    //             EarnedRuns: 0,
+    //             HitsAllowed: 0,
+    //             WalksHitsInningsPitched: 0,
+    //             ERAMinus: 0,
+    //             FIPMinus: 0,
+    //             Save: 0,
+    //             BlownSave: 0,
+    //             SVPercent: 0,
+    //             KPerNine: 1.00,
+    //             FIPMinusRank: 0,
+    //             BBPerNine: 1.00
+    // }
 
-    const tempPlayer1 = {
-        name: player1.name,
-        HitterStats: HitterStats1,
-        PitcherStats: PitcherStats1
-    };
+    // const tempPlayer1 = {
+    //     name: player1.name,
+    //     HitterStats: HitterStats1,
+    //     PitcherStats: PitcherStats1
+    // };
 
-    let tempPlayerRef1 = await createTempPlayerStats(tempPlayer1);
+    // let tempPlayerRef1 = await createTempPlayerStats(tempPlayer1);
 
-    const tempPlayer2 = {
-        name: player2.name,
-        HitterStats: HitterStats1,
-        PitcherStats: PitcherStats1
-    }
+    // const tempPlayer2 = {
+    //     name: player2.name,
+    //     HitterStats: HitterStats1,
+    //     PitcherStats: PitcherStats1
+    // }
 
-    let tempPlayerRef2 = await createTempPlayerStats(tempPlayer2);
+    // let tempPlayerRef2 = await createTempPlayerStats(tempPlayer2);
 
-    const tempPlayer3 = {
-        name: player3.name,
-        HitterStats: HitterStats1,
-        PitcherStats: PitcherStats1
-    }
+    // const tempPlayer3 = {
+    //     name: player3.name,
+    //     HitterStats: HitterStats1,
+    //     PitcherStats: PitcherStats1
+    // }
 
-    let tempPlayerRef3 = await createTempPlayerStats(tempPlayer3);
+    // let tempPlayerRef3 = await createTempPlayerStats(tempPlayer3);
 
-    const tempPlayer4 = {
-        name: player4.name,
-        HitterStats: HitterStats1,
-        PitcherStats: PitcherStats1
-    }
+    // const tempPlayer4 = {
+    //     name: player4.name,
+    //     HitterStats: HitterStats1,
+    //     PitcherStats: PitcherStats1
+    // }
 
-    let tempPlayerRef4 = await createTempPlayerStats(tempPlayer4);
+    // let tempPlayerRef4 = await createTempPlayerStats(tempPlayer4);
 
-    const tempPlayer5 = {
-        name: player5.name,
-        HitterStats: HitterStats1,
-        PitcherStats: PitcherStats1
-    }
+    // const tempPlayer5 = {
+    //     name: player5.name,
+    //     HitterStats: HitterStats1,
+    //     PitcherStats: PitcherStats1
+    // }
 
-    let tempPlayerRef5 = await createTempPlayerStats(tempPlayer5);
+    // let tempPlayerRef5 = await createTempPlayerStats(tempPlayer5);
 
-    const tempPlayer6 = {
-        name: player6.name,
-        HitterStats: HitterStats1,
-        PitcherStats: PitcherStats1
-    }
+    // const tempPlayer6 = {
+    //     name: player6.name,
+    //     HitterStats: HitterStats1,
+    //     PitcherStats: PitcherStats1
+    // }
 
-    let tempPlayerRef6 = await createTempPlayerStats(tempPlayer6);
+    // let tempPlayerRef6 = await createTempPlayerStats(tempPlayer6);
 
-    const tempPlayer7 = {
-        name: player7.name,
-        HitterStats: HitterStats1,
-        PitcherStats: PitcherStats1
-    }
+    // const tempPlayer7 = {
+    //     name: player7.name,
+    //     HitterStats: HitterStats1,
+    //     PitcherStats: PitcherStats1
+    // }
 
-    let tempPlayerRef7 = await createTempPlayerStats(tempPlayer7);
+    // let tempPlayerRef7 = await createTempPlayerStats(tempPlayer7);
 
-    const tempPlayer8 = {
-        name: player8.name,
-        HitterStats: HitterStats1,
-        PitcherStats: PitcherStats1
-    }
+    // const tempPlayer8 = {
+    //     name: player8.name,
+    //     HitterStats: HitterStats1,
+    //     PitcherStats: PitcherStats1
+    // }
 
-    let tempPlayerRef8 = await createTempPlayerStats(tempPlayer8);
+    // let tempPlayerRef8 = await createTempPlayerStats(tempPlayer8);
+
+    let screenView = new ScreenView({
+        current_view: "SetUp"
+    });
+
+    await screenView.save();
+
+
 
     if(db)
     {

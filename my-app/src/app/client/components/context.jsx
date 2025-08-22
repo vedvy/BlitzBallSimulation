@@ -32,7 +32,7 @@ export const DataProvider = ({children}) => {
 
         const teamResponse = await axios.get("http://localhost:8000/teams");
         set_teams(teamResponse.data);
-
+        console.log("Right before maingameresponse");
         const mainGameResponse = await axios.get("http://localhost:8000/maingame");
         set_main_game_info(mainGameResponse.data.mainGame);
        

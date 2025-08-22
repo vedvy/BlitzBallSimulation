@@ -13,4 +13,5 @@ playerSchema.virtual("id").get(function()
     return this._id;
 });
 
+console.log('mongoose.models in player:', mongoose.models);
 module.exports = mongoose.model("player", playerSchema);

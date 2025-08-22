@@ -8,6 +8,7 @@ import Team from './models/team.js';
 import MainGame from './models/main_game.js';
 import TempPlayerStats from "./models/tempPlayerStats.js";
 import leagueAverages from "./models/leagueAverages.js";
+import ScreenView from "./models/screenView.js";
 
 import mongoose from 'mongoose';
 import bodyParser from "body-parser";
@@ -128,6 +129,17 @@ app.get("/maingame", async function(req, res){
         res.status(500).json({message: "err", err});
     }
 });
+
+app.get("/screenview", async function(req, res)
+{
+    try{
+        res.send("SetUp");
+    }
+    catch(err)
+    {
+        res.status(500).json({message: "err", err});
+    }
+})
 
 /*POST Section for Set Up Screen*/
 
