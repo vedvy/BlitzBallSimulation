@@ -43,6 +43,6 @@ mainGameSchema.virtual("id").get(function()
 })
 
 console.log('mongoose.models:', mongoose.models);
-module.exports =  mongoose.model('MainGame', mainGameSchema);
+module.exports = mongoose.model('MainGame', mainGameSchema);
 
 console.log('mongoose.models after exports:', mongoose.models);

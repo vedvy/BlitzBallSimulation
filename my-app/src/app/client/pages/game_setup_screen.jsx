@@ -131,6 +131,7 @@ export default function SetUpScreen()
     function choosePosition(firstPosition, teamChosen, otherTeam)
     {
        firstPosition === "Pitching" ? set_position_choices({pitching: teamChosen, hitting: otherTeam}) : set_position_choices({pitching: otherTeam, hitting: teamChosen});
+        console.log("Position Choices: Pitching: ", position_choices.pitching, " Hitting: ", position_choices.hitting);
     }
 
     const confirmAllChoices = async () => {
@@ -144,9 +145,11 @@ export default function SetUpScreen()
             alert("Choose a position for each team to start with before starting the game!");
             return;
         }
+        console.log("Position Choices before the new game creation: Pitching: ", position_choices.pitching, " Hitting: ", position_choices.hitting);
         await axios.post("http://localhost:8000/createNewGame", {red_team_lineup: red_team_lineup, blue_team_lineup: blue_team_lineup,
             position_choices: position_choices
         });
+ 
         alert("Database updated. Switch providers to GameScreen to play game!");
         //set up backend stuff and figure out how to switch screens for games from here.
     }

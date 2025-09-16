@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 import Player from './models/player.js';
 import Team from './models/team.js';
-import MainGame from './models/main_game.js';
+// import MainGame from './models/main_game.js';
 import TempPlayerStats from './models/tempPlayerStats.js'
 
 import ScreenView from './models/screenView.js';
@@ -38,22 +38,22 @@ async function createTeam(teamObject){
     return newTeam.save();
 }
 
-async function createGame(mainGameObject){
+// async function createGame(mainGameObject){
 
-    let newGame = new MainGame({
-        teamRed: mainGameObject.teamRed,
-        teamBlue: mainGameObject.teamBlue,
-        currentOuts: mainGameObject.currentOuts,
-        currentStrikes: mainGameObject.currentStrikes,
-        currentInning: mainGameObject.currentInning,
-        topOfInning: mainGameObject.topOfInning,
-        firstBaseActive: mainGameObject.firstBaseActive,
-        secondBaseActive: mainGameObject.secondBaseActive,
-        thirdBaseActive: mainGameObject.thirdBaseActive,
-        gameOver: mainGameObject.gameOver,
-    });
-    return newGame.save();
-}
+//     let newGame = new MainGame({
+//         teamRed: mainGameObject.teamRed,
+//         teamBlue: mainGameObject.teamBlue,
+//         currentOuts: mainGameObject.currentOuts,
+//         currentStrikes: mainGameObject.currentStrikes,
+//         currentInning: mainGameObject.currentInning,
+//         topOfInning: mainGameObject.topOfInning,
+//         firstBaseActive: mainGameObject.firstBaseActive,
+//         secondBaseActive: mainGameObject.secondBaseActive,
+//         thirdBaseActive: mainGameObject.thirdBaseActive,
+//         gameOver: mainGameObject.gameOver,
+//     });
+//     return newGame.save();
+// }
 
 async function createTempPlayerStats(tempPlayerOBJ)
 {

@@ -409,21 +409,21 @@ export default function GameScreen()
                     (!mainGameInfo.gameOver && dataModel.view === "gameField" && <div className={styles.choice_buttons_main}>
                         
                         {!outOptionsOn && 
-                        <div>
+                        <div className={styles.choice_buttons_main}>
                             <span className={styles.player_buttons_red} onClick={() => {set_outOptions(true);}}>Out</span>
                             <span className={styles.player_buttons_red} onClick={async () => {await incrementStrikes();}}>Strike</span>
                             <span className={styles.player_buttons_red} onClick={async () => {await incrementBalls();}}>Ball</span>
                             <span className={styles.player_buttons_red} onClick={async () => {await incrementHBP();}}>Hit By Pitch</span>    
                         </div>}
                         {outOptionsOn && !outType &&
-                        <div>
+                        <div className={styles.choice_buttons_main}>
                             <span className={styles.player_buttons_red} onClick={() => {set_outType("GroundOut");}}>GroundOut</span>
                             <span className={styles.player_buttons_red} onClick={() => {set_outType("LineOut");}}>LineOut</span>
                             <span className={styles.player_buttons_red} onClick={() => {set_outType("PopOut");}}>PopOut</span>
                             <span className={styles.player_buttons_red} onClick={() => {set_outType(); set_outOptions(false);}}>Cancel</span>
                         </div>}
                         {outOptionsOn && outType &&
-                        <div>
+                        <div className={styles.choice_buttons_main}>
                             {redTeamPlayers.map((player, index) => 
                             <span className={styles.player_buttons_red} key={index} onClick={async () => {set_outFielder(player); await incrementOuts(false, player);}}>{player}</span>
                             )}
@@ -449,21 +449,21 @@ export default function GameScreen()
                     {teamBlue.teamChoices === "pitcher" && (
                     (!mainGameInfo.gameOver && dataModel.view === "gameField" && <div className={styles.choice_buttons_main}>
                         {!outOptionsOn && 
-                        <div>
+                        <div className={styles.choice_buttons_main}>
                             <span className={styles.player_buttons_blue} onClick={() => {set_outOptions(true);}}>Out</span>
                             <span className={styles.player_buttons_blue} onClick={async () => {await incrementStrikes();}}>Strike</span>
                             <span className={styles.player_buttons_blue} onClick={async () => {await incrementBalls();}}>Ball</span>
                             <span className={styles.player_buttons_blue} onClick={async () => {await incrementHBP();}}>Hit By Pitch</span>    
                         </div>}
                         {outOptionsOn && !outType &&
-                        <div>
+                        <div className={styles.choice_buttons_main}>
                             <span className={styles.player_buttons_blue} onClick={() => {set_outType("GroundOut");}}>GroundOut</span>
                             <span className={styles.player_buttons_blue} onClick={() => {set_outType("LineOut");}}>LineOut</span>
                             <span className={styles.player_buttons_blue} onClick={() => {set_outType("PopOut");}}>PopOut</span>
                             <span className={styles.player_buttons_blue} onClick={() => {set_outType(false); set_outOptions(false)}}>Cancel</span>
                         </div>}
                         {outOptionsOn && outType &&
-                        <div>
+                        <div className={styles.choice_buttons_main}>
                             {blueTeamPlayers.map((player, index) => 
                             <span className={styles.player_buttons_blue} key={index} onClick={async () => {set_outFielder(player); await incrementOuts(false, player);}}>{player}</span>
                             )}

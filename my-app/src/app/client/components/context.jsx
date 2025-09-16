@@ -1,5 +1,5 @@
 'use client'
-
+//make a single context for setup screen and game screen? how would I handle the redTeamPlayers and blueTeamPlayers?
 import { createContext, useEffect, useState } from "react";
 import axios from 'axios';
 

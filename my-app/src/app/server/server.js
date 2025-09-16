@@ -196,7 +196,7 @@ app.post("/createNewGame", jsonParser, async function(req, res)
         teamColor: "red",
         teamPlayers: redTeamIDs,
         teamScore: 0,
-        teamChoices: position_choices.pitching === red_team_lineup ? "pitcher" : "hitter"
+        teamChoices: position_choices.pitching === "red" ? "pitcher" : "hitter"
     });
     let savedTeamRed = await teamRedObj.save();
 
@@ -204,7 +204,7 @@ app.post("/createNewGame", jsonParser, async function(req, res)
         teamColor: "blue",
         teamPlayers: blueTeamIDs,
         teamScore: 0,
-        teamChoices: position_choices.pitching === blue_team_lineup ? "pitcher" : "hitter"
+        teamChoices: position_choices.pitching === "blue" ? "pitcher" : "hitter"
     });
 
     let savedTeamBlue = await teamBlueObj.save();
