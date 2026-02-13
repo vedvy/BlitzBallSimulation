@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-var Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const playerSchema = new Schema({
     name: {type: String, required: true},
@@ -13,5 +13,11 @@ playerSchema.virtual("id").get(function()
     return this._id;
 });
 
-console.log('mongoose.models in player:', mongoose.models);
-module.exports = mongoose.model("player", playerSchema);
+let PlayerModel;
+try {
+  PlayerModel = mongoose.models.Player || mongoose.model("Player", playerSchema);
+} catch (error) {
+  console.log('Player model registration error:', error.message);
+  PlayerModel = mongoose.model("Player");
+}
+export default PlayerModel;

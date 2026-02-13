@@ -18,12 +18,12 @@ export default function Home() {
 
   return (
     <div className="main_program">
-        {/* <SetUpScreenDataProvider>
+        <SetUpScreenDataProvider>
           <SetUpScreen />
-        </SetUpScreenDataProvider> */}
-        <DataProvider>
+        </SetUpScreenDataProvider>
+        {/* <DataProvider>
         <GameScreen/>
-      </DataProvider>
+      </DataProvider> */}
     </div>
   );
 }

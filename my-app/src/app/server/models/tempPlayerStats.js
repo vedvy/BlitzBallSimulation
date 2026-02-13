@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-var Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const tempPlayerStatsSchema = new Schema({
     name: {type: String, required: true},
@@ -161,4 +161,11 @@ What to do now:
 2. If you want to see rwal-time stats, write to the logs before the DB. OPS is important in real-time.
 */
 
-module.exports = mongoose.model("TempPlayerStats", tempPlayerStatsSchema);
+let TempPlayerStatsModel;
+try {
+  TempPlayerStatsModel = mongoose.models.TempPlayerStats || mongoose.model("TempPlayerStats", tempPlayerStatsSchema);
+} catch (error) {
+  console.log('TempPlayerStats model registration error:', error.message);
+  TempPlayerStatsModel = mongoose.model("TempPlayerStats");
+}
+export default TempPlayerStatsModel;

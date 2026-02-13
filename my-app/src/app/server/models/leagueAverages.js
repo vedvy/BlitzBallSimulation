@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-var Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const leagueAverages = new Schema({
     HitterStats: {
@@ -31,8 +31,14 @@ const leagueAverages = new Schema({
     }
 }, {toJSON: {virtuals: true}}, {toObject: {virtuals: true}});
 
-
-module.exports = mongoose.model("LeagueAverages", leagueAverages);
+let LeagueAveragesModel;
+try {
+  LeagueAveragesModel = mongoose.models.LeagueAverages || mongoose.model("LeagueAverages", leagueAverages);
+} catch (error) {
+  console.log('LeagueAverages model registration error:', error.message);
+  LeagueAveragesModel = mongoose.model("LeagueAverages");
+}
+export default LeagueAveragesModel;
 /*
 Batting Stats:
 

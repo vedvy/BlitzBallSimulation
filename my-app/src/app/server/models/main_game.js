@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-var Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const mainGameSchema = new Schema({
     teamRed: {type: Schema.Types.ObjectId, ref: "team", required: true},
@@ -42,5 +42,11 @@ mainGameSchema.virtual("id").get(function()
     return this._id;
 })
 
-
-module.exports = mongoose.model('MainGame', mainGameSchema);
+let MainGameModel;
+try {
+  MainGameModel = mongoose.models.MainGame || mongoose.model('MainGame', mainGameSchema);
+} catch (error) {
+  console.log('MainGame model registration error:', error.message);
+  MainGameModel = mongoose.model('MainGame');
+}
+export default MainGameModel;

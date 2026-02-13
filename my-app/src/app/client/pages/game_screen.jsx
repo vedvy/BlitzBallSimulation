@@ -13,32 +13,33 @@ import EndGameScreen from "../components/endGameScreen";
 
 export default function GameScreen()
 { 
-   
-
     const dataModel = useContext(DataContext);
-    if(!dataModel.loading)
-    {
-        console.log(dataModel.main_game_info[0].teamBlue);
-        console.log("Team Red Teammates: ", dataModel.teams[0].teamChoices);
-
-        var teamRed = dataModel.teams[0];
-        var teamBlue = dataModel.teams[1];
-        var mainGameInfo = dataModel.main_game_info[0];
-        var tempPlayerOBJ = dataModel.tempPlayerStats[0];
-        var redTeamPlayers = dataModel.redTeamPlayers;
-        var blueTeamPlayers = dataModel.blueTeamPlayers;
-
-
-        
-        // console.log("Team Red: ", dataModel.main_game_info.teamRed);
-    }
-    const [localStrikes, set_local_strikes] = useState(mainGameInfo.currentStrikes);
-    const [localBalls, set_local_balls] = useState(mainGameInfo.currentBalls);
-    const [localHBP, set_local_HBP] = useState(mainGameInfo.currentHBP);
-
+    
+    // Initialize state hooks BEFORE any early returns (React rule)
+    const [localStrikes, set_local_strikes] = useState(0);
+    const [localBalls, set_local_balls] = useState(0);
+    const [localHBP, set_local_HBP] = useState(0);
     const [outOptionsOn, set_outOptions] = useState(false);
     const [outType, set_outType] = useState();
     const [outFielder, set_outFielder] = useState();
+    
+    // Safety check for context
+    if (!dataModel || dataModel.loading) {
+        return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+            <h2>Loading game data...</h2>
+        </div>;
+    }
+
+    // Now we can safely use dataModel
+    const teamRed = dataModel.teams[0];
+    const teamBlue = dataModel.teams[1];
+    const mainGameInfo = dataModel.main_game_info[0];
+    const tempPlayerOBJ = dataModel.tempPlayerStats[0];
+    const redTeamPlayers = dataModel.redTeamPlayers;
+    const blueTeamPlayers = dataModel.blueTeamPlayers;
+
+    console.log(dataModel.main_game_info[0].teamBlue);
+    console.log("Team Red Teammates: ", dataModel.teams[0].teamChoices);
     
 
     const incrementOuts = async (isStrikeOut, playerName) =>

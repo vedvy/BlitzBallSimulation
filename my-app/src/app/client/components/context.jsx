@@ -76,17 +76,11 @@ export const DataProvider = ({children}) => {
      console.log(players);
     }, []);
 
-    // const fetchTeamPlayers = async (players, teams) => {
-    //     let teamRed = teams[0];
-    //     let teamBlue = teams[1];
-    //     await axios.post("http://localhost:8000/teamplayernames", {playersArray: players, teamRed: teamRed,
-    //         teamBlue: teamBlue})
-    //         .then((response) => {
-    //         set_red_team_players(response.data.redTeamPlayers);
-    //         set_blue_team_players(response.data.blueTeamPlayers);
-    //     });
-
-    // }
+    if(loading) {
+        return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+            <h2>Loading game data...</h2>
+        </div>;
+    }
 
     if(!loading)
     {

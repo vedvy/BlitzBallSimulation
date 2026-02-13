@@ -26,7 +26,7 @@ export default function EndGameScreen(
                 <span className={styles.winnerTitle} style={{color: "lightblue"}}>Team Blue</span>
                 </div>}
                 {teamRed.teamScore === teamBlue.teamScore && <div>
-                <span className={styles.winnerTitle} style={{color: "orange"}}>It's a Tie!</span>
+                <span className={styles.winnerTitle} style={{color: "orange"}}>It&apos;s a Tie!</span>
                 </div>}
                 <h1>Team Red Score: {teamRed.teamScore}</h1>
                 <h1>Team Blue Score: {teamBlue.teamScore}</h1>

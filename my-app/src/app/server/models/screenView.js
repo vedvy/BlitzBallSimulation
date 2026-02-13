@@ -1,9 +1,16 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-var Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const ScreenViewSchema = new Schema({
     current_view: {type: String, default: "SetUp"}
 }, {toJSON: {virtuals: true}, toObject: {virtuals: true}});
 
-module.exports = mongoose.model("ScreenViewSchema", ScreenViewSchema);
+let ScreenViewModel;
+try {
+  ScreenViewModel = mongoose.models.ScreenView || mongoose.model("ScreenView", ScreenViewSchema);
+} catch (error) {
+  console.log('ScreenView model registration error:', error.message);
+  ScreenViewModel = mongoose.model("ScreenView");
+}
+export default ScreenViewModel;

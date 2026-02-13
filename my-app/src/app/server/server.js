@@ -12,9 +12,6 @@ import ScreenView from "./models/screenView.js";
 
 import mongoose from 'mongoose';
 import bodyParser from "body-parser";
-import { withCoalescedInvoke } from "next/dist/lib/coalesced-function.js";
-import { createStaticHandler } from "react-router-dom";
-
 
 // const express = require("express");
 
@@ -1101,7 +1098,10 @@ function compareFIPMinusAscending(a, b)
     return a.PitcherStats.FIPMinus - b.PitcherStats.FIPMinus;
 }
 
-app.listen(8000, () => {console.log("Server listening on port 8000...");});
+// Start server when DB connection is ready
+db.once('open', () => {
+  app.listen(8000, () => {console.log("Server listening on port 8000...");});
+});
 
 app.get("", (req,res) =>
 {

@@ -32,6 +32,12 @@ export const SetUpScreenDataProvider = ({children}) => {
         setUpFetchData();
     }, []);
 
+    if(loading) {
+        return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+            <h2>Loading setup data...</h2>
+        </div>;
+    }
+
     if(!loading)
     {
         return(

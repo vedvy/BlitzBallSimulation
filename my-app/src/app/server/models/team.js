@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-var Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const teamSchema = new Schema({
     teamColor: { type: String, required: true},
@@ -24,4 +24,11 @@ teamSchema.virtual("id").get(function(){
     return this._id;
 });
 
-module.exports = mongoose.model("team", teamSchema);
+let TeamModel;
+try {
+  TeamModel = mongoose.models.Team || mongoose.model("Team", teamSchema);
+} catch (error) {
+  console.log('Team model registration error:', error.message);
+  TeamModel = mongoose.model("Team");
+}
+export default TeamModel;

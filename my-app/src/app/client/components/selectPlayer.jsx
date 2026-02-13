@@ -92,7 +92,7 @@ export default function SelectPlayer()
             </h2>
             {!redPlayerChosen && <div className={styles.selectPlayerRed}>
                 
-                {teamRed.teamChoices === "hitter" ? <h1>Choose Red Team's Hitter</h1> : <h1>Choose Red Team's Pitcher</h1>}
+                {teamRed.teamChoices === "hitter" ? <h1>Choose Red Team&apos;s Hitter</h1> : <h1>Choose Red Team&apos;s Pitcher</h1>}
                 
                 {redTeamPlayers.map((player, index) => 
                         <button key={index} className={styles.select_player_red}
@@ -104,7 +104,7 @@ export default function SelectPlayer()
                     <h1>Red Player Up Next: {redPlayerChosen}</h1>
                 </div>}
             {!bluePlayerChosen && <div className={styles.selectPlayerBlue}>
-                {teamBlue.teamChoices === "hitter" ? <h1>Choose Blue Team's Hitter</h1> : <h1>Choose Blue Team's Pitcher</h1>}
+                {teamBlue.teamChoices === "hitter" ? <h1>Choose Blue Team&apos;s Hitter</h1> : <h1>Choose Blue Team&apos;s Pitcher</h1>}
                 {blueTeamPlayers.map((player, index) => 
                     <button key={index} className={styles.select_player_blue}
                     onClick={async () => {await chosenBluePlayer(player);}}>
